@@ -1,0 +1,30 @@
+{{- if .Values.sonarr.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sonarr
+  labels:
+    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
+  {{- with .Values.sonarr.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+{{ if .Values.sonarr.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.general.ingress_host | quote }}
+      secretName: {{ .Values.sonarr.ingress.tls.secretName }}
+{{ end }}     
+  rules:
+    - host: {{ .Values.general.ingress_host | quote }}
+      http:
+        paths:
+          - path: {{ .Values.sonarr.ingress.path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: sonarr
+                port:
+                  number: {{ .Values.sonarr.service.port }}
+{{ end }}     

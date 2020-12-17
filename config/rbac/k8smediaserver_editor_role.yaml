@@ -1,0 +1,24 @@
+# permissions for end users to edit k8smediaservers.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: k8smediaserver-editor-role
+rules:
+- apiGroups:
+  - kubealex.com
+  resources:
+  - k8smediaservers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - kubealex.com
+  resources:
+  - k8smediaservers/status
+  verbs:
+  - get

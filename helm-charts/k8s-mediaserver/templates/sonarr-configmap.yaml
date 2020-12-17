@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sonarr-config
+data:
+  PGID: "{{ .Values.general.pgid }}"
+  PUID: "{{ .Values.general.puid }}"

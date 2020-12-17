@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+  config.xml: |
+    <Config>
+      <UrlBase>{{ .Values.sonarr.ingress.path }}</UrlBase>
+    </Config>
+  init-sonarr.sh: |
+    #!/bin/bash
+    cp -n /init-sonarr/config.xml /sonarr-config/config.xml
+kind: ConfigMap
+metadata:
+  name: init-sonarr-cm

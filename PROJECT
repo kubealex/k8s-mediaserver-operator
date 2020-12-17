@@ -1,0 +1,8 @@
+domain: com
+layout: helm.sdk.operatorframework.io/v1
+projectName: k8s-mediaserver-operator
+resources:
+- group: kubealex
+  kind: K8SMediaserver
+  version: v1
+version: 3-alpha
