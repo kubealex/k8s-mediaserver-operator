@@ -41,7 +41,16 @@ Then you are good to go with the CR:
 
     kubectl apply -f k8s-mediaserver.yml
 
-In seconds, you will be ready to use your applications! 
+In seconds, you will be ready to use your applications!
+
+With default settings, your applications will run in these paths:
+
+    http://k8s-mediaserver.k8s.test/sonarr
+    http://k8s-mediaserver.k8s.test/radarr
+    http://k8s-mediaserver.k8s.test/transmission
+    http://k8s-mediaserver.k8s.test/jackett
+
+    http://k8s-plex.k8s.test/
 
 ## The mediaserver CR
 The CR is quite simple to configure, and I tried to keep the number of parameters low to avoid confusion, but still letting some customization to fit the resource inside your cluster.
