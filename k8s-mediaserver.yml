@@ -5,9 +5,9 @@ metadata:
 spec:
   # Default values copied from <project_dir>/helm-charts/k8s-mediaserver/values.yaml
   general:
-    ingress_host: k8s-test-loadbalancer.k8s.test
-    pgid: 1000
+    ingress_host: k8s-mediaserver.k8s.test
     plex_ingress_host: k8s-plex.k8s.test
+    pgid: 1000
     puid: 1000
     storage:
       nfs: false
@@ -15,7 +15,7 @@ spec:
       nfsServer: null
       pvcName: mediaserver-pvc
       pvcStorageClass: {}
-      size: 5Gi
+      size: 50Gi
   jackett:
     container:
       nodeSelector: {}
