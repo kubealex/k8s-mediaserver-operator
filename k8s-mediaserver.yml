@@ -14,7 +14,7 @@ spec:
       nfsPath: null
       nfsServer: null
       pvcName: mediaserver-pvc
-      pvcStorageClass: {}
+      pvcStorageClass: managed-nfs-storage
       size: 50Gi
   jackett:
     container:
@@ -34,6 +34,7 @@ spec:
       type: ClusterIP
   plex:
     claim: CHANGEME
+    advertise_ip: "k8s-plex.k8s.test:32400"
     container:
       nodeSelector: {}
       port: 32400
@@ -46,9 +47,9 @@ spec:
     replicaCount: 1
     service:
       extraLBService: false
-      nodePort: null
+      nodePort: 32400
       port: 32400
-      type: ClusterIP
+      type: NodePort
   radarr:
     container:
       nodeSelector: {}

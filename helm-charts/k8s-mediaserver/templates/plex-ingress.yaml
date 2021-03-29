@@ -13,11 +13,11 @@ spec:
 {{ if .Values.plex.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values.general.ingress_host | quote }}
+        - {{ .Values.general.plex_ingress_host | quote }}
       secretName: {{ .Values.plex.ingress.tls.secretName }}
 {{ end }}     
   rules:
-    - host: {{ .Values.plex.ingress_host | quote }}
+    - host: {{ .Values.general.plex_ingress_host | quote }}
       http:
         paths:
           - path: /

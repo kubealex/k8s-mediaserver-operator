@@ -6,3 +6,4 @@ data:
   PGID: "{{ .Values.general.pgid }}"
   PUID: "{{ .Values.general.puid }}"
   PLEX_CLAIM: {{ .Values.plex.claim }}
+  ADVERTISE_IP: "{{ .Values.plex.advertise_ip }}"
