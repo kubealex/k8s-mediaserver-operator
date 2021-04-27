@@ -17,7 +17,7 @@ spec:
     spec:
       initContainers:
         - name: config-jackett
-          image: bitnami/kubectl:latest
+          image: docker.io/ubuntu:groovy
           command: ["/init-jackett/init-jackett.sh"]
           volumeMounts:
             - mountPath: /init-jackett
@@ -33,7 +33,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: jackett-config
-          image: docker.io/linuxserver/jackett:latest
+          image: docker.io/linuxserver/jackett:{{ .Values.general.image_tag }}
           imagePullPolicy: Always
           readinessProbe:
             tcpSocket:

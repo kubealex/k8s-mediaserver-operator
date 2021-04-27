@@ -61,6 +61,7 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | ------------ | ------------ | ------------ |
 | general.ingress_host | The hostname to use in ingress definition, this will be the hostname where the applications will be exposed  | k8s-mediaserver.k8s.test |
 | general.plex_ingress_host | The hostname to use for **PLEX** as it must be exposed on a / dedicated path  | k8s-plex.k8s.test |
+| general.image_tag | The name of the image tag (arm32v7-latest, arm64v8-latest, development)  | latest |
 | general.pgid | The GID for the process | 1000 |
 | general.puid | The UID for the process | 1000 |
 | general.nodeSelector | Node Selector for all the pods | {} |

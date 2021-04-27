@@ -17,7 +17,7 @@ spec:
     spec:
       initContainers:
         - name: config-sonarr
-          image: bitnami/kubectl:latest
+          image: docker.io/ubuntu:groovy
           command: ["/init-sonarr/init-sonarr.sh"]
           volumeMounts:
             - mountPath: /init-sonarr
@@ -33,7 +33,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: sonarr-config
-          image: "docker.io/linuxserver/sonarr:latest" 
+          image: "docker.io/linuxserver/sonarr:{{ .Values.general.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
             tcpSocket:

@@ -5,6 +5,7 @@
 general: 
   ingress_host: k8s-test-loadbalancer.k8s.test
   plex_ingress_host: k8s-plex.k8s.test
+  image_tag: latest
   #UID to run the process with
   puid: 1000
   #GID to run the process with

@@ -7,6 +7,7 @@ spec:
   general:
     ingress_host: k8s-mediaserver.k8s.test
     plex_ingress_host: k8s-plex.k8s.test
+    image_tag: latest
     pgid: 1000
     puid: 1000
     storage:
