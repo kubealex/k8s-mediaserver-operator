@@ -17,7 +17,7 @@ spec:
     spec:
       initContainers:
         - name: config-radarr
-          image: bitnami/kubectl:latest
+          image: docker.io/ubuntu:groovy
           command: ["/init-radarr/init-radarr.sh"]
           volumeMounts:
             - mountPath: /init-radarr
@@ -33,7 +33,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: radarr-config
-          image: "docker.io/linuxserver/radarr:latest" 
+          image: "docker.io/linuxserver/radarr:{{ .Values.general.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
             tcpSocket:

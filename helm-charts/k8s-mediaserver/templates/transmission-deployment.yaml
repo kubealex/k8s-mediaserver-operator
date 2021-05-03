@@ -17,7 +17,7 @@ spec:
     spec:
       initContainers:
         - name: config-transmission
-          image: bitnami/kubectl:latest
+          image: docker.io/ubuntu:groovy
           command: ["/init-transmission/init-transmission.sh"]
           volumeMounts:
             - mountPath: /init-transmission
@@ -27,13 +27,13 @@ spec:
               subPath: "config/transmission"
           securityContext:
             runAsUser: {{ .Values.general.puid }}
-            runAsGroup: {{ .Values.general.pgid }}     
+            runAsGroup: {{ .Values.general.pgid }}
       containers:
         - name: {{ .Chart.Name }}
           envFrom:
             - configMapRef:
                 name: transmission-config
-          image: "docker.io/linuxserver/transmission:latest"
+          image: "docker.io/linuxserver/transmission:{{ .Values.general.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
             tcpSocket:
