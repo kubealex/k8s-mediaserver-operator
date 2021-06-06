@@ -1,8 +1,16 @@
-domain: com
-layout: helm.sdk.operatorframework.io/v1
+domain: kubealex.com
+layout:
+- helm.sdk.operatorframework.io/v1
+plugins:
+  manifests.sdk.operatorframework.io/v2: {}
+  scorecard.sdk.operatorframework.io/v2: {}
 projectName: k8s-mediaserver-operator
 resources:
-- group: kubealex
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: kubealex.com
+  group: charts
   kind: K8SMediaserver
   version: v1
-version: 3-alpha
+version: "3"

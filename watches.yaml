@@ -3,4 +3,4 @@
   version: v1
   kind: K8SMediaserver
   chart: helm-charts/k8s-mediaserver
-# +kubebuilder:scaffold:watch
+#+kubebuilder:scaffold:watch

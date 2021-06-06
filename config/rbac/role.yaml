@@ -29,13 +29,14 @@ rules:
   - create
 
 ##
-## Rules for kubealex.com/v1, Kind: K8SMediaserver
+## Rules for charts.kubealex.com/v1, Kind: K8SMediaserver
 ##
 - apiGroups:
   - kubealex.com
   resources:
   - k8smediaservers
   - k8smediaservers/status
+  - k8smediaservers/finalizers
   verbs:
   - create
   - delete
@@ -65,4 +66,4 @@ rules:
   resources:
   - "ingresses"
 
-# +kubebuilder:scaffold:rules
+#+kubebuilder:scaffold:rules

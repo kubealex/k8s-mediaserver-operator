@@ -1,0 +1,50 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: '[]'
+    capabilities: Basic Install
+  name: k8s-mediaserver-operator.v0.0.3
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions: {}
+  description: A fully featured operator for managing a mediaserver
+  displayName: k8s-mediaserver-operator
+  icon:
+  - base64data: ""
+    mediatype: ""
+  install:
+    spec:
+      deployments: null
+    strategy: ""
+  installModes:
+  - supported: false
+    type: OwnNamespace
+  - supported: false
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - k8s
+  - plex
+  - sonarr
+  - radarr
+  - transmission
+  - kubernetes
+  - operator
+  - helm
+  - mediaserver
+  links:
+  - name: K8s Mediaserver Operator
+    url: https://k8s-mediaserver-operator.domain
+  maintainers:
+  - email: al.rossi87@gmail.com
+    name: kubealex
+  maturity: alpha
+  provider:
+    name: kubealex
+    url: https://github.com/kubealex/k8s-mediaserver-operator
+  version: 0.0.3

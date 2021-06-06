@@ -6,7 +6,7 @@
 *.so
 *.dylib
 bin
-
+kube-alex.yml
 # editor and IDE paraphernalia
 .idea
 *.swp

@@ -5,6 +5,7 @@ metadata:
 spec:
   # Default values copied from <project_dir>/helm-charts/k8s-mediaserver/values.yaml
   general:
+    image_tag: latest
     ingress_host: k8s-test-loadbalancer.k8s.test
     pgid: 1000
     plex_ingress_host: k8s-plex.k8s.test

@@ -3,19 +3,18 @@ kind: K8SMediaserver
 metadata:
   name: k8smediaserver-sample
 spec:
-  # Default values copied from <project_dir>/helm-charts/k8s-mediaserver/values.yaml
   general:
-    ingress_host: k8s-mediaserver.k8s.test
-    plex_ingress_host: k8s-plex.k8s.test
     image_tag: latest
+    ingress_host: k8s-mediaserver.kube.test
     pgid: 1000
+    plex_ingress_host: k8s-plex.kube.test
     puid: 1000
     storage:
       nfs: false
       nfsPath: null
       nfsServer: null
       pvcName: mediaserver-pvc
-      pvcStorageClass: managed-nfs-storage
+      pvcStorageClass: {}
       size: 50Gi
   jackett:
     container:
@@ -35,7 +34,6 @@ spec:
       type: ClusterIP
   plex:
     claim: CHANGEME
-    advertise_ip: "k8s-plex.k8s.test:32400"
     container:
       nodeSelector: {}
       port: 32400
@@ -48,9 +46,9 @@ spec:
     replicaCount: 1
     service:
       extraLBService: false
-      nodePort: 32400
+      nodePort: null
       port: 32400
-      type: NodePort
+      type: ClusterIP
   radarr:
     container:
       nodeSelector: {}
