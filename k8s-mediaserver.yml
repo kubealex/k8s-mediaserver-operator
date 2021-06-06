@@ -5,9 +5,9 @@ metadata:
 spec:
   general:
     image_tag: latest
-    ingress_host: k8s-mediaserver.kube.test
+    ingress_host: k8s-mediaserver.k8s.test
     pgid: 1000
-    plex_ingress_host: k8s-plex.kube.test
+    plex_ingress_host: k8s-plex.k8s.test
     puid: 1000
     storage:
       nfs: false
