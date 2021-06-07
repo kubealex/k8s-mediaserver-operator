@@ -14,7 +14,7 @@ general:
   storage:
     pvcName: mediaserver-pvc
     size: 5Gi
-    pvcStorageClass: {}
+    pvcStorageClass: []
     nfs: false 
     nfsServer: 
     nfsPath: 
