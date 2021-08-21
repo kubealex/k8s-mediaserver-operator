@@ -35,10 +35,12 @@ All you need is:
 
 First install the CRD and the operator:
 
-AMD/Intel:
+AMD/Intel: 
+
     kubectl apply -f k8s-mediaserver-operator.yml
 
-ARM:
+ARM: 
+
     kubectl apply -f k8s-mediaserver-operator-arm64.yml
 
 Then you are good to go with the CR:
