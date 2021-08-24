@@ -29,7 +29,7 @@ spec:
     - port: {{ .Values.transmission.service.peer.port }}
       targetPort: {{ .Values.transmission.container.port.peer }}
       protocol: TCP
-      name: trans-peer-port-tcp
+      name: trans-peer-tcp
 {{ if eq .Values.transmission.service.peer.type "NodePort" }}
       nodePort: {{ .Values.transmission.service.peer.nodePort }}
 {{ end }}
@@ -48,7 +48,7 @@ spec:
     - port: {{ .Values.transmission.service.peer.port }}
       targetPort: {{ .Values.transmission.container.port.peer }}
       protocol: UDP
-      name: trans-peer-port-udp
+      name: trans-peer-udp
 {{ if eq .Values.transmission.service.peer.type "NodePort" }}
       nodePort: {{ .Values.transmission.service.peer.nodePort }}
 {{ end }}
@@ -84,7 +84,7 @@ spec:
     - port: {{ .Values.transmission.service.peer.port }}
       targetPort: {{ .Values.transmission.container.peer.port }}
       protocol: TCP
-      name: trans-peer-port-tcp
+      name: trans-peer-tcp
   selector:
     app: transmission
 ---
@@ -100,7 +100,7 @@ spec:
     - port: {{ .Values.transmission.service.peer.port }}
       targetPort: {{ .Values.transmission.container.peer.port }}
       protocol: UDP
-      name: trans-peer-port-udp
+      name: trans-peer-udp
   selector:
     app: transmission
 {{ end }}

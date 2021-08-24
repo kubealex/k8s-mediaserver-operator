@@ -44,10 +44,10 @@ spec:
             - name: trans-port
               containerPort: {{ .Values.transmission.container.port.utp }}
               protocol: TCP
-            - name: trans-peer-port-tcp
+            - name: trans-peer-tcp
               containerPort: {{ .Values.transmission.container.port.peer }}
               protocol: TCP
-            - name: trans-peer-port-udp
+            - name: trans-peer-udp
               containerPort: {{ .Values.transmission.container.port.peer }}
               protocol: UDP
           volumeMounts:

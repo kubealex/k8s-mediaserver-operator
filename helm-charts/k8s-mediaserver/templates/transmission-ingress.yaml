@@ -26,5 +26,5 @@ spec:
               service:
                 name: transmission
                 port:
-                  number: {{ .Values.transmission.service.port }}
+                  number: {{ .Values.transmission.service.utp.port }}
 {{ end }}     
