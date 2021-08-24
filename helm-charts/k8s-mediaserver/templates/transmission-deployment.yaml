@@ -37,13 +37,19 @@ spec:
           imagePullPolicy: Always
           readinessProbe:
             tcpSocket:
-              port: {{ .Values.transmission.container.port }}
+              port: {{ .Values.transmission.container.port.utp }}
             initialDelaySeconds: 5
             periodSeconds: 10
           ports:
             - name: trans-port
-              containerPort: {{ .Values.transmission.container.port }}
+              containerPort: {{ .Values.transmission.container.port.utp }}
               protocol: TCP
+            - name: trans-peer-port-tcp
+              containerPort: {{ .Values.transmission.container.port.peer }}
+              protocol: TCP
+            - name: trans-peer-port-udp
+              containerPort: {{ .Values.transmission.container.port.peer }}
+              protocol: UDP
           volumeMounts:
             - name: mediaserver-volume
               mountPath: "/config"

@@ -2,7 +2,11 @@ apiVersion: v1
 data:
   init-transmission.sh: |
     #!/bin/bash
-    cp -n /init-transmission/settings.json /transmission-config/settings.json
+    echo "### Initializing config ###"
+    if [ ! -f /transmission-config/settings.json ]; then
+      cp -n /init-transmission/settings.json /transmission-config/settings.json
+      echo "### No configuration found, intialized with default settings ###"
+    fi
   settings.json: |
     {
         "alt-speed-down": 50,
@@ -32,7 +36,7 @@ data:
         "peer-id-ttl-hours": 6,
         "peer-limit-global": 200,
         "peer-limit-per-torrent": 50,
-        "peer-port": 51413,
+        "peer-port": {{ .Values.transmission.service.peer.port }},
         "peer-port-random-high": 65535,
         "peer-port-random-low": 49152,
         "peer-port-random-on-start": false,
@@ -46,15 +50,15 @@ data:
         "ratio-limit": 2,
         "ratio-limit-enabled": false,
         "rename-partial-files": true,
-        "rpc-authentication-required": false,
+        "rpc-authentication-required": {{ .Values.transmission.config.auth.enabled }},
         "rpc-bind-address": "0.0.0.0",
         "rpc-enabled": true,
         "rpc-host-whitelist": "",
         "rpc-host-whitelist-enabled": false,
-        "rpc-password": "{1ddd3f1f6a71d655cde7767242a23a575b44c909n5YuRT.f",
+        "rpc-password": {{ .Values.transmission.config.auth.password | quote }} ,
         "rpc-port": 9091,
         "rpc-url": "{{ .Values.transmission.ingress.path }}/",
-        "rpc-username": "",
+        "rpc-username": {{ .Values.transmission.config.auth.username | quote }},
         "rpc-whitelist": "127.0.0.1",
         "rpc-whitelist-enabled": false,
         "scrape-paused-torrents-enabled": true,

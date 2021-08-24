@@ -84,7 +84,9 @@ spec:
   transmission:
     container:
       nodeSelector: {}
-      port: 9091
+      port: 
+        utp: 9091
+        peer: 51413
     ingress:
       annotations: {}
       enabled: true
@@ -93,7 +95,18 @@ spec:
         enabled: false
         secretName: ""
     service:
-      extraLBService: false
-      nodePort: null
-      port: 9091
-      type: ClusterIP
+      utp:
+        extraLBService: false
+        nodePort: null
+        port: 9091
+        type: ClusterIP
+      peer:
+        extraLBService: false
+        nodePort: null
+        port: 51413
+        type: ClusterIP
+    config:
+      auth: 
+        enabled: false
+        username: ""
+        password: ""
