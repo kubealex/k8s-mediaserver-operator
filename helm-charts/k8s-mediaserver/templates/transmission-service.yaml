@@ -5,18 +5,55 @@ metadata:
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.transmission.service.type }}
+  type: {{ .Values.transmission.service.utp.type }}
   ports:
-    - port: {{ .Values.transmission.service.port }}
-      targetPort: {{ .Values.transmission.container.port }}
+    - port: {{ .Values.transmission.service.utp.port }}
+      targetPort: {{ .Values.transmission.container.port.utp }}
       protocol: TCP
       name: trans-port
-{{ if eq .Values.transmission.service.type "NodePort" }}
-      nodePort: {{ .Values.transmission.service.nodePort }}
+{{ if eq .Values.transmission.service.utp.type "NodePort" }}
+      nodePort: {{ .Values.transmission.service.utp.nodePort }}
 {{ end }}
   selector:
     app: transmission
-
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transmission-peer-tcp
+  labels:
+    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.transmission.service.peer.type }}
+  ports:
+    - port: {{ .Values.transmission.service.peer.port }}
+      targetPort: {{ .Values.transmission.container.port.peer }}
+      protocol: TCP
+      name: trans-peer-tcp
+{{ if eq .Values.transmission.service.peer.type "NodePort" }}
+      nodePort: {{ .Values.transmission.service.peer.nodePort }}
+{{ end }}
+  selector:
+    app: transmission
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transmission-peer-udp
+  labels:
+    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.transmission.service.peer.type }}
+  ports:
+    - port: {{ .Values.transmission.service.peer.port }}
+      targetPort: {{ .Values.transmission.container.port.peer }}
+      protocol: UDP
+      name: trans-peer-udp
+{{ if eq .Values.transmission.service.peer.type "NodePort" }}
+      nodePort: {{ .Values.transmission.service.peer.nodePort }}
+{{ end }}
+  selector:
+    app: transmission
 ---
 {{ if .Values.transmission.service.extraLBService }}
 apiVersion: v1
@@ -32,6 +69,38 @@ spec:
       targetPort: {{ .Values.transmission.container.port }}
       protocol: TCP
       name: trans-port
+  selector:
+    app: transmission
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transmission-lb-peer-tcp
+  labels:
+    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
+spec:
+  type: LoadBalancer
+  ports:
+    - port: {{ .Values.transmission.service.peer.port }}
+      targetPort: {{ .Values.transmission.container.peer.port }}
+      protocol: TCP
+      name: trans-peer-tcp
+  selector:
+    app: transmission
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transmission-lb-peer-udp
+  labels:
+    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
+spec:
+  type: LoadBalancer
+  ports:
+    - port: {{ .Values.transmission.service.peer.port }}
+      targetPort: {{ .Values.transmission.container.peer.port }}
+      protocol: UDP
+      name: trans-peer-udp
   selector:
     app: transmission
 {{ end }}

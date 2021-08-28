@@ -28,7 +28,7 @@ spec:
       - args:
         - --leader-elect
         - --leader-election-id=k8s-mediaserver-operator
-        image: quay.io/kubealex/k8s-mediaserver-operator:v0.3
+        image: quay.io/kubealex/k8s-mediaserver-operator:v0.4
         name: manager
         securityContext:
           allowPrivilegeEscalation: false

@@ -145,15 +145,23 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | Config path | Meaning | Default | 
 | ------------ | ------------ | ------------ |
 | transmission.container.port | The port in use by the container | 9091 | 
-| transmission.service.type | The kind of Service (ClusterIP/NodePort/LoadBalancer) | ClusterIP |
-| transmission.service.port | The port assigned to the service | 9091 |
-| transmission.service.nodePort | In case of service.type NodePort, the nodePort to use | "" |
-| transmission.service.extraLBService | If true, creates an additional LoadBalancer service with '-lb' suffix (requires a cloud provider or metalLB) | false | 
+| transmission.container.port | The port in use by the container for peer connection | 51413 | 
+| transmission.service.utp.type | The kind of Service (ClusterIP/NodePort/LoadBalancer) for transmission itself | ClusterIP |
+| transmission.service.utp.port | The port assigned to the service for transmission itself | 9091 |
+| transmission.service.utp.nodePort | In case of service.type NodePort, the nodePort to use for transmission itself | "" |
+| transmission.service.utp.extraLBService | If true, creates an additional LoadBalancer service with '-lb' suffix (requires a cloud provider or metalLB) | false | 
+| transmission.service.peer.type | The kind of Service (ClusterIP/NodePort/LoadBalancer) for peer port | ClusterIP |
+| transmission.service.peer.port | The port assigned to the service for peer port | 51413 |
+| transmission.service.peer.nodePort | In case of service.type NodePort, the nodePort to use for peer port | "" |
+| transmission.service.peer.extraLBService | If true, creates an additional LoadBalancer service with '-lb' suffix (requires a cloud provider or metalLB) | false | 
 | transmission.ingress.enabled | If true, creates the ingress resource for the application | true |
 | transmission.ingress.annotations | Additional field for annotations, if needed | {} |
 | transmission.ingress.path | The path where the application is exposed | /transmission |
 | transmission.ingress.tls.enabled | If true, tls is enabled | false |
 | transmission.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress | "" |
+| transmission.config.auth.enabled | Enables authentication for transmission | false |
+| transmission.config.auth.username | Username for transmission | "" |
+| transmission.config.auth.password | Password for transmission | "" |
 
 ## About the project
 

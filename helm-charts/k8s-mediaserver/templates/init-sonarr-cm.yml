@@ -6,7 +6,11 @@ data:
     </Config>
   init-sonarr.sh: |
     #!/bin/bash
-    cp -n /init-sonarr/config.xml /sonarr-config/config.xml
+    echo "### Initializing config ###"
+    if [ ! -f /sonarr-config/config.xml ]; then
+      cp -n /init-sonarr/config.xml /sonarr-config/config.xml
+      echo "### No configuration found, intialized with default settings ###"
+    fi
 kind: ConfigMap
 metadata:
   name: init-sonarr-cm

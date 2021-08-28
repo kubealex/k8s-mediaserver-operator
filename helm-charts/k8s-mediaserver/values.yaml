@@ -78,13 +78,22 @@ jackett:
 transmission:
   container: 
     nodeSelector: {}
-    port: 9091
+    port: 
+      utp: 9091
+      peer: 51413
   service:
-    type: ClusterIP
-    port: 9091
-    nodePort: 
-    # Defines an additional LB service, requires cloud provider service or MetalLB 
-    extraLBService: false 
+    utp:
+      type: ClusterIP
+      port: 9091
+      nodePort: 
+      # Defines an additional LB service, requires cloud provider service or MetalLB 
+      extraLBService: false
+    peer:
+      type: ClusterIP
+      port: 51413
+      nodePort:
+      # Defines an additional LB service, requires cloud provider service or MetalLB 
+      extraLBService: false
   ingress:
     enabled: true
     annotations: {}
@@ -92,7 +101,12 @@ transmission:
     tls:
       enabled: false
       secretName: ""
-
+  config:
+    auth: 
+      enabled: false
+      username: ""
+      password: ""
+      
 plex:
   claim: "CHANGEME"
   replicaCount: 1
