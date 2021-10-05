@@ -50,7 +50,7 @@ spec:
       protocol: UDP
       name: trans-peer-udp
 {{ if eq .Values.transmission.service.peer.type "NodePort" }}
-      nodePort: {{ .Values.transmission.service.peer.nodePort }}
+      nodePort: {{ .Values.transmission.service.peer.nodePortUDP }}
 {{ end }}
   selector:
     app: transmission

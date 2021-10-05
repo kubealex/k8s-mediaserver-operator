@@ -92,6 +92,7 @@ transmission:
       type: ClusterIP
       port: 51413
       nodePort:
+      nodePortUDP: 
       # Defines an additional LB service, requires cloud provider service or MetalLB 
       extraLBService: false
   ingress:
