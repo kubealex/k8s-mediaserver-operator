@@ -153,6 +153,7 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | transmission.service.peer.type | The kind of Service (ClusterIP/NodePort/LoadBalancer) for peer port | ClusterIP |
 | transmission.service.peer.port | The port assigned to the service for peer port | 51413 |
 | transmission.service.peer.nodePort | In case of service.type NodePort, the nodePort to use for peer port | "" |
+| transmission.service.peer.nodePortUDP | In case of service.type NodePort, the nodePort to use for peer port UDP service | "" |
 | transmission.service.peer.extraLBService | If true, creates an additional LoadBalancer service with '-lb' suffix (requires a cloud provider or metalLB) | false | 
 | transmission.ingress.enabled | If true, creates the ingress resource for the application | true |
 | transmission.ingress.annotations | Additional field for annotations, if needed | {} |

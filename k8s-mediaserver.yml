@@ -103,6 +103,7 @@ spec:
       peer:
         extraLBService: false
         nodePort: null
+        nodePortUDP: null
         port: 51413
         type: ClusterIP
     config:
