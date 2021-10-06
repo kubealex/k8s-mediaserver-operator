@@ -39,7 +39,7 @@ AMD/Intel:
 
     kubectl apply -f k8s-mediaserver-operator.yml
 
-ARM: 
+ARM - Raspberry Pi: 
 
     kubectl apply -f k8s-mediaserver-operator-arm64.yml
 
