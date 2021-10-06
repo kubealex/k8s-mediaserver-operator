@@ -166,7 +166,8 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 
 ## About the project
 
-This project is intended as an exercise, and absolutely for fun. Don't use it to commit piracy. 
+This project is intended as an exercise, and absolutely for fun. 
+This is not intended to promote piracy. 
 
 Also feel free to contribute and extend it!
 
