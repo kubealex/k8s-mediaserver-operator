@@ -1,0 +1,173 @@
+{{- if .Values.sabnzbd.enabled -}}
+---
+### CONFIGMAP
+## APPLICATION
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sabnzbd-config
+data:
+  PGID: "{{ .Values.general.pgid }}"
+  PUID: "{{ .Values.general.puid }}"
+---
+### DEPLOYMENT
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sabnzbd
+  labels:
+    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "k8s-mediaserver.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "k8s-mediaserver.selectorLabels" . | nindent 8 }}
+        app: sabnzbd
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          envFrom:
+            - configMapRef:
+                name: sabnzbd-config
+          image: "docker.io/linuxserver/sabnzbd:{{ .Values.general.image_tag }}"
+          imagePullPolicy: Always
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.sabnzbd.container.port.http }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          ports:
+            - name: sabnzbd-http-port
+              containerPort: {{ .Values.sabnzbd.container.port.http }}
+              protocol: TCP
+            - name: sabnzbd-https-port
+              containerPort: {{ .Values.sabnzbd.container.port.https }}
+              protocol: TCP
+          volumeMounts:
+            - name: mediaserver-volume
+              mountPath: "/config"
+              subPath: "config/sabnzbd"
+            - name: mediaserver-volume
+              mountPath: "/downloads"
+              subPath: "downloads/sabnzbd/complete"
+            - name: mediaserver-volume
+              mountPath: "/incomplete-downloads"
+              subPath: "downloads/sabnzbd/incomplete"
+      volumes:
+        - name: mediaserver-volume
+          persistentVolumeClaim:
+            claimName: {{ .Values.general.storage.pvcName }}
+      {{- with .Values.general.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+### SERVICES
+apiVersion: v1
+kind: Service
+metadata:
+  name: sabnzbd
+  labels:
+    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.sabnzbd.service.http.type }}
+  ports:
+    - port: {{ .Values.sabnzbd.service.http.port }}
+      targetPort: {{ .Values.sabnzbd.container.port.http }}
+      protocol: TCP
+      name: sabnzbd-http-port
+{{ if eq .Values.sabnzbd.service.http.type "NodePort" }}
+      nodePort: {{ .Values.sabnzbd.service.http.nodePort }}
+{{ end }}
+  selector:
+    app: sabnzbd
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sabnzbd-https
+  labels:
+    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.sabnzbd.service.https.type }}
+  ports:
+    - port: {{ .Values.sabnzbd.service.https.port }}
+      targetPort: {{ .Values.sabnzbd.container.port.http }}
+      protocol: TCP
+      name: sabnzbd-https-port
+{{ if eq .Values.sabnzbd.service.http.type "NodePort" }}
+      nodePort: {{ .Values.sabnzbd.service.http.nodePort }}
+{{ end }}
+  selector:
+    app: sabnzbd
+---
+{{ if .Values.sabnzbd.service.extraLBService }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: sabnzbd-lb
+  labels:
+    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
+spec:
+  type: LoadBalancer
+  ports:
+    - port: {{ .Values.sabnzbd.service.http.port }}
+      targetPort: {{ .Values.sabnzbd.container.port.http }}
+      protocol: TCP
+      name: sabnzbd-http-port
+  selector:
+    app: sabnzbd
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sabnzbd-lb-https
+  labels:
+    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
+spec:
+  type: LoadBalancer
+  ports:
+    - port: {{ .Values.sabnzbd.service.https.port }}
+      targetPort: {{ .Values.sabnzbd.container.port.https }}
+      protocol: TCP
+      name: sabnzbd-https-port
+  selector:
+    app: sabnzbd
+{{ end }}
+---
+### INGRESS
+{{ if .Values.sabnzbd.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sabnzbd
+  labels:
+    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
+  {{- with .Values.sabnzbd.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+{{- if .Values.sabnzbd.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.general.ingress_host | quote }}
+      secretName: {{ .Values.sabnzbd.ingress.tls.secretName }}
+{{ end }}     
+  rules:
+    - host: {{ .Values.general.ingress_host | quote }}
+      http:
+        paths:
+          - path: {{ .Values.sabnzbd.ingress.path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: sabnzbd
+                port:
+                  number: {{ .Values.sabnzbd.service.http.port }}
+{{ end }}     
+{{ end }}

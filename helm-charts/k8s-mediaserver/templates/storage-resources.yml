@@ -13,3 +13,15 @@ spec:
     server: {{ .Values.general.storage.nfsServer }}
     path: {{ .Values.general.storage.nfsPath }}
 {{ end }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.general.storage.pvcName }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.general.storage.size }}
+  storageClassName: {{ .Values.general.storage.pvcStorageClass | quote }}

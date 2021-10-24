@@ -1,0 +1,136 @@
+{{ if .Values.plex.enabled }}
+---
+### CONFIGMAP
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: plex-config
+data:
+  PGID: "{{ .Values.general.pgid }}"
+  PUID: "{{ .Values.general.puid }}"
+  PLEX_CLAIM: {{ .Values.plex.claim }}
+---
+### DEPLOYMENT
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex
+  labels:
+    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.plex.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "k8s-mediaserver.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "k8s-mediaserver.selectorLabels" . | nindent 8 }}
+        app: plex
+    spec:
+      volumes:
+        - name: mediaserver-volume
+          persistentVolumeClaim:
+            claimName: {{ .Values.general.storage.pvcName }}
+      containers:
+        - name: {{ .Chart.Name }}
+          envFrom:
+            - configMapRef:
+                name: plex-config
+          image: "docker.io/linuxserver/plex:{{ .Values.general.image_tag }}"
+          imagePullPolicy: Always
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.plex.container.port }}
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          ports:
+            - name: plex-port
+              containerPort: {{ .Values.plex.container.port }}
+              protocol: TCP
+          volumeMounts:
+            - name: mediaserver-volume
+              mountPath: "/config"
+              subPath: "config/plex"
+            - name: mediaserver-volume
+              mountPath: "/movies"
+              subPath: "media/movies"
+            - name: mediaserver-volume
+              mountPath: "/tv"
+              subPath: "media/tv"
+      {{- with .Values.general.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+### SERVICE
+apiVersion: v1
+kind: Service
+metadata:
+  name: plex
+  labels:
+    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.plex.service.type }}
+  ports:
+    - port: {{ .Values.plex.service.port }}
+      targetPort: {{ .Values.plex.container.port }}
+      protocol: TCP
+      name: plex-port
+{{ if eq .Values.plex.service.type "NodePort" }}
+      nodePort: {{ .Values.plex.service.nodePort }}
+{{ end }}
+  selector:
+    app: plex
+
+---
+{{ if .Values.plex.service.extraLBService }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: plex-lb
+  labels:
+    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
+spec:
+  type: LoadBalancer
+  ports:
+    - port: {{ .Values.plex.service.port }}
+      targetPort: {{ .Values.plex.container.port }}
+      protocol: TCP
+      name: plex-port
+  selector:
+    app: plex
+{{ end }}
+---
+### INGRESS
+{{ if .Values.plex.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: plex
+  labels:
+    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
+  {{- with .Values.plex.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+{{- if .Values.plex.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.general.plex_ingress_host | quote }}
+      secretName: {{ .Values.plex.ingress.tls.secretName }}
+{{ end }}     
+  rules:
+    - host: {{ .Values.general.plex_ingress_host | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: plex
+                port:
+                  number: {{ .Values.plex.service.port }}
+{{ end }}     
+{{ end }}     
