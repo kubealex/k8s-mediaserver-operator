@@ -285,7 +285,7 @@ spec:
         - --metrics-bind-address=127.0.0.1:8080
         - --leader-elect
         - --leader-election-id=k8s-mediaserver-operator
-        image: quay.io/kubealex/k8s-mediaserver-operator:v0.4
+        image: quay.io/kubealex/k8s-mediaserver-operator:v0.4.1
         imagePullPolicy: Always
         livenessProbe:
           httpGet:

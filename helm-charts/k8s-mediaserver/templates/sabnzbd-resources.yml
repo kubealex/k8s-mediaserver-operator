@@ -41,10 +41,10 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 10
           ports:
-            - name: sabnzbd-http-port
+            - name: sabnzbd-http
               containerPort: {{ .Values.sabnzbd.container.port.http }}
               protocol: TCP
-            - name: sabnzbd-https-port
+            - name: sabnzbd-https
               containerPort: {{ .Values.sabnzbd.container.port.https }}
               protocol: TCP
           volumeMounts:
@@ -79,7 +79,7 @@ spec:
     - port: {{ .Values.sabnzbd.service.http.port }}
       targetPort: {{ .Values.sabnzbd.container.port.http }}
       protocol: TCP
-      name: sabnzbd-http-port
+      name: sabnzbd-http
 {{ if eq .Values.sabnzbd.service.http.type "NodePort" }}
       nodePort: {{ .Values.sabnzbd.service.http.nodePort }}
 {{ end }}
@@ -98,7 +98,7 @@ spec:
     - port: {{ .Values.sabnzbd.service.https.port }}
       targetPort: {{ .Values.sabnzbd.container.port.http }}
       protocol: TCP
-      name: sabnzbd-https-port
+      name: sabnzbd-https
 {{ if eq .Values.sabnzbd.service.http.type "NodePort" }}
       nodePort: {{ .Values.sabnzbd.service.http.nodePort }}
 {{ end }}
@@ -118,7 +118,7 @@ spec:
     - port: {{ .Values.sabnzbd.service.http.port }}
       targetPort: {{ .Values.sabnzbd.container.port.http }}
       protocol: TCP
-      name: sabnzbd-http-port
+      name: sabnzbd-http
   selector:
     app: sabnzbd
 ---
@@ -134,7 +134,7 @@ spec:
     - port: {{ .Values.sabnzbd.service.https.port }}
       targetPort: {{ .Values.sabnzbd.container.port.https }}
       protocol: TCP
-      name: sabnzbd-https-port
+      name: sabnzbd-https
   selector:
     app: sabnzbd
 {{ end }}
