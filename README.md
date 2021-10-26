@@ -14,7 +14,9 @@ The Custom Resource that is implemented, allows you to create a fully working an
 
 [Transmission](https://transmissionbt.com/ "Transmission") - A fast, easy and reliable torrent client.
 
-All the container images used by the operator are from [linuxserver](https://github.com/linuxserver) - [linuxserver.io](https://www.linuxserver.io/ "linuxserver.io")
+[Sabnzbd](https://sabnzbd.org/ "Sabnzbd) - A free and easy binary newsreader.
+
+All container images used by the operator are from [linuxserver](https://github.com/linuxserver) - [linuxserver.io](https://www.linuxserver.io/ "linuxserver.io")
 
 ## Introduction
 
@@ -144,8 +146,8 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 
 | Config path | Meaning | Default | 
 | ------------ | ------------ | ------------ |
-| transmission.container.port | The port in use by the container | 9091 | 
-| transmission.container.port | The port in use by the container for peer connection | 51413 | 
+| transmission.container.port.utp | The port in use by the container | 9091 | 
+| transmission.container.port.peer | The port in use by the container for peer connection | 51413 | 
 | transmission.service.utp.type | The kind of Service (ClusterIP/NodePort/LoadBalancer) for transmission itself | ClusterIP |
 | transmission.service.utp.port | The port assigned to the service for transmission itself | 9091 |
 | transmission.service.utp.nodePort | In case of service.type NodePort, the nodePort to use for transmission itself | "" |
@@ -163,6 +165,26 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | transmission.config.auth.enabled | Enables authentication for transmission | false |
 | transmission.config.auth.username | Username for transmission | "" |
 | transmission.config.auth.password | Password for transmission | "" |
+
+# Sabnzbd
+
+| Config path | Meaning | Default | 
+| ------------ | ------------ | ------------ |
+| sabnzbd.container.port.http | The port in use by the container | 8080 | 
+| sabnzbd.container.port.https | The port in use by the container for peer connection | 9090 | 
+| sabnzbd.service.http.type | The kind of Service (ClusterIP/NodePort/LoadBalancer) for sabnzbd itself | ClusterIP |
+| sabnzbd.service.http.port | The port assigned to the service for sabnzbd itself | 9091 |
+| sabnzbd.service.http.nodePort | In case of service.type NodePort, the nodePort to use for sabnzbd itself | "" |
+| sabnzbd.service.http.extraLBService | If true, creates an additional LoadBalancer service with '-lb' suffix (requires a cloud provider or metalLB) | false | 
+| sabnzbd.service.https.type | The kind of Service (ClusterIP/NodePort/LoadBalancer) for https port | ClusterIP |
+| sabnzbd.service.https.port | The port assigned to the service for peer port | 51413 |
+| sabnzbd.service.https.nodePort | In case of service.type NodePort, the nodePort to use for https port | "" |
+| sabnzbd.service.https.extraLBService | If true, creates an additional LoadBalancer service with '-lb' suffix (requires a cloud provider or metalLB) | false | 
+| sabnzbd.ingress.enabled | If true, creates the ingress resource for the application | true |
+| sabnzbd.ingress.annotations | Additional field for annotations, if needed | {} |
+| sabnzbd.ingress.path | The path where the application is exposed | /sabnzbd |
+| sabnzbd.ingress.tls.enabled | If true, tls is enabled | false |
+| sabnzbd.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress | "" |
 
 ## About the project
 
