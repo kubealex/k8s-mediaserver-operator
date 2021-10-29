@@ -105,7 +105,7 @@ spec:
   selector:
     app: sabnzbd
 ---
-{{ if .Values.sabnzbd.service.extraLBService }}
+{{ if .Values.sabnzbd.service.http.extraLBService }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -119,6 +119,23 @@ spec:
       targetPort: {{ .Values.sabnzbd.container.port.http }}
       protocol: TCP
       name: sabnzbd-http
+  selector:
+    app: sabnzbd
+---
+{{ if .Values.sabnzbd.service.https.extraLBService }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: sabnzbd-lb-https
+  labels:
+    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
+spec:
+  type: LoadBalancer
+  ports:
+    - port: {{ .Values.sabnzbd.service.https.port }}
+      targetPort: {{ .Values.sabnzbd.container.port.https }}
+      protocol: TCP
+      name: sabnzbd-https
   selector:
     app: sabnzbd
 ---
