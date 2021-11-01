@@ -84,23 +84,25 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 
 | Config path | Meaning | Default | 
 | ------------ | ------------ | ------------ |
-|plex.claim | **IMPORTANT** Token from your account, needed to claim the server | CHANGEME |
-|plex.replicaCount | Number of replicas serving plex | 1 | 
-|plex.container.port | The port in use by the container | 32400 | 
-|plex.service.type | The kind of Service (ClusterIP/NodePort/LoadBalancer) | ClusterIP |
-|plex.service.port | The port assigned to the service | 32400 |
-|plex.service.nodePort | In case of service.type NodePort, the nodePort to use | "" |
-|plex.service.extraLBService | If true, creates an additional LoadBalancer service with '-lb' suffix (requires a cloud provider or metalLB) | false | 
-|plex.ingress.enabled | If true, creates the ingress resource for the application | true |
-|plex.ingress.annotations | Additional field for annotations, if needed | {} |
-|plex.ingress.path | The path where the application is exposed | /plex |
-|plex.ingress.tls.enabled | If true, tls is enabled | false |
-|plex.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress | "" |
+| plex.enabled | Flag if you want to enable plex | true | 
+| plex.claim | **IMPORTANT** Token from your account, needed to claim the server | CHANGEME |
+| plex.replicaCount | Number of replicas serving plex | 1 | 
+| plex.container.port | The port in use by the container | 32400 | 
+| plex.service.type | The kind of Service (ClusterIP/NodePort/LoadBalancer) | ClusterIP |
+| plex.service.port | The port assigned to the service | 32400 |
+| plex.service.nodePort | In case of service.type NodePort, the nodePort to use | "" |
+| plex.service.extraLBService | If true, creates an additional LoadBalancer service with '-lb' suffix (requires a cloud provider or metalLB) | false | 
+| plex.ingress.enabled | If true, creates the ingress resource for the application | true |
+| plex.ingress.annotations | Additional field for annotations, if needed | {} |
+| plex.ingress.path | The path where the application is exposed | /plex |
+| plex.ingress.tls.enabled | If true, tls is enabled | false |
+| plex.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress | "" |
 
 # Sonarr
 
 | Config path | Meaning | Default | 
 | ------------ | ------------ | ------------ |
+| sonarr.enabled | Flag if you want to enable sonarr | true | 
 | sonarr.container.port | The port in use by the container | 8989 | 
 | sonarr.service.type | The kind of Service (ClusterIP/NodePort/LoadBalancer) | ClusterIP |
 | sonarr.service.port | The port assigned to the service | 8989 |
@@ -116,6 +118,7 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 
 | Config path | Meaning | Default | 
 | ------------ | ------------ | ------------ |
+| radarr.enabled | Flag if you want to enable radarr | true | 
 | radarr.container.port | The port in use by the container | 7878 | 
 | radarr.service.type | The kind of Service (ClusterIP/NodePort/LoadBalancer) | ClusterIP |
 | radarr.service.port | The port assigned to the service | 7878 |
@@ -131,6 +134,7 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 
 | Config path | Meaning | Default | 
 | ------------ | ------------ | ------------ |
+| jackett.enabled | Flag if you want to enable jackett | true | 
 | jackett.container.port | The port in use by the container | 9117 | 
 | jackett.service.type | The kind of Service (ClusterIP/NodePort/LoadBalancer) | ClusterIP |
 | jackett.service.port | The port assigned to the service | 9117 |
@@ -146,6 +150,7 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 
 | Config path | Meaning | Default | 
 | ------------ | ------------ | ------------ |
+| transmission.enabled | Flag if you want to enable transmission | true | 
 | transmission.container.port.utp | The port in use by the container | 9091 | 
 | transmission.container.port.peer | The port in use by the container for peer connection | 51413 | 
 | transmission.service.utp.type | The kind of Service (ClusterIP/NodePort/LoadBalancer) for transmission itself | ClusterIP |
@@ -170,6 +175,7 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 
 | Config path | Meaning | Default | 
 | ------------ | ------------ | ------------ |
+| sabnzbd.enabled | Flag if you want to enable sabnzbd | true | 
 | sabnzbd.container.port.http | The port in use by the container | 8080 | 
 | sabnzbd.container.port.https | The port in use by the container for peer connection | 9090 | 
 | sabnzbd.service.http.type | The kind of Service (ClusterIP/NodePort/LoadBalancer) for sabnzbd itself | ClusterIP |
