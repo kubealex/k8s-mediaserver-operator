@@ -14,7 +14,7 @@ The Custom Resource that is implemented, allows you to create a fully working an
 
 [Transmission](https://transmissionbt.com/ "Transmission") - A fast, easy and reliable torrent client.
 
-[Sabnzbd](https://sabnzbd.org/ "Sabnzbd) - A free and easy binary newsreader.
+[Sabnzbd](https://sabnzbd.org/ "Sabnzbd") - A free and easy binary newsreader.
 
 All container images used by the operator are from [linuxserver](https://github.com/linuxserver) - [linuxserver.io](https://www.linuxserver.io/ "linuxserver.io")
 
