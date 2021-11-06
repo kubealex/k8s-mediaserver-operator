@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: plex-config
-data:
-  PGID: "{{ .Values.general.pgid }}"
-  PUID: "{{ .Values.general.puid }}"
-  PLEX_CLAIM: {{ .Values.plex.claim }}

@@ -136,6 +136,7 @@ rules:
   - configmaps
   - persistentvolumeclaims
   - services
+  - persistentvolumes
   verbs:
   - '*'
 - apiGroups:
@@ -284,7 +285,7 @@ spec:
         - --health-probe-bind-address=:8081
         - --metrics-addr=127.0.0.1:8080
         - --leader-election-id=k8s-mediaserver-operator
-        image: quay.io/kubealex/k8s-mediaserver-operator:v0.4-arm64
+        image: quay.io/kubealex/k8s-mediaserver-operator:v0.5-arm64
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
