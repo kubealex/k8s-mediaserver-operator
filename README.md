@@ -18,6 +18,8 @@ The Custom Resource that is implemented, allows you to create a fully working an
 
 All container images used by the operator are from [linuxserver](https://github.com/linuxserver) - [linuxserver.io](https://www.linuxserver.io/ "linuxserver.io")
 
+Each of the components can be **enabled** or **disabled** if you already have something in place in your lab!
+
 ## Introduction
 
 I started working on this project because I was tired of using the 'containerized' version with docker/podman-compose, and I wanted to experiment a bit both with helm and operators.
