@@ -53,7 +53,6 @@ spec:
       tls:
         enabled: false
         secretName: ""
-        
   jackett:
     enabled: true
     container: 
