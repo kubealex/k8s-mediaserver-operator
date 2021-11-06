@@ -4,7 +4,7 @@ metadata:
   annotations:
     alm-examples: '[]'
     capabilities: Basic Install
-  name: k8s-mediaserver-operator.v0.0.5
+  name: k8s-mediaserver-operator.v0.5
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
