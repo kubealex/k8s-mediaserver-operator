@@ -33,7 +33,8 @@ The operator and the CR are already configured with some defaults settings to ma
 All you need is:
 
 - A namespace where you want to put your CR and all the pods that will spawn
-- Being able to provision an RWX PV where to store configurations, downloads, and all related stuff (suggested > 200GB). PV could be created manually and/or dynamically provisioned.
+- Being able to provision an RWX PV where to store configurations, downloads, and all related stuff (suggested > 200GB). 
+Persistent Volume **or** StorageClasses for dynamically provisioned volumes are **REQUIRED**
 
 First install the CRD and the operator:
 
