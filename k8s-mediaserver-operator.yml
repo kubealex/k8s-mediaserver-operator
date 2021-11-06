@@ -136,7 +136,6 @@ rules:
   - configmaps
   - persistentvolumeclaims
   - services
-  - persistentvolumes
   verbs:
   - '*'
 - apiGroups:

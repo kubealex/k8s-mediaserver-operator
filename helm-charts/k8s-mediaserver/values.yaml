@@ -10,14 +10,11 @@ general:
   puid: 1000
   #GID to run the process with
   pgid: 1000
-  #Name, size and eventual SC of needed PVC
+  #Name, size and SC of needed PVC
   storage:
     pvcName: mediaserver-pvc
     size: 5Gi
     pvcStorageClass: []
-    nfs: false 
-    nfsServer: 
-    nfsPath: 
 
 sonarr:
   enabled: true

@@ -73,9 +73,6 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | general.pgid | The GID for the process | 1000 |
 | general.puid | The UID for the process | 1000 |
 | general.nodeSelector | Node Selector for all the pods | {} |
-| general.storage.nfs  | Specifies if the PV should be configured as a NFS export | false |
-| general.storage.nfsPath  | If PV type is NFS, specifies the path of the export | "" |
-| general.storage.nfsServer  | If PV type is NFS, specifies the server exporting the volume | "" |
 | general.storage.pvcName  | Name of the persistenVolumeClaim configured in deployments | mediaserver-pvc |
 | general.storage.pvcStorageClass  | Specifies a storageClass for the PVC | {} |
 | general.storage.size | Size of the persistenVolume | 50Gi |

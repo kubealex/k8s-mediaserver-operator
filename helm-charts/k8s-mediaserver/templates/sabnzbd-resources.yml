@@ -121,6 +121,7 @@ spec:
       name: sabnzbd-http
   selector:
     app: sabnzbd
+{{ end }}
 ---
 {{ if .Values.sabnzbd.service.https.extraLBService }}
 apiVersion: v1
@@ -138,23 +139,7 @@ spec:
       name: sabnzbd-https
   selector:
     app: sabnzbd
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: sabnzbd-lb-https
-  labels:
-    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
-spec:
-  type: LoadBalancer
-  ports:
-    - port: {{ .Values.sabnzbd.service.https.port }}
-      targetPort: {{ .Values.sabnzbd.container.port.https }}
-      protocol: TCP
-      name: sabnzbd-https
-  selector:
-    app: sabnzbd
-{{ end }}
+    {{ end }}
 ---
 ### INGRESS
 {{ if .Values.sabnzbd.ingress.enabled }}
