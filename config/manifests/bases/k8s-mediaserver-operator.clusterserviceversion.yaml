@@ -4,7 +4,7 @@ metadata:
   annotations:
     alm-examples: '[]'
     capabilities: Basic Install
-  name: k8s-mediaserver-operator.v0.0.4
+  name: k8s-mediaserver-operator.v0.0.5
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -45,4 +45,4 @@ spec:
   provider:
     name: kubealex
     url: github.com/kubealex
-  version: 0.0.4
+  version: 0.5
