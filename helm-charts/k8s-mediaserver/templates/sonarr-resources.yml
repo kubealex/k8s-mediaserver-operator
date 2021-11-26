@@ -51,11 +51,11 @@ spec:
           image: docker.io/ubuntu:groovy
           command: ["/init-sonarr/init-sonarr.sh"]
           volumeMounts:
-            - mountPath: /init-sonarr
+            - mountPath: /init-sonarr 
               name: init-files-sonarr
             - mountPath: /sonarr-config
               name: mediaserver-volume
-              subPath: "config/sonarr"
+              subPath: "{{ .Values.general.storage.media.config }}/sonarr"
           securityContext:
             runAsUser: {{ .Values.general.puid }}
             runAsGroup: {{ .Values.general.pgid }}
@@ -75,16 +75,20 @@ spec:
             - name: sonarr-port
               containerPort: {{ .Values.sonarr.container.port }}
               protocol: TCP
-          volumeMounts:
+          volumeMounts: 
             - name: mediaserver-volume
               mountPath: "/config"
-              subPath: "config/sonarr"
+              subPath: "{{ .Values.general.storage.media.config }}/sonarr"
             - name: mediaserver-volume
               mountPath: "/downloads"
-              subPath: "downloads/transmission"
+              subPath: "{{ .Values.general.storage.media.downloads }}"
             - name: mediaserver-volume
               mountPath: "/tv"
-              subPath: "media/tv"
+              subPath: "{{ .Values.general.storage.media.tv }}"
+          {{- with .Values.sonarr.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
       volumes:
         - name: mediaserver-volume
           persistentVolumeClaim:

@@ -119,10 +119,10 @@ spec:
           command: ["/init-transmission/init-transmission.sh"]
           volumeMounts:
             - mountPath: /init-transmission
-              name: init-files-transmission
+              name: init-files-transmission 
             - mountPath: /transmission-config
               name: mediaserver-volume
-              subPath: "config/transmission"
+              subPath: "{{ .Values.general.storage.media.config }}/transmission"
           securityContext:
             runAsUser: {{ .Values.general.puid }}
             runAsGroup: {{ .Values.general.pgid }}
@@ -148,13 +148,17 @@ spec:
             - name: trans-peer-udp
               containerPort: {{ .Values.transmission.container.port.peer }}
               protocol: UDP
-          volumeMounts:
+          volumeMounts: 
             - name: mediaserver-volume
               mountPath: "/config"
-              subPath: "config/transmission"
+              subPath: "{{ .Values.general.storage.media.config }}/transmission"
             - name: mediaserver-volume
               mountPath: "/downloads"
-              subPath: "downloads/transmission"
+              subPath: "{{ .Values.general.storage.media.downloads }}"
+          {{- with .Values.transmission.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
       volumes:
         - name: mediaserver-volume
           persistentVolumeClaim:
