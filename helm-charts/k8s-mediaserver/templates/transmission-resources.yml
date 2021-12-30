@@ -122,7 +122,7 @@ spec:
               name: init-files-transmission 
             - mountPath: /transmission-config
               name: mediaserver-volume
-              subPath: "{{ .Values.general.storage.media.config }}/transmission"
+              subPath: "{{ .Values.general.storage.subPaths.config }}/transmission"
           securityContext:
             runAsUser: {{ .Values.general.puid }}
             runAsGroup: {{ .Values.general.pgid }}

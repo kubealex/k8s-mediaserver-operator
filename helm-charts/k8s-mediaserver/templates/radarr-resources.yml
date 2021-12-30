@@ -56,7 +56,7 @@ spec:
               name: init-files-radarr 
             - mountPath: /radarr-config
               name: mediaserver-volume
-              subPath: "{{ .Values.general.storage.media.config }}/radarr"
+              subPath: "{{ .Values.general.storage.subPaths.config }}/radarr"
           securityContext:
             runAsUser: {{ .Values.general.puid }}
             runAsGroup: {{ .Values.general.pgid }}

@@ -55,7 +55,7 @@ spec:
               name: init-files-sonarr
             - mountPath: /sonarr-config
               name: mediaserver-volume
-              subPath: "{{ .Values.general.storage.media.config }}/sonarr"
+              subPath: "{{ .Values.general.storage.subPaths.config }}/sonarr"
           securityContext:
             runAsUser: {{ .Values.general.puid }}
             runAsGroup: {{ .Values.general.pgid }}
