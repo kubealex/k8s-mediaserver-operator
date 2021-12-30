@@ -12,7 +12,7 @@ spec:
     storage:
       pvcName: mediaserver-pvc
       size: 5Gi
-      pvcStorageClass: []
+      pvcStorageClass: ""
       subPaths:
         tv: media/tv
         movies: media/movies
@@ -20,7 +20,7 @@ spec:
         sabnzbd: downloads/sabnzbd
         config: config        
   sonarr:
-    enabled: false
+    enabled: true
     container: 
       nodeSelector: {}
       port: 8989
@@ -38,7 +38,7 @@ spec:
         secretName: ""
 
   radarr:
-    enabled: false
+    enabled: true
     container: 
       nodeSelector: {}
       port: 7878
@@ -56,7 +56,7 @@ spec:
         secretName: ""
         
   jackett:
-    enabled: false
+    enabled: true
     container: 
       nodeSelector: {}
       port: 9117
@@ -132,7 +132,7 @@ spec:
         secretName: ""
 
   plex:
-    enabled: false
+    enabled: true
     claim: "CHANGEME"
     replicaCount: 1
     container: 
