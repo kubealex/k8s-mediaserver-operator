@@ -77,7 +77,7 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | general.puid | The UID for the process | 1000 |
 | general.nodeSelector | Node Selector for all the pods | {} |
 | general.storage.pvcName  | Name of the persistenVolumeClaim configured in deployments | mediaserver-pvc |
-| general.storage.pvcStorageClass  | Specifies a storageClass for the PVC | {} |
+| general.storage.pvcStorageClass  | Specifies a storageClass for the PVC | "" |
 | general.storage.size | Size of the persistenVolume | 50Gi |
 | general.storage.subPaths.tv | Default subpath for tv series folder on used storage | media/tv |
 | general.storage.subPaths.movies | Default subpath for movies folder on used storage | media/movies |
