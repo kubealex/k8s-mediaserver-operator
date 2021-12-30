@@ -1,3 +1,8 @@
+{{- if .Values.transmission.enabled }}
+{{- if .Values.sabnzbd.enabled }}
+{{- fail "Transmission and Sabnzbd are mutually exclusive!" }}
+{{- end }}
+{{- end }}
 {{- if .Values.transmission.enabled -}}
 ---
 ### CONFIGMAP
