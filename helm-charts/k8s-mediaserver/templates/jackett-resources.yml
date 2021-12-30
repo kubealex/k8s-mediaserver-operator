@@ -78,7 +78,7 @@ spec:
           volumeMounts:
             - name: mediaserver-volume
               mountPath: "/config"
-              subPath: "{{ .Values.general.storage.media.config }}/jackett"
+              subPath: "{{ .Values.general.storage.subPaths.config }}/jackett"
           {{- with .Values.jackett.resources }}
           resources:
             {{- toYaml . | nindent 12 }}

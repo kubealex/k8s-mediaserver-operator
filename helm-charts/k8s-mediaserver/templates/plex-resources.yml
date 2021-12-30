@@ -51,13 +51,13 @@ spec:
           volumeMounts:
             - name: mediaserver-volume
               mountPath: "/config"
-              subPath: "{{ .Values.general.storage.media.config }}/plex"
+              subPath: "{{ .Values.general.storage.subPaths.config }}/plex"
             - name: mediaserver-volume
               mountPath: "/movies"
-              subPath: "{{ .Values.general.storage.media.movies }}"
+              subPath: "{{ .Values.general.storage.subPaths.movies }}"
             - name: mediaserver-volume
               mountPath: "/tv"
-              subPath: "{{ .Values.general.storage.media.tv }}"
+              subPath: "{{ .Values.general.storage.subPaths.tv }}"
           {{- with .Values.plex.resources }}
           resources:
             {{- toYaml . | nindent 12 }}

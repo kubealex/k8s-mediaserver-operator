@@ -79,13 +79,20 @@ spec:
           volumeMounts: 
             - name: mediaserver-volume
               mountPath: "/config"
-              subPath: "{{ .Values.general.storage.media.config }}/radarr"
+              subPath: "{{ .Values.general.storage.subPaths.config }}/radarr"
+{{ if .Values.transmission.enabled }}
             - name: mediaserver-volume
               mountPath: "/downloads"
-              subPath: "{{ .Values.general.storage.media.downloads }}"
+              subPath: "{{ .Values.general.storage.subPaths.transmission }}"
+{{ end }}
+{{ if .Values.sabnzbd.enabled }}
+            - name: mediaserver-volume
+              mountPath: "/downloads"
+              subPath: "{{ .Values.general.storage.subPaths.sabnzbd }}"
+{{ end }}
             - name: mediaserver-volume
               mountPath: "/movies"
-              subPath: "{{ .Values.general.storage.media.movies }}"
+              subPath: "{{ .Values.general.storage.subPaths.movies }}"
           {{- with .Values.radarr.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
