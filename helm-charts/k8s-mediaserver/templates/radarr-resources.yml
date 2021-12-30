@@ -1,3 +1,8 @@
+{{- if .Values.sabnzbd.enabled }}
+{{- if .Values.transmission.enabled }}
+{{- fail "Transmission and Sabnzbd are mutually exclusive!" }}
+{{- end }}
+{{- end }}
 {{ if .Values.radarr.enabled }}
 ---
 ### CONFIGMAP
@@ -53,10 +58,10 @@ spec:
           command: ["/init-radarr/init-radarr.sh"]
           volumeMounts:
             - mountPath: /init-radarr
-              name: init-files-radarr
+              name: init-files-radarr 
             - mountPath: /radarr-config
               name: mediaserver-volume
-              subPath: "config/radarr"
+              subPath: "{{ .Values.general.storage.subPaths.config }}/radarr"
           securityContext:
             runAsUser: {{ .Values.general.puid }}
             runAsGroup: {{ .Values.general.pgid }}
@@ -76,16 +81,27 @@ spec:
             - name: radarr-port
               containerPort: {{ .Values.radarr.container.port }}
               protocol: TCP
-          volumeMounts:
+          volumeMounts: 
             - name: mediaserver-volume
               mountPath: "/config"
-              subPath: "config/radarr"
+              subPath: "{{ .Values.general.storage.subPaths.config }}/radarr"
+{{ if .Values.transmission.enabled }}
             - name: mediaserver-volume
               mountPath: "/downloads"
-              subPath: "downloads/transmission"
+              subPath: "{{ .Values.general.storage.subPaths.transmission }}"
+{{ end }}
+{{ if .Values.sabnzbd.enabled }}
+            - name: mediaserver-volume
+              mountPath: "/downloads"
+              subPath: "{{ .Values.general.storage.subPaths.sabnzbd }}"
+{{ end }}
             - name: mediaserver-volume
               mountPath: "/movies"
-              subPath: "media/movies"
+              subPath: "{{ .Values.general.storage.subPaths.movies }}"
+          {{- with .Values.radarr.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
       volumes:
         - name: mediaserver-volume
           persistentVolumeClaim:

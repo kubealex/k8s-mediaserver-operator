@@ -15,6 +15,13 @@ general:
     pvcName: mediaserver-pvc
     size: 5Gi
     pvcStorageClass: []
+    # the path starting from the top level of the pv you're passing. If your share is server.local/share/, then tv is server.local/share/media/tv
+    subPaths:
+      tv: media/tv
+      movies: media/movies
+      transmission: downloads/transmission
+      sabnzbd: downloads/sabnzbd
+      config: config
 
 sonarr:
   enabled: true
@@ -35,6 +42,7 @@ sonarr:
     tls:
       enabled: false
       secretName: ""
+  resources: {}
 
 radarr:
   enabled: true
@@ -55,6 +63,7 @@ radarr:
     tls:
       enabled: false
       secretName: ""
+  resources: {}
   
 jackett:
   enabled: true
@@ -74,6 +83,7 @@ jackett:
     tls:
       enabled: false
       secretName: ""
+  resources: {}
   
 transmission:
   enabled: true
@@ -108,6 +118,7 @@ transmission:
       enabled: false
       username: ""
       password: ""
+  resources: {}
 
 sabnzbd:
   enabled: true
@@ -136,6 +147,7 @@ sabnzbd:
     tls:
       enabled: false
       secretName: ""
+  resources: {}
 
 plex:
   enabled: true
@@ -156,5 +168,10 @@ plex:
     tls:
       enabled: false
       secretName: ""
-
-
+  resources: {}
+  #  limits:
+  #    cpu: 100m
+  #    memory: 100Mi
+  #  requests:
+  #    cpu: 100m
+  #    memory: 100Mi

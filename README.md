@@ -79,6 +79,11 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | general.storage.pvcName  | Name of the persistenVolumeClaim configured in deployments | mediaserver-pvc |
 | general.storage.pvcStorageClass  | Specifies a storageClass for the PVC | {} |
 | general.storage.size | Size of the persistenVolume | 50Gi |
+| general.storage.subPaths.tv | Default subpath for tv series folder on used storage | media/tv |
+| general.storage.subPaths.movies | Default subpath for movies folder on used storage | media/movies |
+| general.storage.subPaths.transmission | Default subpath for transmission downloads on used storage | downloads/transmission |
+| general.storage.subPaths.sabnzbd | Default subpath for sabnzbd downloads on used storage | downloads/sabnzbd |
+| general.storage.subPaths.config | Default subpath for all config files on used storage | config |
 
 # Plex
 

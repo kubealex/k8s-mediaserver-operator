@@ -3,7 +3,6 @@ kind: K8SMediaserver
 metadata:
   name: k8smediaserver-sample
 spec:
-  # Default values copied from <project_dir>/helm-charts/k8s-mediaserver/values.yaml
   general: 
     ingress_host: k8s-test-loadbalancer.k8s.test
     plex_ingress_host: k8s-plex.k8s.test
@@ -14,10 +13,12 @@ spec:
       pvcName: mediaserver-pvc
       size: 5Gi
       pvcStorageClass: []
-      nfs: false 
-      nfsServer: 
-      nfsPath: 
-
+      subPaths:
+        tv: media/tv
+        movies: media/movies
+        transmission: downloads/transmission
+        sabnzbd: downloads/sabnzbd
+        config: config        
   sonarr:
     enabled: false
     container: 

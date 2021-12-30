@@ -1,3 +1,9 @@
+{{- if .Values.sabnzbd.enabled }}
+{{- if .Values.transmission.enabled }}
+{{- fail "Transmission and Sabnzbd are mutually exclusive!" }}
+{{- end }}
+{{- end }}
+
 {{- if .Values.sabnzbd.enabled -}}
 ---
 ### CONFIGMAP
@@ -50,13 +56,17 @@ spec:
           volumeMounts:
             - name: mediaserver-volume
               mountPath: "/config"
-              subPath: "config/sabnzbd"
+              subPath: "{{ .Values.general.storage.subPaths.config }}/sabnzbd"
             - name: mediaserver-volume
               mountPath: "/downloads"
-              subPath: "downloads/sabnzbd/complete"
+              subPath: "{{ .Values.general.storage.subPaths.sabnzbd }}/complete"
             - name: mediaserver-volume
               mountPath: "/incomplete-downloads"
-              subPath: "downloads/sabnzbd/incomplete"
+              subPath: "{{ .Values.general.storage.subPaths.sabnzbd }}/incomplete"
+          {{- with .Values.sabnzbd.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
       volumes:
         - name: mediaserver-volume
           persistentVolumeClaim:
