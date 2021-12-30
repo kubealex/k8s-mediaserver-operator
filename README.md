@@ -85,7 +85,6 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | general.storage.subPaths.sabnzbd | Default subpath for sabnzbd downloads on used storage | downloads/sabnzbd |
 | general.storage.subPaths.config | Default subpath for all config files on used storage | config |
 
-
 # Plex
 
 | Config path | Meaning | Default | 
