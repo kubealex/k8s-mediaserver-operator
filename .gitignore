@@ -12,3 +12,4 @@ kube-alex.yml
 *.swp
 *.swo
 *~
+kubeserver.yml
