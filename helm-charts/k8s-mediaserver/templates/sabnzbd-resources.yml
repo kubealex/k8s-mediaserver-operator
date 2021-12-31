@@ -53,10 +53,10 @@ spec:
               subPath: "{{ .Values.general.storage.subPaths.config }}/sabnzbd"
             - name: mediaserver-volume
               mountPath: "/downloads"
-              subPath: "{{ .Values.general.storage.subPaths.sabnzbd }}/complete"
+              subPath: "{{ .Values.general.storage.subPaths.downloads }}/{{ .Values.general.storage.subPaths.sabnzbd }}/complete"
             - name: mediaserver-volume
               mountPath: "/incomplete-downloads"
-              subPath: "{{ .Values.general.storage.subPaths.sabnzbd }}/incomplete"
+              subPath: "{{ .Values.general.storage.subPaths.downloads }}/{{ .Values.general.storage.subPaths.sabnzbd }}/incomplete"
           {{- with .Values.sabnzbd.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
