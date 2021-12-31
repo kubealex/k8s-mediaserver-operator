@@ -1,9 +1,3 @@
-{{- if .Values.sabnzbd.enabled }}
-{{- if .Values.transmission.enabled }}
-{{- fail "Transmission and Sabnzbd are mutually exclusive!" }}
-{{- end }}
-{{- end }}
-{{ if .Values.radarr.enabled }}
 ---
 ### CONFIGMAP
 ## INIT-CONTAINER
