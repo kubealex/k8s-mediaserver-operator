@@ -81,8 +81,9 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | general.storage.size | Size of the persistenVolume | 50Gi |
 | general.storage.subPaths.tv | Default subpath for tv series folder on used storage | media/tv |
 | general.storage.subPaths.movies | Default subpath for movies folder on used storage | media/movies |
-| general.storage.subPaths.transmission | Default subpath for transmission downloads on used storage | downloads/transmission |
-| general.storage.subPaths.sabnzbd | Default subpath for sabnzbd downloads on used storage | downloads/sabnzbd |
+| general.storage.subPaths.downloads | Default root path for downloads for both sabnzbd and transmission on used storage | downloads |
+| general.storage.subPaths.transmission | Default subpath for transmission downloads on used storage | general.storage.subPaths.downloads/transmission |
+| general.storage.subPaths.sabnzbd | Default subpath for sabnzbd downloads on used storage | general.storage.subPaths.downloads/sabnzbd |
 | general.storage.subPaths.config | Default subpath for all config files on used storage | config |
 
 # Plex

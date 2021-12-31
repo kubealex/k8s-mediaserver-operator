@@ -1,8 +1,3 @@
-{{- if .Values.transmission.enabled }}
-{{- if .Values.sabnzbd.enabled }}
-{{- fail "Transmission and Sabnzbd are mutually exclusive!" }}
-{{- end }}
-{{- end }}
 {{- if .Values.transmission.enabled -}}
 ---
 ### CONFIGMAP
@@ -159,7 +154,7 @@ spec:
               subPath: "{{ .Values.general.storage.subPaths.config }}/transmission"
             - name: mediaserver-volume
               mountPath: "/downloads"
-              subPath: "{{ .Values.general.storage.subPaths.downloads }}"
+              subPath: "{{ .Values.general.storage.subPaths.downloads }}/{{ .Values.general.storage.subPaths.transmission }}"
           {{- with .Values.transmission.resources }}
           resources:
             {{- toYaml . | nindent 12 }}

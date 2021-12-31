@@ -16,9 +16,10 @@ spec:
       subPaths:
         tv: media/tv
         movies: media/movies
-        transmission: downloads/transmission
-        sabnzbd: downloads/sabnzbd
-        config: config        
+        downloads: downloads    
+        transmission: transmission
+        sabnzbd: sabnzbd
+        config: config    
   sonarr:
     enabled: true
     container: 
@@ -110,7 +111,7 @@ spec:
     resources: {}
 
   sabnzbd:
-    enabled: false
+    enabled: true
     container: 
       nodeSelector: {}
       port: 
