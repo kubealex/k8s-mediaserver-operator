@@ -19,10 +19,10 @@ general:
     subPaths:
       tv: media/tv
       movies: media/movies
+      downloads: downloads
       transmission: downloads/transmission
       sabnzbd: downloads/sabnzbd
       config: config
-      downloads: downloads
 
 sonarr:
   enabled: true
