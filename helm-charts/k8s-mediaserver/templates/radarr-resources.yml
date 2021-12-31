@@ -1,3 +1,4 @@
+{{ if .Values.radarr.enabled }}
 ---
 ### CONFIGMAP
 ## INIT-CONTAINER
