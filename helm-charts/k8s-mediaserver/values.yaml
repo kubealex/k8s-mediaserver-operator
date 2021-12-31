@@ -20,8 +20,8 @@ general:
       tv: media/tv
       movies: media/movies
       downloads: downloads
-      transmission: downloads/transmission
-      sabnzbd: downloads/sabnzbd
+      transmission: transmission
+      sabnzbd: sabnzbd
       config: config
 
 sonarr:
