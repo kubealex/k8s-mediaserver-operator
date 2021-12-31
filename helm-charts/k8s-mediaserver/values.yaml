@@ -22,6 +22,7 @@ general:
       transmission: downloads/transmission
       sabnzbd: downloads/sabnzbd
       config: config
+      downloads: downloads
 
 sonarr:
   enabled: true
