@@ -4,7 +4,7 @@ metadata:
   name: k8smediaserver-sample
 spec:
   general: 
-    ingress_host: k8s-test-loadbalancer.k8s.test
+    ingress_host: k8s-mediaserver.k8s.test
     plex_ingress_host: k8s-plex.k8s.test
     image_tag: latest
     puid: 1000
