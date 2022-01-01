@@ -320,6 +320,7 @@ data:
 kind: ConfigMap
 metadata:
   name: init-sabnzbd-cm
+---
 ### CONFIGMAP
 ## APPLICATION
 apiVersion: v1
