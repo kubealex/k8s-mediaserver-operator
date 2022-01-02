@@ -47,7 +47,7 @@ data:
     api_key = 7a50bedb4f764603bab47212c7a16ec4
     nzb_key = c7378d3a9b024117baacb21de005b1a6
     permissions = ""
-    download_dir = /{{ .Values.general.storage.subPaths.downloads }}/{{ .Values.general.storage.subPaths.sabnzbd }}/incomplete-downloads
+    download_dir = /{{ .Values.general.storage.subPaths.downloads }}/{{ .Values.general.storage.subPaths.sabnzbd }}/incomplete
     download_free = ""
     complete_dir = /{{ .Values.general.storage.subPaths.downloads }}/{{ .Values.general.storage.subPaths.sabnzbd }}/complete
     complete_free = ""
