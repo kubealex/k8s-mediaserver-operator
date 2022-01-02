@@ -235,7 +235,7 @@ spec:
   selector:
     app: transmission
 ---
-{{ if .Values.transmission.service.extraLBService }}
+{{ if .Values.transmission.service.utp.extraLBService }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -252,6 +252,8 @@ spec:
   selector:
     app: transmission
 ---
+{{ end }}
+{{ if .Values.transmission.service.peer.extraLBService }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -262,7 +264,7 @@ spec:
   type: LoadBalancer
   ports:
     - port: {{ .Values.transmission.service.peer.port }}
-      targetPort: {{ .Values.transmission.container.peer.port }}
+      targetPort: {{ .Values.transmission.container.port.peer }}
       protocol: TCP
       name: trans-peer-tcp
   selector:
@@ -278,7 +280,7 @@ spec:
   type: LoadBalancer
   ports:
     - port: {{ .Values.transmission.service.peer.port }}
-      targetPort: {{ .Values.transmission.container.peer.port }}
+      targetPort: {{ .Values.transmission.container.port.peer }}
       protocol: UDP
       name: trans-peer-udp
   selector:
