@@ -3,33 +3,33 @@ kind: K8SMediaserver
 metadata:
   name: k8smediaserver-sample
 spec:
-  general: 
-    ingress_host: k8s-mediaserver.k8s.test
-    plex_ingress_host: k8s-plex.k8s.test
+  general:
+    ingress_host: media.10.100.102.50.nip.io
+    plex_ingress_host: plex.10.100.102.50.nip.io
     image_tag: latest
     puid: 1000
     pgid: 1000
     storage:
       pvcName: mediaserver-pvc
-      size: 5Gi
-      pvcStorageClass: ""
+      size: 80Gi
+      pvcStorageClass: "longhorn"
       subPaths:
         tv: media/tv
         movies: media/movies
-        downloads: downloads    
+        downloads: downloads
         transmission: transmission
         sabnzbd: sabnzbd
-        config: config    
+        config: config
   sonarr:
     enabled: true
-    container: 
+    container:
       nodeSelector: {}
       port: 8989
     service:
       type: ClusterIP
       port: 8989
-      nodePort: 
-      extraLBService: false 
+      nodePort:
+      extraLBService: false
     ingress:
       enabled: true
       annotations: {}
@@ -41,14 +41,14 @@ spec:
 
   radarr:
     enabled: true
-    container: 
+    container:
       nodeSelector: {}
       port: 7878
     service:
       type: ClusterIP
       port: 7878
-      nodePort: 
-      extraLBService: false 
+      nodePort:
+      extraLBService: false
     ingress:
       enabled: true
       annotations: {}
@@ -57,17 +57,17 @@ spec:
         enabled: false
         secretName: ""
     resources: {}
-      
+
   jackett:
     enabled: true
-    container: 
+    container:
       nodeSelector: {}
       port: 9117
     service:
       type: ClusterIP
       port: 9117
-      nodePort: 
-      extraLBService: false 
+      nodePort:
+      extraLBService: false
     ingress:
       enabled: true
       annotations: {}
@@ -76,25 +76,25 @@ spec:
         enabled: false
         secretName: ""
     resources: {}
-    
+
   transmission:
     enabled: true
-    container: 
+    container:
       nodeSelector: {}
-      port: 
+      port:
         utp: 9091
         peer: 51413
     service:
       utp:
         type: ClusterIP
         port: 9091
-        nodePort: 
+        nodePort:
         extraLBService: false
       peer:
         type: ClusterIP
         port: 51413
         nodePort:
-        nodePortUDP: 
+        nodePortUDP:
         extraLBService: false
     ingress:
       enabled: true
@@ -104,7 +104,7 @@ spec:
         enabled: false
         secretName: ""
     config:
-      auth: 
+      auth:
         enabled: false
         username: ""
         password: ""
@@ -112,16 +112,16 @@ spec:
 
   sabnzbd:
     enabled: true
-    container: 
+    container:
       nodeSelector: {}
-      port: 
+      port:
         http: 8080
         https: 9090
     service:
       http:
         type: ClusterIP
         port: 8080
-        nodePort: 
+        nodePort:
         extraLBService: false
       https:
         type: ClusterIP
@@ -141,14 +141,14 @@ spec:
     enabled: true
     claim: "CHANGEME"
     replicaCount: 1
-    container: 
+    container:
       nodeSelector: {}
       port: 32400
     service:
       type: ClusterIP
       port: 32400
-      nodePort: 
-      extraLBService: false 
+      nodePort:
+      extraLBService: false
     ingress:
       enabled: true
       annotations: {}
