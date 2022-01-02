@@ -10,8 +10,9 @@ general:
   puid: 1000
   #GID to run the process with
   pgid: 1000
-  #Name, size and SC of needed PVC
+  #Persistent storage selections and pathing
   storage:
+    customVolume: false  #set to true if not using a PVC (must provide volume below)
     pvcName: mediaserver-pvc
     size: 5Gi
     pvcStorageClass: []
@@ -23,6 +24,9 @@ general:
       transmission: transmission
       sabnzbd: sabnzbd
       config: config
+    volumes: {}
+    #  hostPath:
+    #    path: /mnt/share
 
 sonarr:
   enabled: true

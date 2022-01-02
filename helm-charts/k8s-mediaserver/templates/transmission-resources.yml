@@ -26,13 +26,13 @@ data:
         "blocklist-url": "http://www.example.com/blocklist",
         "cache-size-mb": 4,
         "dht-enabled": true,
-        "download-dir": "/downloads/complete",
+        "download-dir": "/{{ .Values.general.storage.subPaths.downloads }}/{{ .Values.general.storage.subPaths.transmission }}/complete",
         "download-queue-enabled": true,
         "download-queue-size": 5,
         "encryption": 1,
         "idle-seeding-limit": 30,
         "idle-seeding-limit-enabled": false,
-        "incomplete-dir": "/downloads/incomplete",
+        "incomplete-dir": "/{{ .Values.general.storage.subPaths.downloads }}/{{ .Values.general.storage.subPaths.transmission }}/incomplete",
         "incomplete-dir-enabled": true,
         "lpd-enabled": false,
         "message-level": 2,
@@ -154,15 +154,20 @@ spec:
               subPath: "{{ .Values.general.storage.subPaths.config }}/transmission"
             - name: mediaserver-volume
               mountPath: "/downloads"
-              subPath: "{{ .Values.general.storage.subPaths.downloads }}/{{ .Values.general.storage.subPaths.transmission }}"
+              subPath: "{{ .Values.general.storage.subPaths.downloads }}"
           {{- with .Values.transmission.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
+        {{ if not .Values.general.storage.customVolume }}
         - name: mediaserver-volume
           persistentVolumeClaim:
             claimName: {{ .Values.general.storage.pvcName }}
+        {{ else }}
+        - name: mediaserver-volume
+          {{- toYaml .Values.general.storage.volumes | nindent 10 }}
+        {{ end }}
         - name: init-files-transmission
           configMap:
             defaultMode: 493
@@ -230,7 +235,7 @@ spec:
   selector:
     app: transmission
 ---
-{{ if .Values.transmission.service.extraLBService }}
+{{ if .Values.transmission.service.utp.extraLBService }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -247,6 +252,8 @@ spec:
   selector:
     app: transmission
 ---
+{{ end }}
+{{ if .Values.transmission.service.peer.extraLBService }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -257,7 +264,7 @@ spec:
   type: LoadBalancer
   ports:
     - port: {{ .Values.transmission.service.peer.port }}
-      targetPort: {{ .Values.transmission.container.peer.port }}
+      targetPort: {{ .Values.transmission.container.port.peer }}
       protocol: TCP
       name: trans-peer-tcp
   selector:
@@ -273,7 +280,7 @@ spec:
   type: LoadBalancer
   ports:
     - port: {{ .Values.transmission.service.peer.port }}
-      targetPort: {{ .Values.transmission.container.peer.port }}
+      targetPort: {{ .Values.transmission.container.port.peer }}
       protocol: UDP
       name: trans-peer-udp
   selector:

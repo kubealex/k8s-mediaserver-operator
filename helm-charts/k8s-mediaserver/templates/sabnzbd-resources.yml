@@ -47,7 +47,7 @@ data:
     api_key = 7a50bedb4f764603bab47212c7a16ec4
     nzb_key = c7378d3a9b024117baacb21de005b1a6
     permissions = ""
-    download_dir = /{{ .Values.general.storage.subPaths.downloads }}/{{ .Values.general.storage.subPaths.sabnzbd }}/incomplete-downloads
+    download_dir = /{{ .Values.general.storage.subPaths.downloads }}/{{ .Values.general.storage.subPaths.sabnzbd }}/incomplete
     download_free = ""
     complete_dir = /{{ .Values.general.storage.subPaths.downloads }}/{{ .Values.general.storage.subPaths.sabnzbd }}/complete
     complete_free = ""
@@ -387,18 +387,20 @@ spec:
               subPath: "{{ .Values.general.storage.subPaths.config }}/sabnzbd"
             - name: mediaserver-volume
               mountPath: "/downloads"
-              subPath: "{{ .Values.general.storage.subPaths.downloads }}/{{ .Values.general.storage.subPaths.sabnzbd }}/complete"
-            - name: mediaserver-volume
-              mountPath: "/incomplete-downloads"
-              subPath: "{{ .Values.general.storage.subPaths.downloads }}/{{ .Values.general.storage.subPaths.sabnzbd }}/incomplete"
+              subPath: "{{ .Values.general.storage.subPaths.downloads }}"
           {{- with .Values.sabnzbd.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
+        {{ if not .Values.general.storage.customVolume }}
         - name: mediaserver-volume
           persistentVolumeClaim:
             claimName: {{ .Values.general.storage.pvcName }}
+        {{ else }}
+        - name: mediaserver-volume
+          {{- toYaml .Values.general.storage.volumes | nindent 10 }}
+        {{ end }}
         - name: init-files-sabnzbd
           configMap:
             defaultMode: 493
