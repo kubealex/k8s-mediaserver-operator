@@ -76,6 +76,7 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | general.pgid | The GID for the process | 1000 |
 | general.puid | The UID for the process | 1000 |
 | general.nodeSelector | Node Selector for all the pods | {} |
+| general.storage.customVolume | Flag if you want to supply your own volume and not use a PVC | false |
 | general.storage.pvcName  | Name of the persistenVolumeClaim configured in deployments | mediaserver-pvc |
 | general.storage.pvcStorageClass  | Specifies a storageClass for the PVC | "" |
 | general.storage.size | Size of the persistenVolume | 50Gi |
@@ -85,6 +86,7 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | general.storage.subPaths.transmission | Default subpath for transmission downloads on used storage | general.storage.subPaths.downloads/transmission |
 | general.storage.subPaths.sabnzbd | Default subpath for sabnzbd downloads on used storage | general.storage.subPaths.downloads/sabnzbd |
 | general.storage.subPaths.config | Default subpath for all config files on used storage | config |
+| general.storage.volumes | Supply custom volume to be mounted for all services | {} |
 
 # Plex
 
