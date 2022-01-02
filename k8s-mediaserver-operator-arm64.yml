@@ -3,7 +3,7 @@ kind: Namespace
 metadata:
   labels:
     control-plane: controller-manager
-  name: k8s-mediaserver-operator-system
+  name: media
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -53,13 +53,13 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: k8s-mediaserver-operator-controller-manager
-  namespace: k8s-mediaserver-operator-system
+  namespace: media
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: k8s-mediaserver-operator-leader-election-role
-  namespace: k8s-mediaserver-operator-system
+  namespace: media
 rules:
 - apiGroups:
   - ""
@@ -184,7 +184,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: k8s-mediaserver-operator-leader-election-rolebinding
-  namespace: k8s-mediaserver-operator-system
+  namespace: media
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -192,7 +192,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: k8s-mediaserver-operator-controller-manager
-  namespace: k8s-mediaserver-operator-system
+  namespace: media
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -205,7 +205,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: k8s-mediaserver-operator-controller-manager
-  namespace: k8s-mediaserver-operator-system
+  namespace: media
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -218,7 +218,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: k8s-mediaserver-operator-controller-manager
-  namespace: k8s-mediaserver-operator-system
+  namespace: media
 ---
 apiVersion: v1
 data:
@@ -236,7 +236,7 @@ data:
 kind: ConfigMap
 metadata:
   name: k8s-mediaserver-operator-manager-config
-  namespace: k8s-mediaserver-operator-system
+  namespace: media
 ---
 apiVersion: v1
 kind: Service
@@ -244,7 +244,7 @@ metadata:
   labels:
     control-plane: controller-manager
   name: k8s-mediaserver-operator-controller-manager-metrics-service
-  namespace: k8s-mediaserver-operator-system
+  namespace: media
 spec:
   ports:
   - name: https
@@ -259,7 +259,7 @@ metadata:
   labels:
     control-plane: controller-manager
   name: k8s-mediaserver-operator-controller-manager
-  namespace: k8s-mediaserver-operator-system
+  namespace: media
 spec:
   replicas: 1
   selector:
