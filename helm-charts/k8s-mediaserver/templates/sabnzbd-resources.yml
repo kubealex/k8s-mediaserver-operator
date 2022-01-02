@@ -396,9 +396,14 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
+        {{ if not .Values.general.storage.customVolume }}
         - name: mediaserver-volume
           persistentVolumeClaim:
             claimName: {{ .Values.general.storage.pvcName }}
+        {{ else }}
+        - name: mediaserver-volume
+          {{- toYaml .Values.general.storage.volumes | nindent 10 }}
+        {{ end }}
         - name: init-files-sabnzbd
           configMap:
             defaultMode: 493
