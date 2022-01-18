@@ -105,6 +105,7 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | plex.ingress.path | The path where the application is exposed | /plex |
 | plex.ingress.tls.enabled | If true, tls is enabled | false |
 | plex.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress | "" |
+| plex.resources | Limits and Requests for the container | {} | 
 
 # Sonarr
 
@@ -120,7 +121,8 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | sonarr.ingress.annotations | Additional field for annotations, if needed | {} |
 | sonarr.ingress.path | The path where the application is exposed | /sonarr |
 | sonarr.ingress.tls.enabled | If true, tls is enabled | false |
-| sonarr.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress | "" |
+| sonarr.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress | "" | 
+| sonarr.resources | Limits and Requests for the container | {} |
 
 # Radarr
 
@@ -136,7 +138,8 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | radarr.ingress.annotations | Additional field for annotations, if needed | {} |
 | radarr.ingress.path | The path where the application is exposed | /radarr  |
 | radarr.ingress.tls.enabled | If true, tls is enabled | false |
-| radarr.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress | "" |
+| radarr.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress | "" | 
+| radarr.resources | Limits and Requests for the container | {} |
 
 # Jackett
 
@@ -152,7 +155,8 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | jackett.ingress.annotations | Additional field for annotations, if needed | {} |
 | jackett.ingress.path | The path where the application is exposed | /jackett |
 | jackett.ingress.tls.enabled | If true, tls is enabled | false |
-| jackett.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress | "" |
+| jackett.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress | "" | 
+| jackett.resources | Limits and Requests for the container | {} |
 
 # Transmission
 
@@ -177,7 +181,8 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | transmission.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress | "" |
 | transmission.config.auth.enabled | Enables authentication for transmission | false |
 | transmission.config.auth.username | Username for transmission | "" |
-| transmission.config.auth.password | Password for transmission | "" |
+| transmission.config.auth.password | Password for transmission | "" | 
+| transmission.resources | Limits and Requests for the container | {} |
 
 # Sabnzbd
 
@@ -198,7 +203,8 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | sabnzbd.ingress.annotations | Additional field for annotations, if needed | {} |
 | sabnzbd.ingress.path | The path where the application is exposed | /sabnzbd |
 | sabnzbd.ingress.tls.enabled | If true, tls is enabled | false |
-| sabnzbd.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress | "" |
+| sabnzbd.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress | "" | 
+| sabnzbd.resources | Limits and Requests for the container | {} |
 
 ## About the project
 
