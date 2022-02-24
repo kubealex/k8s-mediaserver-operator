@@ -10,6 +10,7 @@ spec:
     puid: 1000
     pgid: 1000
     storage:
+      customVolume: false
       pvcName: mediaserver-pvc
       size: 5Gi
       pvcStorageClass: ""
@@ -19,7 +20,8 @@ spec:
         downloads: downloads    
         transmission: transmission
         sabnzbd: sabnzbd
-        config: config    
+        config: config  
+      volumes: {}
   sonarr:
     enabled: true
     container: 
