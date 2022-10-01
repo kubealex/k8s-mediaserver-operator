@@ -87,6 +87,7 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | general.storage.subPaths.sabnzbd | Default subpath for sabnzbd downloads on used storage | general.storage.subPaths.downloads/sabnzbd |
 | general.storage.subPaths.config | Default subpath for all config files on used storage | config |
 | general.storage.volumes | Supply custom volume to be mounted for all services | {} |
+| general.ingress.ingressClassName | Reference an IngressClass resource that contains additional Ingress configuration | "" |
 
 # Plex
 
