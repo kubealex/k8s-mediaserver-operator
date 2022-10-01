@@ -27,6 +27,8 @@ general:
     volumes: {}
     #  hostPath:
     #    path: /mnt/share
+  ingress:
+    ingressClassName: ""
 
 sonarr:
   enabled: true
