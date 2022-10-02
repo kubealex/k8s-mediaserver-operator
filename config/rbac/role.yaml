@@ -79,5 +79,10 @@ rules:
   - patch
   - update
   - watch
-
+- apiGroups:
+  - "networking.k8s.io"
+  verbs:
+  - "*"
+  resources:
+  - "ingresses"
 #+kubebuilder:scaffold:rules
