@@ -1,5 +1,5 @@
 # Use the 'create api' subcommand to add watches to this file.
-- group: kubealex.com
+- group: charts.kubealex.com
   version: v1
   kind: K8SMediaserver
   chart: helm-charts/k8s-mediaserver
