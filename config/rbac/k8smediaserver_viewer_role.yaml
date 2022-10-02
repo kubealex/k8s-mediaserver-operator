@@ -5,7 +5,7 @@ metadata:
   name: k8smediaserver-viewer-role
 rules:
 - apiGroups:
-  - kubealex.com
+  - charts.kubealex.com
   resources:
   - k8smediaservers
   verbs:
@@ -13,7 +13,7 @@ rules:
   - list
   - watch
 - apiGroups:
-  - kubealex.com
+  - charts.kubealex.com
   resources:
   - k8smediaservers/status
   verbs:

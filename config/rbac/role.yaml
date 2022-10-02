@@ -32,7 +32,7 @@ rules:
 ## Rules for charts.kubealex.com/v1, Kind: K8SMediaserver
 ##
 - apiGroups:
-  - kubealex.com
+  - charts.kubealex.com
   resources:
   - k8smediaservers
   - k8smediaservers/status
@@ -45,25 +45,39 @@ rules:
   - patch
   - update
   - watch
-- verbs:
-  - "*"
-  apiGroups:
+- apiGroups:
   - ""
   resources:
-  - "configmaps"
-  - "persistentvolumeclaims"
-  - "services"
-- verbs:
-  - "*"
-  apiGroups:
-  - "apps"
+  - pods
+  - services
+  - services/finalizers
+  - endpoints
+  - persistentvolumeclaims
+  - events
+  - configmaps
+  - secrets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apps
   resources:
-  - "deployments"
-- verbs:
-  - "*"
-  apiGroups:
-  - "networking.k8s.io"
-  resources:
-  - "ingresses"
+  - deployments
+  - daemonsets
+  - replicasets
+  - statefulsets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
 
 #+kubebuilder:scaffold:rules
