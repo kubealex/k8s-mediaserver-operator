@@ -130,6 +130,7 @@ spec:
         - {{ .Values.general.plex_ingress_host | quote }}
       secretName: {{ .Values.plex.ingress.tls.secretName }}
 {{ end }}     
+  ingressClassName: {{ .Values.general.ingress.ingressClassName }}
   rules:
     - host: {{ .Values.general.plex_ingress_host | quote }}
       http:

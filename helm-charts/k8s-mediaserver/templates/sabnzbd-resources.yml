@@ -504,6 +504,7 @@ spec:
         - {{ .Values.general.ingress_host | quote }}
       secretName: {{ .Values.sabnzbd.ingress.tls.secretName }}
 {{ end }}     
+  ingressClassName: {{ .Values.general.ingress.ingressClassName }}
   rules:
     - host: {{ .Values.general.ingress_host | quote }}
       http:
