@@ -107,6 +107,7 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | plex.ingress.tls.enabled | If true, tls is enabled | false |
 | plex.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress | "" |
 | plex.resources | Limits and Requests for the container | {} | 
+| plex.volume | If set, Plex will create a PVC for it's config volume, else it will be put on general.storage.subPaths.config | {} |
 
 # Sonarr
 
@@ -124,6 +125,7 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | sonarr.ingress.tls.enabled | If true, tls is enabled | false |
 | sonarr.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress | "" | 
 | sonarr.resources | Limits and Requests for the container | {} |
+| sonarr.volume | If set, Sonarr will create a PVC for it's config volume, else it will be put on general.storage.subPaths.config | {} |
 
 # Radarr
 
@@ -141,6 +143,7 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | radarr.ingress.tls.enabled | If true, tls is enabled | false |
 | radarr.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress | "" | 
 | radarr.resources | Limits and Requests for the container | {} |
+| radarr.volume | If set, Radarr will create a PVC for it's config volume, else it will be put on general.storage.subPaths.config | {} |
 
 # Jackett
 
@@ -158,6 +161,7 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | jackett.ingress.tls.enabled | If true, tls is enabled | false |
 | jackett.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress | "" | 
 | jackett.resources | Limits and Requests for the container | {} |
+| jackett.volume | If set, jackett will create a PVC for it's config volume, else it will be put on general.storage.subPaths.config | {} |
 
 # Transmission
 
@@ -184,6 +188,7 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | transmission.config.auth.username | Username for transmission | "" |
 | transmission.config.auth.password | Password for transmission | "" | 
 | transmission.resources | Limits and Requests for the container | {} |
+| transmission.volume | If set, transmission will create a PVC for it's config volume, else it will be put on general.storage.subPaths.config | {} |
 
 # Sabnzbd
 
@@ -206,6 +211,7 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | sabnzbd.ingress.tls.enabled | If true, tls is enabled | false |
 | sabnzbd.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress | "" | 
 | sabnzbd.resources | Limits and Requests for the container | {} |
+| sabnzbd.volume | If set, sabnzbd will create a PVC for it's config volume, else it will be put on general.storage.subPaths.config | {} |
 
 ## About the project
 

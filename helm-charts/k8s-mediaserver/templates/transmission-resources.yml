@@ -119,10 +119,15 @@ spec:
           command: ["/init-transmission/init-transmission.sh"]
           volumeMounts:
             - mountPath: /init-transmission
-              name: init-files-transmission 
-            - mountPath: /transmission-config
-              name: mediaserver-volume
+              name: init-files-transmission
+          {{ if .Values.transmission.volume }}
+            - name: {{ .Values.transmission.volume.name }}
+              mountPath: /transmission-config
+          {{ else }}
+            - name: mediaserver-volume
+              mountPath: "/transmission-config"
               subPath: "{{ .Values.general.storage.subPaths.config }}/transmission"
+          {{ end }}
           securityContext:
             runAsUser: {{ .Values.general.puid }}
             runAsGroup: {{ .Values.general.pgid }}
@@ -148,10 +153,15 @@ spec:
             - name: trans-peer-udp
               containerPort: {{ .Values.transmission.container.port.peer }}
               protocol: UDP
-          volumeMounts: 
+          volumeMounts:
+          {{ if .Values.transmission.volume }}
+            - name: {{ .Values.transmission.volume.name }}
+              mountPath: /config
+          {{ else }}
             - name: mediaserver-volume
               mountPath: "/config"
               subPath: "{{ .Values.general.storage.subPaths.config }}/transmission"
+          {{ end }}
             - name: mediaserver-volume
               mountPath: "/downloads"
               subPath: "{{ .Values.general.storage.subPaths.downloads }}"
@@ -167,6 +177,11 @@ spec:
         {{ else }}
         - name: mediaserver-volume
           {{- toYaml .Values.general.storage.volumes | nindent 10 }}
+        {{ end }}
+        {{ if .Values.transmission.volume }}
+        - name: {{ .Values.transmission.volume.name }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.transmission.volume.name }}
         {{ end }}
         - name: init-files-transmission
           configMap:
@@ -305,7 +320,7 @@ spec:
     - hosts:
         - {{ .Values.general.ingress_host | quote }}
       secretName: {{ .Values.transmission.ingress.tls.secretName }}
-{{ end }}     
+{{ end }}
   ingressClassName: {{ .Values.general.ingress.ingressClassName }}
   rules:
     - host: {{ .Values.general.ingress_host | quote }}
@@ -318,5 +333,5 @@ spec:
                 name: transmission
                 port:
                   number: {{ .Values.transmission.service.utp.port }}
-{{ end }}     
+{{ end }}
 {{ end }}

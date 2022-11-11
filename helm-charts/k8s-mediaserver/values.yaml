@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-general: 
+general:
   ingress_host: k8s-mediaserver.k8s.test
   plex_ingress_host: k8s-plex.k8s.test
   image_tag: latest
@@ -15,7 +15,7 @@ general:
     customVolume: false  #set to true if not using a PVC (must provide volume below)
     pvcName: mediaserver-pvc
     size: 5Gi
-    pvcStorageClass: []
+    pvcStorageClass: ""
     # the path starting from the top level of the pv you're passing. If your share is server.local/share/, then tv is server.local/share/media/tv
     subPaths:
       tv: media/tv
@@ -32,15 +32,15 @@ general:
 
 sonarr:
   enabled: true
-  container: 
+  container:
     nodeSelector: {}
     port: 8989
   service:
     type: ClusterIP
     port: 8989
-    nodePort: 
-    extraLBService: false 
-    # Defines an additional LB service, requires cloud provider service or MetalLB 
+    nodePort:
+    extraLBService: false
+    # Defines an additional LB service, requires cloud provider service or MetalLB
 
   ingress:
     enabled: true
@@ -50,18 +50,28 @@ sonarr:
       enabled: false
       secretName: ""
   resources: {}
+  volume: {}
+    #name: pvc-sonarr-config
+    #storageClassName: longhorn
+    #annotations:
+    #  my-annotation/test: my-value
+    #labels:
+    #  my-label/test: my-other-value
+    #accessModes: ReadWriteOnce
+    #storage: 5Gi
+    #selector: {}
 
 radarr:
   enabled: true
-  container: 
+  container:
     nodeSelector: {}
     port: 7878
   service:
     type: ClusterIP
     port: 7878
-    nodePort: 
-    extraLBService: false 
-    # Defines an additional LB service, requires cloud provider service or MetalLB 
+    nodePort:
+    extraLBService: false
+    # Defines an additional LB service, requires cloud provider service or MetalLB
 
   ingress:
     enabled: true
@@ -71,18 +81,26 @@ radarr:
       enabled: false
       secretName: ""
   resources: {}
-  
+  volume: {}
+    #name: pvc-radarr-config
+    #storageClassName: longhorn
+    #annotations: {}
+    #labels: {}
+    #accessModes: ReadWriteOnce
+    #storage: 5Gi
+    #selector: {}
+
 jackett:
   enabled: true
-  container: 
+  container:
     nodeSelector: {}
     port: 9117
   service:
     type: ClusterIP
     port: 9117
-    nodePort: 
-    extraLBService: false 
-    # Defines an additional LB service, requires cloud provider service or MetalLB 
+    nodePort:
+    extraLBService: false
+    # Defines an additional LB service, requires cloud provider service or MetalLB
   ingress:
     enabled: true
     annotations: {}
@@ -91,27 +109,35 @@ jackett:
       enabled: false
       secretName: ""
   resources: {}
-  
+  volume: {}
+  #  name: pvc-jackett-config
+  #  storageClassName: longhorn
+  #  annotations: {}
+  #  labels: {}
+  #  accessModes: ReadWriteOnce
+  #  storage: 5Gi
+  #  selector: {}
+
 transmission:
   enabled: true
-  container: 
+  container:
     nodeSelector: {}
-    port: 
+    port:
       utp: 9091
       peer: 51413
   service:
     utp:
       type: ClusterIP
       port: 9091
-      nodePort: 
-      # Defines an additional LB service, requires cloud provider service or MetalLB 
+      nodePort:
+      # Defines an additional LB service, requires cloud provider service or MetalLB
       extraLBService: false
     peer:
       type: ClusterIP
       port: 51413
       nodePort:
-      nodePortUDP: 
-      # Defines an additional LB service, requires cloud provider service or MetalLB 
+      nodePortUDP:
+      # Defines an additional LB service, requires cloud provider service or MetalLB
       extraLBService: false
   ingress:
     enabled: true
@@ -121,31 +147,39 @@ transmission:
       enabled: false
       secretName: ""
   config:
-    auth: 
+    auth:
       enabled: false
       username: ""
       password: ""
   resources: {}
+  volume: {}
+  #  name: pvc-transmission-config
+  #  storageClassName: longhorn
+  #  annotations: {}
+  #  labels: {}
+  #  accessModes: ReadWriteOnce
+  #  storage: 5Gi
+  #  selector: {}
 
 sabnzbd:
   enabled: true
-  container: 
+  container:
     nodeSelector: {}
-    port: 
+    port:
       http: 8080
       https: 9090
   service:
     http:
       type: ClusterIP
       port: 8080
-      nodePort: 
-      # Defines an additional LB service, requires cloud provider service or MetalLB 
+      nodePort:
+      # Defines an additional LB service, requires cloud provider service or MetalLB
       extraLBService: false
     https:
       type: ClusterIP
       port: 9090
       nodePort:
-      # Defines an additional LB service, requires cloud provider service or MetalLB 
+      # Defines an additional LB service, requires cloud provider service or MetalLB
       extraLBService: false
   ingress:
     enabled: true
@@ -155,20 +189,28 @@ sabnzbd:
       enabled: false
       secretName: ""
   resources: {}
+  volume: {}
+  #  name: pvc-plex-config
+  #  storageClassName: longhorn
+  #  annotations: {}
+  #  labels: {}
+  #  accessModes: ReadWriteOnce
+  #  storage: 5Gi
+  #  selector: {}
 
 plex:
   enabled: true
   claim: "CHANGEME"
   replicaCount: 1
-  container: 
+  container:
     nodeSelector: {}
     port: 32400
   service:
     type: ClusterIP
     port: 32400
-    nodePort: 
-    # Defines an additional LB service, requires cloud provider service or MetalLB 
-    extraLBService: false 
+    nodePort:
+    # Defines an additional LB service, requires cloud provider service or MetalLB
+    extraLBService: false
   ingress:
     enabled: true
     annotations: {}
@@ -182,3 +224,11 @@ plex:
   #  requests:
   #    cpu: 100m
   #    memory: 100Mi
+  volume: {}
+  #  name: pvc-plex-config
+  #  storageClassName: longhorn
+  #  annotations: {}
+  #  labels: {}
+  #  accessModes: ReadWriteOnce
+  #  storage: 5Gi
+  #  selector: {}
