@@ -63,6 +63,29 @@ With default settings, your applications will run in these paths:
 
     http://k8s-plex.k8s.test/
 
+## Using a cluster-external NFS server
+This assumes that you have an already pre-configured NFS server set up on your network that is accessible from all nodes. If it is not accessible by all nodes, pods will not enter ready state when scheduled on nodes that do not have NFS access. 
+
+To add an NFS volume to each resource, create a `my-values.yaml` file and add the below. You should change the `server:` and `path:` values to match your NFS.
+
+``` yaml
+general:
+  storage:
+    customVolume: true
+  volumes:
+    nfs:
+      server: {SERVER-IP}
+      path: /mount/path/on/nfs/server/
+```
+With this value saved in the top level directory of this repo, running the below will add the resources to your cluster, under the helm release name `k8s-mediaserver`
+
+``` bash
+helm install -f my-values.yaml k8s-mediaserver ./helm-charts/k8s-mediaserver/
+```
+
+This is eqiuvalent to running `mount {SERVER-IP}:/mount/path/on/nfs/server ...` in each container, where `...` is different per resouce, as defined in the templatesdirectory (for each resource).
+In addition to the above, you should also edit your subpaths so that they when they are appended to your `path:` specified in `values.yaml`, they map to the directories you intend.
+
 ## The mediaserver CR
 The CR is quite simple to configure, and I tried to keep the number of parameters low to avoid confusion, but still letting some customization to fit the resource inside your cluster.
 
