@@ -1,4 +1,6 @@
-## k8s-mediaserver-operator - Your all-in-one resource for your media needs!
+# k8s-mediaserver-operator
+
+Your all-in-one resource for your media needs!
 
 I am so happy to announce the first release of the **k8s-mediaserver-operator**, a project that mixes up some of the
 mainstream tools for your media needs.
@@ -22,6 +24,7 @@ trackers for torrents.
 [Sabnzbd](https://sabnzbd.org/ "Sabnzbd") - A free and easy binary newsreader.
 
 All container images used by the operator are from [linuxserver](https://github.com/linuxserver)
+
 - [linuxserver.io](https://www.linuxserver.io/ "linuxserver.io")
 
 Each of the components can be **enabled** or **disabled** if you already have something in place in your lab!
@@ -43,36 +46,41 @@ The operator and the CR are already configured with some defaults settings to ma
 
 All you need is:
 
-- A namespace where you want to put your CR and all the pods that will spawn
+- A namespace where you want to put your Custom Resource and all the pods that will spawn
 - Being able to provision an RWX PV where to store configurations, downloads, and all related stuff (suggested > 200GB).
-  Persistent Volume **or** StorageClasses for dynamically provisioned volumes are **REQUIRED**
+  Persistent Volume **or** StorageClasses for dynamically provisioned volumes are **REQUIRED** (See below for NFS)
 
-First install the CRD and the operator:
+1. First install the CRD and the operator:
 
 AMD/Intel:
-
-    kubectl apply -f k8s-mediaserver-operator.yml
+```shell
+kubectl apply -f k8s-mediaserver-operator.yml
+```
 
 ARM - Raspberry Pi:
+```shell
+kubectl apply -f k8s-mediaserver-operator-arm64.yml
+```
 
-    kubectl apply -f k8s-mediaserver-operator-arm64.yml
-
-Then you are good to go with the CR:
-
-    kubectl apply -f k8s-mediaserver.yml
+2. Install the custom resource:
+```shell
+kubectl apply -f k8s-mediaserver.yml
+```
 
 In seconds, you will be ready to use your applications!
 
 With default settings, your applications will run in these paths:
 
-    http://k8s-mediaserver.k8s.test/sonarr
-    http://k8s-mediaserver.k8s.test/radarr
-    http://k8s-mediaserver.k8s.test/transmission
-    http://k8s-mediaserver.k8s.test/jackett
+| Service      | Link                                           |
+|--------------|------------------------------------------------|
+| Sonarr       | http://k8s-mediaserver.k8s.test/sonarr         |
+| Radarr       | http://k8s-mediaserver.k8s.test/radarr         |
+| Transmission | http://k8s-mediaserver.k8s.test/transmission   |
+| Jackett      | http://k8s-mediaserver.k8s.test/jackett        |
+| PLEX         | http://k8s-plex.k8s.test/                      |
 
-    http://k8s-plex.k8s.test/
 
-## Using a cluster-external NFS server
+### Using a cluster-external NFS server
 
 This assumes that you have a pre-configured NFS server set up on your network that is accessible from all nodes. If it
 is not accessible by all nodes, pods will not enter ready state when scheduled on nodes that do not have NFS access.
@@ -93,7 +101,7 @@ general:
 With this value saved in the top level directory of this repo, running the below will add the resources to your cluster,
 under the helm release name `k8s-mediaserver`
 
-``` bash
+``` shell
 helm install -f my-values.yaml k8s-mediaserver ./helm-charts/k8s-mediaserver/
 ```
 
@@ -107,7 +115,7 @@ specified in `values.yaml`, they map to the directories you intend.
 The CR is quite simple to configure, and I tried to keep the number of parameters low to avoid confusion, but still
 letting some customization to fit the resource inside your cluster.
 
-# General config
+## General config
 
 | Config path                           | Meaning                                                                                                     | Default                                         | 
 |---------------------------------------|-------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
@@ -130,7 +138,7 @@ letting some customization to fit the resource inside your cluster.
 | general.storage.volumes               | Supply custom volume to be mounted for all services                                                         | {}                                              |
 | general.ingress.ingressClassName      | Reference an IngressClass resource that contains additional Ingress configuration                           | ""                                              |
 
-# Plex
+### Plex
 
 | Config path                 | Meaning                                                                                                      | Default   | 
 |-----------------------------|--------------------------------------------------------------------------------------------------------------|-----------|
@@ -149,7 +157,7 @@ letting some customization to fit the resource inside your cluster.
 | plex.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress                                               | ""        |
 | plex.resources              | Limits and Requests for the container                                                                        | {}        | 
 
-# Sonarr
+### Sonarr
 
 | Config path                   | Meaning                                                                                                      | Default   | 
 |-------------------------------|--------------------------------------------------------------------------------------------------------------|-----------|
@@ -166,7 +174,7 @@ letting some customization to fit the resource inside your cluster.
 | sonarr.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress                                               | ""        | 
 | sonarr.resources              | Limits and Requests for the container                                                                        | {}        |
 
-# Radarr
+### Radarr
 
 | Config path                   | Meaning                                                                                                      | Default   | 
 |-------------------------------|--------------------------------------------------------------------------------------------------------------|-----------|
@@ -183,7 +191,7 @@ letting some customization to fit the resource inside your cluster.
 | radarr.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress                                               | ""        | 
 | radarr.resources              | Limits and Requests for the container                                                                        | {}        |
 
-# Jackett
+### Jackett
 
 | Config path                    | Meaning                                                                                                         | Default   | 
 |--------------------------------|-----------------------------------------------------------------------------------------------------------------|-----------|
@@ -200,7 +208,7 @@ letting some customization to fit the resource inside your cluster.
 | jackett.ingress.tls.secretName | Name of the secret holding certificates for the secure ingress                                                  | ""        | 
 | jackett.resources              | Limits and Requests for the container                                                                           | {}        |
 
-# Transmission
+### Transmission
 
 | Config path                              | Meaning                                                                                                      | Default       | 
 |------------------------------------------|--------------------------------------------------------------------------------------------------------------|---------------|
@@ -226,7 +234,7 @@ letting some customization to fit the resource inside your cluster.
 | transmission.config.auth.password        | Password for transmission                                                                                    | ""            | 
 | transmission.resources                   | Limits and Requests for the container                                                                        | {}            |
 
-# Sabnzbd
+### Sabnzbd
 
 | Config path                          | Meaning                                                                                                      | Default   | 
 |--------------------------------------|--------------------------------------------------------------------------------------------------------------|-----------|
@@ -254,4 +262,3 @@ This project is intended as an exercise, and absolutely for fun.
 This is not intended to promote piracy.
 
 Also feel free to contribute and extend it!
-
