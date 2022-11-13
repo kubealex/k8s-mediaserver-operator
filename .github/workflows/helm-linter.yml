@@ -16,4 +16,4 @@ jobs:
         id: install-helm
        
       - name: Test helm
-        run: helm template k8s-mediaserver
+        run: helm template helm-charts/k8s-mediaserver
