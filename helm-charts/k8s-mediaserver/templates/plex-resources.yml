@@ -42,7 +42,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: plex-config
-          image: "docker.io/linuxserver/plex:{{ .Values.general.image_tag }}"
+          image: "{{ .Values.plex.container.image }}:{{ .Values.plex.container.tag | default .Values.general.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
             tcpSocket:

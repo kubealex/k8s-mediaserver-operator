@@ -96,6 +96,8 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | plex.enabled | Flag if you want to enable plex | true | 
 | plex.claim | **IMPORTANT** Token from your account, needed to claim the server | CHANGEME |
 | plex.replicaCount | Number of replicas serving plex | 1 | 
+| sonarr.container.image | The image used by the container | docker.io/linuxserver/plex | 
+| sonarr.container.tag | The tag used by the container | null | 
 | plex.container.port | The port in use by the container | 32400 | 
 | plex.service.type | The kind of Service (ClusterIP/NodePort/LoadBalancer) | ClusterIP |
 | plex.service.port | The port assigned to the service | 32400 |
@@ -113,6 +115,8 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | Config path | Meaning | Default | 
 | ------------ | ------------ | ------------ |
 | sonarr.enabled | Flag if you want to enable sonarr | true | 
+| sonarr.container.image | The image used by the container | docker.io/linuxserver/sonarr | 
+| sonarr.container.tag | The tag used by the container | null | 
 | sonarr.container.port | The port in use by the container | 8989 | 
 | sonarr.service.type | The kind of Service (ClusterIP/NodePort/LoadBalancer) | ClusterIP |
 | sonarr.service.port | The port assigned to the service | 8989 |
@@ -130,6 +134,8 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | Config path | Meaning | Default | 
 | ------------ | ------------ | ------------ |
 | radarr.enabled | Flag if you want to enable radarr | true | 
+| radarr.container.image | The image used by the container | docker.io/linuxserver/radarr | 
+| radarr.container.tag | The tag used by the container | null | 
 | radarr.container.port | The port in use by the container | 7878 | 
 | radarr.service.type | The kind of Service (ClusterIP/NodePort/LoadBalancer) | ClusterIP |
 | radarr.service.port | The port assigned to the service | 7878 |
@@ -147,6 +153,8 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | Config path | Meaning | Default | 
 | ------------ | ------------ | ------------ |
 | jackett.enabled | Flag if you want to enable jackett | true | 
+| jackett.container.image | The image used by the container | docker.io/linuxserver/jackett | 
+| jackett.container.tag | The tag used by the container | null | 
 | jackett.container.port | The port in use by the container | 9117 | 
 | jackett.service.type | The kind of Service (ClusterIP/NodePort/LoadBalancer) | ClusterIP |
 | jackett.service.port | The port assigned to the service | 9117 |
@@ -164,6 +172,8 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | Config path | Meaning | Default | 
 | ------------ | ------------ | ------------ |
 | transmission.enabled | Flag if you want to enable transmission | true | 
+| transmission.container.image | The image used by the container | docker.io/linuxserver/transmission | 
+| transmission.container.tag | The tag used by the container | null | 
 | transmission.container.port.utp | The port in use by the container | 9091 | 
 | transmission.container.port.peer | The port in use by the container for peer connection | 51413 | 
 | transmission.service.utp.type | The kind of Service (ClusterIP/NodePort/LoadBalancer) for transmission itself | ClusterIP |
@@ -190,6 +200,8 @@ The CR is quite simple to configure, and I tried to keep the number of parameter
 | Config path | Meaning | Default | 
 | ------------ | ------------ | ------------ |
 | sabnzbd.enabled | Flag if you want to enable sabnzbd | true | 
+| sabnzbd.container.image | The image used by the container | docker.io/linuxserver/sabnzbd | 
+| sabnzbd.container.tag | The tag used by the container | null | 
 | sabnzbd.container.port.http | The port in use by the container | 8080 | 
 | sabnzbd.container.port.https | The port in use by the container for peer connection | 9090 | 
 | sabnzbd.service.http.type | The kind of Service (ClusterIP/NodePort/LoadBalancer) for sabnzbd itself | ClusterIP |
