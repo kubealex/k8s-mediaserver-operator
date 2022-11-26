@@ -37,6 +37,8 @@ metadata:
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
 spec:
+  strategy:
+    type: Recreate
   replicas: 1
   selector:
     matchLabels:
@@ -53,10 +55,15 @@ spec:
           command: ["/init-radarr/init-radarr.sh"]
           volumeMounts:
             - mountPath: /init-radarr
-              name: init-files-radarr 
-            - mountPath: /radarr-config
-              name: mediaserver-volume
+              name: init-files-radarr
+          {{- if .Values.radarr.volume }}
+            - name: {{ .Values.radarr.volume.name }}
+              mountPath: /radarr-config
+          {{- else }}
+            - name: mediaserver-volume
+              mountPath: /radarr-config
               subPath: "{{ .Values.general.storage.subPaths.config }}/radarr"
+          {{- end }}
           securityContext:
             runAsUser: {{ .Values.general.puid }}
             runAsGroup: {{ .Values.general.pgid }}
@@ -76,10 +83,15 @@ spec:
             - name: radarr-port
               containerPort: {{ .Values.radarr.container.port }}
               protocol: TCP
-          volumeMounts: 
+          volumeMounts:
+          {{- if .Values.radarr.volume }}
+            - name: {{ .Values.radarr.volume.name }}
+              mountPath: /config
+          {{- else }}
             - name: mediaserver-volume
               mountPath: "/config"
               subPath: "{{ .Values.general.storage.subPaths.config }}/radarr"
+          {{- end }}
             - name: mediaserver-volume
               mountPath: "/downloads"
               subPath: "{{ .Values.general.storage.subPaths.downloads }}"
@@ -91,14 +103,19 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
-        {{ if not .Values.general.storage.customVolume }}
+        {{- if not .Values.general.storage.customVolume }}
         - name: mediaserver-volume
           persistentVolumeClaim:
             claimName: {{ .Values.general.storage.pvcName }}
-        {{ else }}
+        {{- else }}
         - name: mediaserver-volume
           {{- toYaml .Values.general.storage.volumes | nindent 10 }}
-        {{ end }}
+        {{- end }}
+        {{- if .Values.radarr.volume }}
+        - name: {{ .Values.radarr.volume.name }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.radarr.volume.name }}
+        {{- end }}
         - name: init-files-radarr
           configMap:
             defaultMode: 493
@@ -165,7 +182,7 @@ spec:
     - hosts:
         - {{ .Values.general.ingress_host | quote }}
       secretName: {{ .Values.radarr.ingress.tls.secretName }}
-{{ end }}     
+{{ end }}
   ingressClassName: {{ .Values.general.ingress.ingressClassName }}
   rules:
     - host: {{ .Values.general.ingress_host | quote }}
@@ -178,5 +195,5 @@ spec:
                 name: radarr
                 port:
                   number: {{ .Values.radarr.service.port }}
-{{ end }}     
-{{ end }}     
+{{ end }}
+{{ end }}
