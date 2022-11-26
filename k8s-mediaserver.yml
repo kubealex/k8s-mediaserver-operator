@@ -6,37 +6,37 @@ metadata:
 spec:
   # Default values copied from <project_dir>/helm-charts/k8s-mediaserver/values.yaml
   general:
-    image_tag: latest
-    ingress:
-      ingressClassName: ""
     ingress_host: k8s-mediaserver.k8s.test
     plex_ingress_host: k8s-plex.k8s.test
-    # UID to run the process with
+    image_tag: latest
+    #UID to run the process with
     puid: 1000
-    # GID to run the process with
+    #GID to run the process with
     pgid: 1000
-    # Persistent storage selections and pathing
+    #Persistent storage selections and pathing
     storage:
-      customVolume: false  # set to true if not using a PVC (must provide volume below)
+      customVolume: false  #set to true if not using a PVC (must provide volume below)
       pvcName: mediaserver-pvc
       size: 5Gi
       pvcStorageClass: ""
       # the path starting from the top level of the pv you're passing. If your share is server.local/share/, then tv is server.local/share/media/tv
       subPaths:
-        config: config
-        downloads: downloads
-        movies: media/movies
-        sabnzbd: sabnzbd
-        transmission: transmission
         tv: media/tv
-
+        movies: media/movies
+        downloads: downloads
+        transmission: transmission
+        sabnzbd: sabnzbd
+        config: config
       volumes: {}
       #  hostPath:
       #    path: /mnt/share
+    ingress:
+      ingressClassName: ""
 
   sonarr:
     enabled: true
     container:
+      image: docker.io/linuxserver/sonarr
       nodeSelector: {}
       port: 8989
     service:
@@ -55,19 +55,20 @@ spec:
         secretName: ""
     resources: {}
     volume: {}
-    # name: pvc-sonarr-config
-    # storageClassName: longhorn
-    # annotations:
-    #   my-annotation/test: my-value
-    # labels:
-    #   my-label/test: my-other-value
-    # accessModes: ReadWriteOnce
-    # storage: 5Gi
-    # selector: {}
+      #name: pvc-sonarr-config
+      #storageClassName: longhorn
+      #annotations:
+      #  my-annotation/test: my-value
+      #labels:
+      #  my-label/test: my-other-value
+      #accessModes: ReadWriteOnce
+      #storage: 5Gi
+      #selector: {}
 
   radarr:
     enabled: true
     container:
+      image: docker.io/linuxserver/radarr
       nodeSelector: {}
       port: 7878
     service:
@@ -86,17 +87,18 @@ spec:
         secretName: ""
     resources: {}
     volume: {}
-    # name: pvc-radarr-config
-    # storageClassName: longhorn
-    # annotations: {}
-    # labels: {}
-    # accessModes: ReadWriteOnce
-    # storage: 5Gi
-    # selector: {}
-    
+      #name: pvc-radarr-config
+      #storageClassName: longhorn
+      #annotations: {}
+      #labels: {}
+      #accessModes: ReadWriteOnce
+      #storage: 5Gi
+      #selector: {}
+
   jackett:
     enabled: true
     container:
+      image: docker.io/linuxserver/jackett
       nodeSelector: {}
       port: 9117
     service:
@@ -125,6 +127,7 @@ spec:
   transmission:
     enabled: true
     container:
+      image: docker.io/linuxserver/transmission
       nodeSelector: {}
       port:
         utp: 9091
@@ -168,6 +171,7 @@ spec:
   sabnzbd:
     enabled: true
     container:
+      image: docker.io/linuxserver/sabnzbd
       nodeSelector: {}
       port:
         http: 8080
@@ -207,6 +211,7 @@ spec:
     claim: "CHANGEME"
     replicaCount: 1
     container:
+      image: docker.io/linuxserver/plex
       nodeSelector: {}
       port: 32400
     service:
