@@ -53,9 +53,14 @@ spec:
           volumeMounts:
             - mountPath: /init-jackett
               name: init-files-jackett
-            - mountPath: /jackett-config
-              name: mediaserver-volume
+          {{- if .Values.jackett.volume }}
+            - name: {{ .Values.jackett.volume.name }}
+              mountPath: /jackett-config
+          {{- else }}
+            - name: mediaserver-volume
+              mountPath: /jackett-config
               subPath: "{{ .Values.general.storage.subPaths.config }}/jackett/Jackett"
+          {{- end }}
           securityContext:
             runAsUser: {{ .Values.general.puid }}
             runAsGroup: {{ .Values.general.pgid }}
@@ -64,7 +69,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: jackett-config
-          image: docker.io/linuxserver/jackett:{{ .Values.general.image_tag }}
+          image: "{{ .Values.jackett.container.image }}:{{ .Values.jackett.container.tag | default .Values.general.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
             tcpSocket:
@@ -76,22 +81,32 @@ spec:
               containerPort: {{ .Values.jackett.container.port }}
               protocol: TCP
           volumeMounts:
+          {{- if .Values.jackett.volume }}
+            - name: {{ .Values.jackett.volume.name }}
+              mountPath: /config
+          {{- else }}
             - name: mediaserver-volume
               mountPath: "/config"
               subPath: "{{ .Values.general.storage.subPaths.config }}/jackett"
+          {{- end }}
           {{- with .Values.jackett.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
-        {{ if not .Values.general.storage.customVolume }}
+        {{- if not .Values.general.storage.customVolume }}
         - name: mediaserver-volume
           persistentVolumeClaim:
             claimName: {{ .Values.general.storage.pvcName }}
-        {{ else }}
+        {{- else }}
         - name: mediaserver-volume
           {{- toYaml .Values.general.storage.volumes | nindent 10 }}
-        {{ end }}
+        {{- end }}
+        {{- if .Values.jackett.volume }}
+        - name: {{ .Values.jackett.volume.name }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.jackett.volume.name }}
+        {{- end }}
         - name: init-files-jackett
           configMap:
             defaultMode: 493
@@ -159,7 +174,7 @@ spec:
     - hosts:
         - {{ .Values.general.ingress_host | quote }}
       secretName: {{ .Values.jackett.ingress.tls.secretName }}
-{{ end }}     
+{{ end }}
   ingressClassName: {{ .Values.general.ingress.ingressClassName }}
   rules:
     - host: {{ .Values.general.ingress_host | quote }}
@@ -172,5 +187,5 @@ spec:
                 name: jackett
                 port:
                   number: {{ .Values.jackett.service.port }}
-{{ end }}     
+{{ end }}
 {{ end }}
