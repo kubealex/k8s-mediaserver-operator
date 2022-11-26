@@ -32,7 +32,7 @@ general:
 
 sonarr:
   enabled: true
-  container: 
+  container:
     image: docker.io/linuxserver/sonarr
     nodeSelector: {}
     port: 8989
@@ -42,7 +42,6 @@ sonarr:
     nodePort:
     extraLBService: false
     # Defines an additional LB service, requires cloud provider service or MetalLB
-
   ingress:
     enabled: true
     annotations: {}
@@ -64,7 +63,7 @@ sonarr:
 
 radarr:
   enabled: true
-  container: 
+  container:
     image: docker.io/linuxserver/radarr
     nodeSelector: {}
     port: 7878
@@ -74,7 +73,6 @@ radarr:
     nodePort:
     extraLBService: false
     # Defines an additional LB service, requires cloud provider service or MetalLB
-
   ingress:
     enabled: true
     annotations: {}
@@ -94,7 +92,7 @@ radarr:
 
 jackett:
   enabled: true
-  container: 
+  container:
     image: docker.io/linuxserver/jackett
     nodeSelector: {}
     port: 9117
@@ -123,7 +121,7 @@ jackett:
 
 transmission:
   enabled: true
-  container: 
+  container:
     image: docker.io/linuxserver/transmission
     nodeSelector: {}
     port:
@@ -167,7 +165,7 @@ transmission:
 
 sabnzbd:
   enabled: true
-  container: 
+  container:
     image: docker.io/linuxserver/sabnzbd
     nodeSelector: {}
     port:
@@ -207,7 +205,7 @@ plex:
   enabled: true
   claim: "CHANGEME"
   replicaCount: 1
-  container: 
+  container:
     image: docker.io/linuxserver/plex
     nodeSelector: {}
     port: 32400
