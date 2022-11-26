@@ -151,6 +151,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: radarr-lb
+  annotations:
+    {{- include .Values.radarr.service.extraLBService.annotations . | nindent 4 }}
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
 spec:
