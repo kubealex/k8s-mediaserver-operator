@@ -3,7 +3,10 @@ on:
   push:
     branches:
       - master
-
+    paths:
+      - 'helm-charts/k8s-mediaserver/**'
+      - 'Dockerfile'
+      - 'Dockerfile-ARM64'
 jobs:
   versioning:
     name: Check and manage versioning
@@ -44,7 +47,7 @@ jobs:
           image: k8s-mediaserver-operator
           tags: latest-arm64 ${{ needs.versioning.outputs.release_tag }}-arm64
           containerfiles: |
-            ./Dockerfile-arm64
+            ./Dockerfile-ARM64
           
       - name: Push To quay.io
         id: push-x86
