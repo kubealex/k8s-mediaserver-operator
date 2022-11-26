@@ -32,7 +32,8 @@ general:
 
 sonarr:
   enabled: true
-  container:
+  container: 
+    image: docker.io/linuxserver/sonarr
     nodeSelector: {}
     port: 8989
   service:
@@ -63,7 +64,8 @@ sonarr:
 
 radarr:
   enabled: true
-  container:
+  container: 
+    image: docker.io/linuxserver/radarr
     nodeSelector: {}
     port: 7878
   service:
@@ -92,7 +94,8 @@ radarr:
 
 jackett:
   enabled: true
-  container:
+  container: 
+    image: docker.io/linuxserver/jackett
     nodeSelector: {}
     port: 9117
   service:
@@ -120,7 +123,8 @@ jackett:
 
 transmission:
   enabled: true
-  container:
+  container: 
+    image: docker.io/linuxserver/transmission
     nodeSelector: {}
     port:
       utp: 9091
@@ -163,7 +167,8 @@ transmission:
 
 sabnzbd:
   enabled: true
-  container:
+  container: 
+    image: docker.io/linuxserver/sabnzbd
     nodeSelector: {}
     port:
       http: 8080
@@ -202,7 +207,8 @@ plex:
   enabled: true
   claim: "CHANGEME"
   replicaCount: 1
-  container:
+  container: 
+    image: docker.io/linuxserver/plex
     nodeSelector: {}
     port: 32400
   service:

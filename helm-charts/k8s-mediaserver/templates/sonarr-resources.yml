@@ -71,7 +71,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: sonarr-config
-          image: "docker.io/linuxserver/sonarr:{{ .Values.general.image_tag }}"
+          image: "{{ .Values.sonarr.container.image }}:{{ .Values.sonarr.container.tag | default .Values.general.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
             tcpSocket:

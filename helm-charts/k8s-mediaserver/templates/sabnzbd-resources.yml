@@ -372,7 +372,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: sabnzbd-config
-          image: "docker.io/linuxserver/sabnzbd:{{ .Values.general.image_tag }}"
+          image: "{{ .Values.sabnzbd.container.image }}:{{ .Values.sabnzbd.container.tag | default .Values.general.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
             tcpSocket:

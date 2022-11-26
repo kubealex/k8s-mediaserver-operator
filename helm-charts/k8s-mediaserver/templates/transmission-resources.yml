@@ -136,7 +136,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: transmission-config
-          image: "docker.io/linuxserver/transmission:{{ .Values.general.image_tag }}"
+          image: "{{ .Values.transmission.container.image }}:{{ .Values.transmission.container.tag | default .Values.general.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
             tcpSocket:
