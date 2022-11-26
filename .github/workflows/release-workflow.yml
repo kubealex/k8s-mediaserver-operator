@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       release_tag: ${{ steps.bump-version.outputs.new_tag || steps.bump-version.outputs.previous_tag }}
-      
+
     steps:
     - uses: actions/checkout@v3
 
@@ -22,8 +22,8 @@ jobs:
       id: bump-version
       with:
         github_token: ${{ secrets.GH_TOKEN }}
-        default_bump: false    
-        
+        default_bump: false
+
   build_image:
     needs: versioning
     name: Build and push container images
@@ -48,7 +48,7 @@ jobs:
           tags: latest-arm64 ${{ needs.versioning.outputs.release_tag }}-arm64
           containerfiles: |
             ./Dockerfile-ARM64
-          
+
       - name: Push To quay.io
         id: push-x86
         uses: redhat-actions/push-to-registry@v2
@@ -58,7 +58,7 @@ jobs:
           registry: quay.io/kubealex
           username: ${{ secrets.QUAY_USERNAME }}
           password: ${{ secrets.QUAY_TOKEN }}
-          
+
       - name: Push To quay.io
         id: push-arm64
         uses: redhat-actions/push-to-registry@v2
@@ -68,8 +68,8 @@ jobs:
           registry: quay.io/kubealex
           username: ${{ secrets.QUAY_USERNAME }}
           password: ${{ secrets.QUAY_TOKEN }}
-          
+
       - name: Print image url
         run: echo "Images pushed to {{ steps.push-x86.outputs.registry-paths }} and ${{ steps.push-arm64.outputs.registry-paths }}"
 
-      
+
