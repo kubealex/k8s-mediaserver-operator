@@ -64,7 +64,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: jackett-config
-          image: docker.io/linuxserver/jackett:{{ .Values.general.image_tag }}
+          image: "{{ .Values.jackett.container.image }}:{{ .Values.jackett.container.tag | default .Values.general.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
             tcpSocket:

@@ -146,6 +146,7 @@ letting some customization to fit the resource inside your cluster.
 | plex.claim                  | **IMPORTANT** Token from your account, needed to claim the server                                            | CHANGEME  |
 | plex.replicaCount           | Number of replicas serving plex                                                                              | 1         | 
 | plex.container.port         | The port in use by the container                                                                             | 32400     | 
+| plex.container.tag          | The tag used by the container                                                                                | null      | 
 | plex.service.type           | The kind of Service (ClusterIP/NodePort/LoadBalancer)                                                        | ClusterIP |
 | plex.service.port           | The port assigned to the service                                                                             | 32400     |
 | plex.service.nodePort       | In case of service.type NodePort, the nodePort to use                                                        | ""        |
@@ -163,6 +164,7 @@ letting some customization to fit the resource inside your cluster.
 |-------------------------------|--------------------------------------------------------------------------------------------------------------|-----------|
 | sonarr.enabled                | Flag if you want to enable sonarr                                                                            | true      | 
 | sonarr.container.port         | The port in use by the container                                                                             | 8989      | 
+| sonarr.container.tag          | The tag used by the container                                                                                | null      | 
 | sonarr.service.type           | The kind of Service (ClusterIP/NodePort/LoadBalancer)                                                        | ClusterIP |
 | sonarr.service.port           | The port assigned to the service                                                                             | 8989      |
 | sonarr.service.nodePort       | In case of service.type NodePort, the nodePort to use                                                        | ""        |
@@ -180,6 +182,7 @@ letting some customization to fit the resource inside your cluster.
 |-------------------------------|--------------------------------------------------------------------------------------------------------------|-----------|
 | radarr.enabled                | Flag if you want to enable radarr                                                                            | true      | 
 | radarr.container.port         | The port in use by the container                                                                             | 7878      | 
+| radarr.container.tag          | The tag used by the container                                                                                | null      |
 | radarr.service.type           | The kind of Service (ClusterIP/NodePort/LoadBalancer)                                                        | ClusterIP |
 | radarr.service.port           | The port assigned to the service                                                                             | 7878      |
 | radarr.service.nodePort       | In case of service.type NodePort, the nodePort to use                                                        | ""        |
@@ -197,6 +200,7 @@ letting some customization to fit the resource inside your cluster.
 |--------------------------------|-----------------------------------------------------------------------------------------------------------------|-----------|
 | jackett.enabled                | Flag if you want to enable jackett                                                                              | true      | 
 | jackett.container.port         | The port in use by the container                                                                                | 9117      | 
+| jackett.container.tag          | The tag used by the container                                                                                   | null      |
 | jackett.service.type           | The kind of Service (ClusterIP/NodePort/LoadBalancer)                                                           | ClusterIP |
 | jackett.service.port           | The port assigned to the service                                                                                | 9117      |
 | jackett.service.nodePort       | In case of service.type NodePort, the nodePort to use                                                           | ""        |
@@ -215,6 +219,7 @@ letting some customization to fit the resource inside your cluster.
 | transmission.enabled                     | Flag if you want to enable transmission                                                                      | true          | 
 | transmission.container.port.utp          | The port in use by the container                                                                             | 9091          | 
 | transmission.container.port.peer         | The port in use by the container for peer connection                                                         | 51413         | 
+| transmission.container.tag               | The tag used by the container                                                                                | null          |
 | transmission.service.utp.type            | The kind of Service (ClusterIP/NodePort/LoadBalancer) for transmission itself                                | ClusterIP     |
 | transmission.service.utp.port            | The port assigned to the service for transmission itself                                                     | 9091          |
 | transmission.service.utp.nodePort        | In case of service.type NodePort, the nodePort to use for transmission itself                                | ""            |
@@ -241,6 +246,7 @@ letting some customization to fit the resource inside your cluster.
 | sabnzbd.enabled                      | Flag if you want to enable sabnzbd                                                                           | true      | 
 | sabnzbd.container.port.http          | The port in use by the container                                                                             | 8080      | 
 | sabnzbd.container.port.https         | The port in use by the container for peer connection                                                         | 9090      | 
+| sabnzbd.container.tag                | The tag used by the container                                                                                | null      |
 | sabnzbd.service.http.type            | The kind of Service (ClusterIP/NodePort/LoadBalancer) for sabnzbd itself                                     | ClusterIP |
 | sabnzbd.service.http.port            | The port assigned to the service for sabnzbd itself                                                          | 9091      |
 | sabnzbd.service.http.nodePort        | In case of service.type NodePort, the nodePort to use for sabnzbd itself                                     | ""        |
