@@ -1,0 +1,32 @@
+name: Lint and validate Helm chart
+on:
+  pull_request:
+    types: [opened, reopened, edited]
+      
+jobs:
+  build:
+    name: Deploy KinD cluster and test resources
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Kind Cluster
+        uses: helm/kind-action@v1.4.0
+        with:
+          config: tests/kind-cluster.yml
+
+      - name: Deploy ingress to newly created cluster
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+          kubectl wait pod --for=jsonpath='{.status.phase}'=Running -n ingress-nginx -l app.kubernetes.io/component=controller --all
+
+      - name: Deploy k8s-mediaserver-operator
+        run: |
+          kubectl apply -f k8s-mediaserver-operator.yml
+          kubectl wait pod --for=jsonpath='{.status.phase}'=Running -n k8s-mediaserver-operator-system --all
+
+      - name: Deploy k8s-mediaserver CRD
+        run: |
+          kubectl create ns mediaserver
+          kubectl apply -f tests/k8s-mesiaserver.yml -n mediaserver
+          kubectl wait pod --for=jsonpath='{.status.phase}'=Running -n mediaserver --all
