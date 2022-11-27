@@ -59,7 +59,7 @@ jobs:
 
       - name: Load images into KinD nodes
         run: |
-          kind load localhost/docker-image k8s-mediaserver-operator:${{ github.sha }}
+          kind load docker-image localhost/k8s-mediaserver-operator:${{ github.sha }}
           sed -i "s/#imagename#/k8s-mediaserver-operator:${{ github.sha }}/g" tests/k8s-mediaserver-operator.yml
       
       - name: Deploy ingress to newly created cluster
