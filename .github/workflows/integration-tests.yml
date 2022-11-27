@@ -48,3 +48,12 @@ jobs:
           kubectl apply -f tests/k8s-mediaserver.yml -n mediaserver
           sleep 15
           kubectl wait pod --for=jsonpath='{.status.phase}'=Running -n mediaserver --all --timeout 120s
+
+      - name: Edit hosts file and test apps
+        run: |
+          sudo echo "127.0.0.1   ${{ env.plex_ingress_host }} ${{ env.ingress_host }}" >> /etc/hosts 
+          curl ${{ env.ingress_host }}/jackett -L
+          curl ${{ env.ingress_host }}/sonarr -L
+          curl ${{ env.ingress_host }}/radarr -L
+          curl ${{ env.ingress_host }}/sabnzbd -L
+          curl ${{ env.plex_ingress_host }} -L
