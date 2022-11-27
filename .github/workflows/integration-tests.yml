@@ -1,7 +1,7 @@
 name: Deploy KinD cluster and test resources
 on:
   pull_request:
-    types: [opened, reopened, edited]
+    types: [opened, reopened, edited, labeled]
       
 jobs:
   deploy-cluster:
