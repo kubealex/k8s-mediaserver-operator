@@ -41,7 +41,7 @@ jobs:
           tags: k8s-mediaserver-operator:${{ github.sha }}
           file: ./Dockerfile
 
-      - name: Build Image - x86_64
+      - name: Build Image - ARM64
         id: build-image-arm64
         uses: docker/build-push-action@v3
         with:
@@ -58,7 +58,7 @@ jobs:
 
       - name: Load images into KinD nodes
         run: |
-          kind load docker-image localhost/k8s-mediaserver-operator:${{ github.sha }}
+          kind load docker-image k8s-mediaserver-operator:${{ github.sha }}
           sed -i "s/#imagename#/k8s-mediaserver-operator:${{ github.sha }}/g" tests/k8s-mediaserver-operator.yml
       
       - name: Deploy ingress to newly created cluster
