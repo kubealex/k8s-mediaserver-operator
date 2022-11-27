@@ -35,19 +35,19 @@ jobs:
       - name: Deploy ingress to newly created cluster
         run: |
           kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
-          while [[ $(kubectl get pods -n ingress-nginx -l app.kubernetes.io/component=controller -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "Waiting for ingress pod to be ready" && sleep 1; done
+          while [[ $(kubectl get pods -n ingress-nginx -l app.kubernetes.io/component=controller -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "Waiting for ingress pod to be ready" && sleep 5; done
 
       - name: Deploy k8s-mediaserver-operator
         run: |
           kubectl apply -f k8s-mediaserver-operator.yml
-          while [[ $(kubectl get pods -n k8s-mediaserver-operator-system -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "Waiting for ingress pod to be ready" && sleep 1; done
+          while [[ $(kubectl get pods -n k8s-mediaserver-operator-system -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "Waiting for operator pod to be ready" && sleep 5; done
 
       - name: Deploy k8s-mediaserver CRD
         run: |
           kubectl create ns mediaserver
           kubectl apply -f tests/k8s-mediaserver.yml -n mediaserver
           sleep 15
-          for pod in $(kubectl get pods -n mediaserver | awk 'NR>1{ print $1 }'); do while [[ $(kubectl get pods $pod -n mediaserver -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "Waiting for mediaserver pods to be ready" && sleep 1; done ; done
+          for pod in $(kubectl get pods -n mediaserver | awk 'NR>1{ print $1 }'); do while [[ $(kubectl get pods $pod -n mediaserver -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "Waiting for mediaserver pods to be ready" && sleep 10; done ; done
      
       - name: Edit hosts file and test apps
         run: |
