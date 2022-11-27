@@ -51,7 +51,7 @@ jobs:
 
       - name: Edit hosts file and test apps
         run: |
-          sudo echo "127.0.0.1   ${{ env.plex_ingress_host }} ${{ env.ingress_host }}" >> /etc/hosts 
+          sudo echo "127.0.0.1   ${{ env.plex_ingress_host }} ${{ env.ingress_host }}" | sudo tee -a /etc/hosts
           curl ${{ env.ingress_host }}/jackett -L
           curl ${{ env.ingress_host }}/sonarr -L
           curl ${{ env.ingress_host }}/radarr -L
