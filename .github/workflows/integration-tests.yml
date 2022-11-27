@@ -36,25 +36,21 @@ jobs:
 
       - name: Build Image - x86_64
         id: build-image-x86_64
-        uses: redhat-actions/buildah-build@v2
+        uses: docker/build-push-action@v3
         with:
-          image: k8s-mediaserver-operator
-          tags: ${{ github.sha }}
-          containerfiles: |
-            ./Dockerfile
+          tags: k8s-mediaserver-operator:${{ github.sha }}
+          file: ./Dockerfile
 
-      - name: Build Image - ARM64
+      - name: Build Image - x86_64
         id: build-image-arm64
-        uses: redhat-actions/buildah-build@v2
+        uses: docker/build-push-action@v3
         with:
-          image: k8s-mediaserver-operator
-          tags: ${{ github.sha }}-arm64
-          containerfiles: |
-            ./Dockerfile-ARM64
+          tags: k8s-mediaserver-operator:${{ github.sha }}-arm64
+          file: ./Dockerfile-ARM64
 
       - name: Debug build
         run: docker images
-        
+
       - name: Kind Cluster
         uses: helm/kind-action@v1.4.0
         with:
