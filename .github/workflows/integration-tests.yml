@@ -35,19 +35,19 @@ jobs:
       - name: Deploy ingress to newly created cluster
         run: |
           kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
-          kubectl wait pod --for=jsonpath='{.status.phase}'=Running -n ingress-nginx -l app.kubernetes.io/component=controller --all
+          while [[ $(kubectl get pods -n ingress-nginx -l app.kubernetes.io/component=controller -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "Waiting for ingress pod to be ready" && sleep 1; done
 
       - name: Deploy k8s-mediaserver-operator
         run: |
           kubectl apply -f k8s-mediaserver-operator.yml
-          kubectl wait pod --for=jsonpath='{.status.phase}'=Running -n k8s-mediaserver-operator-system --all
+          while [[ $(kubectl get pods -n k8s-mediaserver-operator-system -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "Waiting for ingress pod to be ready" && sleep 1; done
 
       - name: Deploy k8s-mediaserver CRD
         run: |
           kubectl create ns mediaserver
           kubectl apply -f tests/k8s-mediaserver.yml -n mediaserver
           sleep 15
-          kubectl wait pod --for=jsonpath='{.status.phase}'=Running -n mediaserver --all --timeout 120s
+          while [[ $(kubectl get pods -n mediaserver -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "Waiting for ingress pod to be ready" && sleep 1; done
 
       - name: Edit hosts file and test apps
         run: |
