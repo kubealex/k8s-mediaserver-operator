@@ -7,7 +7,8 @@ on:
       - 'Dockerfile'
       - 'Dockerfile-ARM64'
       - 'k8s-mediaserver*'
-      - '.github/**'
+  workflow_dispatch:
+
 jobs:
   helm-linter:
     runs-on: ubuntu-latest
