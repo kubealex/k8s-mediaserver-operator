@@ -54,6 +54,7 @@ jobs:
       - name: Kind Cluster
         uses: helm/kind-action@v1.4.0
         with:
+          cluster_name: kind
           config: tests/kind-cluster.yml
 
       - name: Load images into KinD nodes
