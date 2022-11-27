@@ -4,17 +4,64 @@ on:
     types: [opened, reopened, edited, labeled]
       
 jobs:
+  # build-commit-containers:
+  #   name: Build containers from current commit
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+
+  #     - name: Build Image - x86_64
+  #       id: build-image-x86_64
+  #       uses: redhat-actions/buildah-build@v2
+  #       with:
+  #         image: k8s-mediaserver-operator
+  #         tags: ${{ github.sha }}
+  #         containerfiles: |
+  #           ./Dockerfile
+
+  #     - name: Build Image - ARM64
+  #       id: build-image-arm64
+  #       uses: redhat-actions/buildah-build@v2
+  #       with:
+  #         image: k8s-mediaserver-operator
+  #         tags: ${{ github.sha }}-arm64
+  #         containerfiles: |
+  #           ./Dockerfile-ARM64
+
   deploy-cluster:
-    name: Deploy KinD cluster and test resources
+    name: Build images and deploy KinD cluster with test resources
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
+      - name: Build Image - x86_64
+        id: build-image-x86_64
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: k8s-mediaserver-operator
+          tags: ${{ github.sha }}
+          containerfiles: |
+            ./Dockerfile
+
+      - name: Build Image - ARM64
+        id: build-image-arm64
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: k8s-mediaserver-operator
+          tags: ${{ github.sha }}-arm64
+          containerfiles: |
+            ./Dockerfile-ARM64
+
       - name: Kind Cluster
         uses: helm/kind-action@v1.4.0
         with:
           config: tests/kind-cluster.yml
 
+      - name: Load images into KinD nodes
+        run: |
+          kind load docker-image k8s-mediaserver-operator:${{ github.sha }}
+          sed -i "s/#imagename#/k8s-mediaserver-operator:${{ github.sha }}/g" tests/k8s-mediaserver-operator.yml
+      
       - name: Deploy ingress to newly created cluster
         run: |
           kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
