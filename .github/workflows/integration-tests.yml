@@ -25,6 +25,7 @@ jobs:
         run: helm template helm-charts/k8s-mediaserver
 
   build-deploy-cluster:
+    needs: helm-linter
     name: Build images and deploy KinD cluster with test resources
     env:
       ingress_host: k8s-mediaserver.k8s.test
@@ -33,13 +34,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Build Image - x86_64
         id: build-image-x86_64
         uses: docker/build-push-action@v3
         with:
           tags: ${{ env.image_name }}:${{ github.sha }}
           file: ./Dockerfile
+
+      - name: Fetch newer version of CRD
+        run: | 
+          cp k8s-mediaserver.yml k8s-mediaserver-operator.yml tests/
+          sed -i 's/accessMode: ""/accessMode: ReadWriteOnce/g' tests/k8s-mediaserver.yml
+          sed -i 's/pvcStorageClass: ""/pvcStorageClass: standard/g' tests/k8s-mediaserver.yml
+          sed 's|quay.io\/kubealex.*|${{ env.image_name }}:${{ github.sha }}|g' tests/k8s-mediaserver-operator.yml
 
       - name: Kind Cluster
         uses: helm/kind-action@v1.4.0
@@ -50,7 +58,6 @@ jobs:
       - name: Load images into KinD nodes
         run: |
           kind load docker-image ${{ env.image_name }}:${{ github.sha }}
-          sed 's|quay.io\/kubealex.*|${{ env.image_name }}:${{ github.sha }}|g' tests/k8s-mediaserver-operator.yml
 
       - name: Deploy ingress to newly created cluster
         run: |
@@ -61,12 +68,6 @@ jobs:
         run: |
           kubectl apply -f k8s-mediaserver-operator.yml
           while [[ $(kubectl get pods -n k8s-mediaserver-operator-system -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "Waiting for operator pod to be ready" && sleep 5; done
-
-      - name: Fetch newer version of CRD
-        run: | 
-          cp k8s-mediaserver.yml k8s-mediaserver-operator.yml tests/
-          sed -i 's/accessMode: ""/accessMode: ReadWriteOnce/g' tests/k8s-mediaserver.yml
-          sed -i 's/pvcStorageClass: ""/pvcStorageClass: standard/g' tests/k8s-mediaserver.yml
         
       - name: Deploy k8s-mediaserver CRD
         run: |
