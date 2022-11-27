@@ -1,10 +1,10 @@
-name: Lint and validate Helm chart
+name: Deploy KinD cluster and test resources
 on:
   pull_request:
     types: [opened, reopened, edited]
       
 jobs:
-  build:
+  deploy-cluster:
     name: Deploy KinD cluster and test resources
     runs-on: ubuntu-latest
     steps:
@@ -28,5 +28,5 @@ jobs:
       - name: Deploy k8s-mediaserver CRD
         run: |
           kubectl create ns mediaserver
-          kubectl apply -f tests/k8s-mesiaserver.yml -n mediaserver
+          kubectl apply -f tests/k8s-mediaserver.yml -n mediaserver
           kubectl wait pod --for=jsonpath='{.status.phase}'=Running -n mediaserver --all
