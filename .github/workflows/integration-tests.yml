@@ -47,8 +47,8 @@ jobs:
           kubectl create ns mediaserver
           kubectl apply -f tests/k8s-mediaserver.yml -n mediaserver
           sleep 15
-          while [[ $(kubectl get pods -n mediaserver -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "Waiting for ingress pod to be ready" && sleep 1; done
-
+          for pod in $(kubectl get pods -n mediaserver | awk 'NR>1{ print $1 }'); do while [[ $(kubectl get pods $pod -n mediaserver -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "Waiting for mediaserver pods to be ready" && sleep 1; done ; done
+     
       - name: Edit hosts file and test apps
         run: |
           sudo echo "127.0.0.1   ${{ env.plex_ingress_host }} ${{ env.ingress_host }}" | sudo tee -a /etc/hosts
