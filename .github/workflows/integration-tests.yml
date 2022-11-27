@@ -1,35 +1,15 @@
 name: Deploy KinD cluster and test resources
 on:
   pull_request:
-    types: [opened, reopened, edited, labeled]
+    types: [opened, reopened, edited, synchronize]
       
 jobs:
-  # build-commit-containers:
-  #   name: Build containers from current commit
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-
-  #     - name: Build Image - x86_64
-  #       id: build-image-x86_64
-  #       uses: redhat-actions/buildah-build@v2
-  #       with:
-  #         image: k8s-mediaserver-operator
-  #         tags: ${{ github.sha }}
-  #         containerfiles: |
-  #           ./Dockerfile
-
-  #     - name: Build Image - ARM64
-  #       id: build-image-arm64
-  #       uses: redhat-actions/buildah-build@v2
-  #       with:
-  #         image: k8s-mediaserver-operator
-  #         tags: ${{ github.sha }}-arm64
-  #         containerfiles: |
-  #           ./Dockerfile-ARM64
-
   deploy-cluster:
     name: Build images and deploy KinD cluster with test resources
+    env:
+      ingress_host: k8s-mediaserver.k8s.test
+      plex_ingress_host: k8s-plex.k8s.test
+      image_name: k8s-mediaserver-operator
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -38,18 +18,8 @@ jobs:
         id: build-image-x86_64
         uses: docker/build-push-action@v3
         with:
-          tags: k8s-mediaserver-operator:${{ github.sha }}
+          tags: ${{ env.image_name }}:${{ github.sha }}
           file: ./Dockerfile
-
-      - name: Build Image - ARM64
-        id: build-image-arm64
-        uses: docker/build-push-action@v3
-        with:
-          tags: k8s-mediaserver-operator:${{ github.sha }}-arm64
-          file: ./Dockerfile-ARM64
-
-      - name: Debug build
-        run: docker images
 
       - name: Kind Cluster
         uses: helm/kind-action@v1.4.0
@@ -59,8 +29,8 @@ jobs:
 
       - name: Load images into KinD nodes
         run: |
-          kind load docker-image k8s-mediaserver-operator:${{ github.sha }}
-          sed -i "s/#imagename#/k8s-mediaserver-operator:${{ github.sha }}/g" tests/k8s-mediaserver-operator.yml
+          kind load docker-image ${{ env.image_name }}:${{ github.sha }}
+          sed -i "s/#imagename#/${{ env.image_name }}:${{ github.sha }}/g" tests/k8s-mediaserver-operator.yml
       
       - name: Deploy ingress to newly created cluster
         run: |
