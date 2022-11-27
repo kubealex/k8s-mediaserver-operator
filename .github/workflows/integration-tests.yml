@@ -29,4 +29,5 @@ jobs:
         run: |
           kubectl create ns mediaserver
           kubectl apply -f tests/k8s-mediaserver.yml -n mediaserver
+          sleep 15
           kubectl wait pod --for=jsonpath='{.status.phase}'=Running -n mediaserver --all
