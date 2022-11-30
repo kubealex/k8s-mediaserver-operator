@@ -53,8 +53,8 @@ spec:
           volumeMounts:
             - mountPath: /init-prowlarr
               name: init-files-prowlarr
-          {{- if .Values.jackett.volume }}
-            - name: {{ .Values.jackett.volume.name }}
+          {{- if .Values.prowlarr.volume }}
+            - name: {{ .Values.prowlarr.volume.name }}
               mountPath: /prowlarr-config
           {{- else }}
             - name: mediaserver-volume

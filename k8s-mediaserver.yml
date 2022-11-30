@@ -9,13 +9,13 @@ spec:
     ingress_host: k8s-mediaserver.k8s.test
     plex_ingress_host: k8s-plex.k8s.test
     image_tag: latest
-    #UID to run the process with
+    # UID to run the process with
     puid: 1000
-    #GID to run the process with
+    # GID to run the process with
     pgid: 1000
-    #Persistent storage selections and pathing
+    # Persistent storage selections and pathing
     storage:
-      customVolume: false  #set to true if not using a PVC (must provide volume below)
+      customVolume: false  # set to true if not using a PVC (must provide volume below)
       pvcName: mediaserver-pvc
       size: 5Gi
       pvcStorageClass: ""
@@ -45,7 +45,9 @@ spec:
       nodePort:
       extraLBService: false
       # Defines an additional LB service, requires cloud provider service or MetalLB
-
+      # extraLBService:
+      #  annotations:
+      #    my-annotation: my-value
     ingress:
       enabled: true
       annotations: {}
@@ -55,15 +57,15 @@ spec:
         secretName: ""
     resources: {}
     volume: {}
-      #name: pvc-sonarr-config
-      #storageClassName: longhorn
-      #annotations:
-      #  my-annotation/test: my-value
-      #labels:
-      #  my-label/test: my-other-value
-      #accessModes: ReadWriteOnce
-      #storage: 5Gi
-      #selector: {}
+    # name: pvc-sonarr-config
+    # storageClassName: longhorn
+    # annotations:
+    #   my-annotation/test: my-value
+    # labels:
+    #   my-label/test: my-other-value
+    # accessModes: ReadWriteOnce
+    # storage: 5Gi
+    # selector: {}
 
   radarr:
     enabled: true
@@ -77,7 +79,9 @@ spec:
       nodePort:
       extraLBService: false
       # Defines an additional LB service, requires cloud provider service or MetalLB
-
+      # extraLBService:
+      #  annotations:
+      #    my-annotation: my-value
     ingress:
       enabled: true
       annotations: {}
@@ -87,13 +91,13 @@ spec:
         secretName: ""
     resources: {}
     volume: {}
-      #name: pvc-radarr-config
-      #storageClassName: longhorn
-      #annotations: {}
-      #labels: {}
-      #accessModes: ReadWriteOnce
-      #storage: 5Gi
-      #selector: {}
+    # name: pvc-radarr-config
+    # storageClassName: longhorn
+    # annotations: {}
+    # labels: {}
+    # accessModes: ReadWriteOnce
+    # storage: 5Gi
+    # selector: {}
 
   jackett:
     enabled: true
@@ -107,6 +111,9 @@ spec:
       nodePort:
       extraLBService: false
       # Defines an additional LB service, requires cloud provider service or MetalLB
+      # extraLBService:
+      #  annotations:
+      #    my-annotation: my-value
     ingress:
       enabled: true
       annotations: {}
@@ -146,6 +153,9 @@ spec:
         nodePortUDP:
         # Defines an additional LB service, requires cloud provider service or MetalLB
         extraLBService: false
+        # extraLBService:
+        #  annotations:
+        #    my-annotation: my-value
     ingress:
       enabled: true
       annotations: {}
@@ -189,6 +199,9 @@ spec:
         nodePort:
         # Defines an additional LB service, requires cloud provider service or MetalLB
         extraLBService: false
+        # extraLBService:
+        #  annotations:
+        #    my-annotation: my-value
     ingress:
       enabled: true
       annotations: {}
@@ -205,6 +218,27 @@ spec:
     #  accessModes: ReadWriteOnce
     #  storage: 5Gi
     #  selector: {}
+
+  prowlarr:
+    enabled: true
+    container:
+      image: docker.io/linuxserver/prowlarr
+      nodeSelector: {}
+      port: 9696
+    service:
+      type: ClusterIP
+      port: 9696
+      nodePort:
+      extraLBService: false
+    ingress:
+      enabled: true
+      annotations: {}
+      path: /prowlarr
+      tls:
+        enabled: false
+        secretName: ""
+    resources: {}
+    volume: {}
 
   plex:
     enabled: true
