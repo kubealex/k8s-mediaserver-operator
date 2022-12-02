@@ -98,6 +98,18 @@ general:
       path: /mount/path/on/nfs/server/
 ```
 
+*Optional:* To use a specific NFS volume for downloads folder, you should add:
+
+``` yaml
+general:
+  storage:
+    customVolume: true
+  downloadsVolume:
+    nfs:
+      server: {SERVER-IP}
+      path: /mount/path/on/nfs/server/
+```
+
 With this value saved in the top level directory of this repo, running the below will add the resources to your cluster,
 under the helm release name `k8s-mediaserver`
 
@@ -126,6 +138,7 @@ letting some customization to fit the resource inside your cluster.
 | general.puid                          | The UID for the process                                                                                     | 1000                                            |
 | general.nodeSelector                  | Node Selector for all the pods                                                                              | {}                                              |
 | general.storage.customVolume          | Flag if you want to supply your own volume and not use a PVC                                                | false                                           |
+| general.storage.downloadsVolume       | Supply custom volume to be mounted for downloads folder                                                     | {}                                              |
 | general.storage.pvcName               | Name of the persistenVolumeClaim configured in deployments                                                  | mediaserver-pvc                                 |
 | general.storage.accessMode            | Access mode for mediaserver PVC in case of single nodes                                                     | ReadWriteMany                                   |
 | general.storage.pvcStorageClass       | Specifies a storageClass for the PVC                                                                        | ""                                              |

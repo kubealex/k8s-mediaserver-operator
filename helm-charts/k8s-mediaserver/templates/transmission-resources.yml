@@ -162,9 +162,15 @@ spec:
               mountPath: "/config"
               subPath: "{{ .Values.general.storage.subPaths.config }}/transmission"
           {{ end }}
+          {{ if (and ( .Values.general.storage.customVolume ) ( .Values.general.storage.downloadsVolume ) ) }}
+            - name: download-volume
+              mountPath: "/downloads"
+              subPath: "{{ .Values.general.storage.subPaths.downloads }}"
+          {{ else }}
             - name: mediaserver-volume
               mountPath: "/downloads"
               subPath: "{{ .Values.general.storage.subPaths.downloads }}"
+          {{ end }}
           {{- with .Values.transmission.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
@@ -177,6 +183,10 @@ spec:
         {{ else }}
         - name: mediaserver-volume
           {{- toYaml .Values.general.storage.volumes | nindent 10 }}
+        {{ end }}
+        {{ if (and ( .Values.general.storage.customVolume ) ( .Values.general.storage.downloadsVolume ) ) }}
+        - name: download-volume
+          {{- toYaml .Values.general.storage.downloadsVolume | nindent 10 }}
         {{ end }}
         {{ if .Values.transmission.volume }}
         - name: {{ .Values.transmission.volume.name }}

@@ -92,9 +92,15 @@ spec:
               mountPath: "/config"
               subPath: "{{ .Values.general.storage.subPaths.config }}/radarr"
           {{- end }}
+          {{- if (and ( .Values.general.storage.customVolume ) ( .Values.general.storage.downloadsVolume ) ) }}
+            - name: download-volume
+              mountPath: "/downloads"
+              subPath: "{{ .Values.general.storage.subPaths.downloads }}"
+          {{- else }}
             - name: mediaserver-volume
               mountPath: "/downloads"
               subPath: "{{ .Values.general.storage.subPaths.downloads }}"
+          {{- end }}
             - name: mediaserver-volume
               mountPath: "/movies"
               subPath: "{{ .Values.general.storage.subPaths.movies }}"
@@ -110,6 +116,10 @@ spec:
         {{- else }}
         - name: mediaserver-volume
           {{- toYaml .Values.general.storage.volumes | nindent 10 }}
+        {{- end }}
+        {{- if (and ( .Values.general.storage.customVolume ) ( .Values.general.storage.downloadsVolume ) ) }}
+        - name: download-volume
+          {{- toYaml .Values.general.storage.downloadsVolume | nindent 10 }}
         {{- end }}
         {{- if .Values.radarr.volume }}
         - name: {{ .Values.radarr.volume.name }}

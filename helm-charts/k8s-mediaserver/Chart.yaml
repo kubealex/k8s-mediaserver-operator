@@ -3,4 +3,4 @@ appVersion: 1.16.0
 description: A Helm chart for Kubernetes mediaserver
 name: k8s-mediaserver
 type: application
-version: 0.7.0
+version: 0.7.1
