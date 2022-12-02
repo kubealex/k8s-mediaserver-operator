@@ -28,6 +28,7 @@ general:
     volumes: {}
     #  hostPath:
     #    path: /mnt/share
+    downloadsVolume: {}
   ingress:
     ingressClassName: ""
 
