@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       release_tag: ${{ steps.bump-version.outputs.new_tag || steps.bump-version.outputs.previous_tag }}
+      previous_tag: ${{ steps.bump-version.outputs.previous_tag }}
 
     steps:
     - uses: actions/checkout@v3
@@ -72,4 +73,18 @@ jobs:
       - name: Print image url
         run: echo "Images pushed to {{ steps.push-x86.outputs.registry-paths }} and ${{ steps.push-arm64.outputs.registry-paths }}"
 
+      - name: Bump operator version in CRD
+        run: |
+          sed -i "s/k8s-mediaserver-operator:{{ previous_tag }}/k8s-mediaserver-operator:{{ release_tag }}/g" k8s-mediaserver-operator.yml k8s-mediaserver-operator-arm64.yml
 
+      - name: Commit files
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -a -m "Bumping operator definition to comply with {{ release_version }}"
+          
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          branch: ${{ github.ref }}
