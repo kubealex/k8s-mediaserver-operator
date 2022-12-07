@@ -206,6 +206,7 @@ prowlarr:
   enabled: true
   container: 
     image: docker.io/linuxserver/prowlarr
+    tag: develop
     nodeSelector: {}
     port: 9696
   service:
