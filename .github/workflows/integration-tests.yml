@@ -84,4 +84,5 @@ jobs:
           wget ${{ env.ingress_host }}/sonarr
           wget ${{ env.ingress_host }}/radarr
           wget ${{ env.ingress_host }}/sabnzbd
+          wget ${{ env.ingress_host }}/prowlarr          
           curl ${{ env.plex_ingress_host }} 
