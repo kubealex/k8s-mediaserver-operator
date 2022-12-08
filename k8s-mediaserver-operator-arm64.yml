@@ -336,7 +336,7 @@ spec:
         - --health-probe-bind-address=:8081
         - --metrics-addr=127.0.0.1:8080
         - --leader-election-id=k8s-mediaserver-operator
-        image: quay.io/kubealex/k8s-mediaserver-operator:v0.7.0-arm64
+        image: quay.io/kubealex/k8s-mediaserver-operator:v0.8.0-arm64
         livenessProbe:
           httpGet:
             path: /healthz
