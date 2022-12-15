@@ -29,6 +29,9 @@ general:
     #  hostPath:
     #    path: /mnt/share
     downloadsVolume: {}
+    #  nfs:
+    #    server: {SERVER-IP}
+    #    path: /mount/path/on/nfs/server/
   ingress:
     ingressClassName: ""
 
