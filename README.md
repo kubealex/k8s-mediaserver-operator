@@ -302,10 +302,10 @@ and `path:` values to match your NFS.
 general:
   storage:
     customVolume: true
-  volumes:
-    nfs:
-      server: {SERVER-IP}
-      path: /mount/path/on/nfs/server/
+    volumes:
+      nfs:
+        server: {SERVER-IP}
+        path: /mount/path/on/nfs/server/
 ```
 
 ### Adding annotations to the extra load balancer
