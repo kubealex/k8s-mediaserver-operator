@@ -295,7 +295,7 @@ letting some customization to fit the resource inside your cluster.
 This assumes that you have a pre-configured NFS server set up on your network that is accessible from all nodes. If it
 is not accessible by all nodes, pods will not enter ready state when scheduled on nodes that do not have NFS access.
 
-To add an NFS volume to each resource, create a `my-values.yaml` file and add the below. You should change the `server:`
+To add an NFS volume to each resource, edit the K8SMediaServer CR to match below snipttet. You should change the `server:`
 and `path:` values to match your NFS.
 
 ``` yaml
