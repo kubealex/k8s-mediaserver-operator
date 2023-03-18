@@ -173,12 +173,12 @@ spec:
 {{ if .Values.prowlarr.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values.general.ingress_host | quote }}
+        - {{ .Values.prowlarr.ingress.host | default .Values.general.ingress_host | quote }}
       secretName: {{ .Values.prowlarr.ingress.tls.secretName }}
 {{ end }}
   ingressClassName: {{ .Values.general.ingress.ingressClassName }}
   rules:
-    - host: {{ .Values.general.ingress_host | quote }}
+    - host: {{ .Values.prowlarr.ingress.host | default .Values.general.ingress_host | quote }}
       http:
         paths:
           - path: {{ .Values.prowlarr.ingress.path }}

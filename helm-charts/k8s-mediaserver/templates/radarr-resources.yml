@@ -182,12 +182,12 @@ spec:
 {{- if .Values.radarr.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values.general.ingress_host | quote }}
+        - {{ .Values.radarr.ingress.host | default .Values.general.ingress_host | quote }}
       secretName: {{ .Values.radarr.ingress.tls.secretName }}
 {{ end }}
   ingressClassName: {{ .Values.general.ingress.ingressClassName }}
   rules:
-    - host: {{ .Values.general.ingress_host | quote }}
+    - host: {{ .Values.radarr.ingress.host | default .Values.general.ingress_host | quote }}
       http:
         paths:
           - path: {{ .Values.radarr.ingress.path }}

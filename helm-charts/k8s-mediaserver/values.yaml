@@ -46,6 +46,7 @@ sonarr:
   ingress:
     enabled: true
     annotations: {}
+    host: "" # Defaults to general.ingress_host
     path: /sonarr
     tls:
       enabled: false
@@ -77,6 +78,7 @@ radarr:
   ingress:
     enabled: true
     annotations: {}
+    host: "" # Defaults to general.ingress_host
     path: /radarr
     tls:
       enabled: false
@@ -106,6 +108,7 @@ jackett:
   ingress:
     enabled: true
     annotations: {}
+    host: "" # Defaults to general.ingress_host
     path: /jackett
     tls:
       enabled: false
@@ -145,6 +148,7 @@ transmission:
   ingress:
     enabled: true
     annotations: {}
+    host: "" # Defaults to general.ingress_host
     path: /transmission
     tls:
       enabled: false
@@ -188,6 +192,7 @@ sabnzbd:
   ingress:
     enabled: true
     annotations: {}
+    host: "" # Defaults to general.ingress_host
     path: /sabnzbd
     tls:
       enabled: false
@@ -217,6 +222,7 @@ prowlarr:
   ingress:
     enabled: true
     annotations: {}
+    host: "" # Defaults to general.ingress_host
     path: /prowlarr
     tls:
       enabled: false

@@ -174,12 +174,12 @@ spec:
 {{ if .Values.jackett.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values.general.ingress_host | quote }}
+        - {{ .Values.jackett.ingress.host | default .Values.general.ingress_host | quote }}
       secretName: {{ .Values.jackett.ingress.tls.secretName }}
 {{ end }}
   ingressClassName: {{ .Values.general.ingress.ingressClassName }}
   rules:
-    - host: {{ .Values.general.ingress_host | quote }}
+    - host: {{ .Values.jackett.ingress.host | default .Values.general.ingress_host | quote }}
       http:
         paths:
           - path: {{ .Values.jackett.ingress.path }}

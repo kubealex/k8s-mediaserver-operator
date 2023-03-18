@@ -180,12 +180,12 @@ spec:
 {{- if .Values.sonarr.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values.general.ingress_host | quote }}
+        - {{ .Values.sonarr.ingress.host | default .Values.general.ingress_host | quote }}
       secretName: {{ .Values.sonarr.ingress.tls.secretName }}
 {{ end }}
   ingressClassName: {{ .Values.general.ingress.ingressClassName }}
   rules:
-    - host: {{ .Values.general.ingress_host | quote }}
+    - host: {{ .Values.sonarr.ingress.host | default .Values.general.ingress_host | quote }}
       http:
         paths:
           - path: {{ .Values.sonarr.ingress.path }}
