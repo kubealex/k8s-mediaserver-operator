@@ -21,6 +21,7 @@ general:
     subPaths:
       tv: media/tv
       movies: media/movies
+      music: media/music
       downloads: downloads
       transmission: transmission
       sabnzbd: sabnzbd
@@ -47,6 +48,37 @@ sonarr:
     enabled: true
     annotations: {}
     path: /sonarr
+    tls:
+      enabled: false
+      secretName: ""
+  resources: {}
+  volume: {}
+    #name: pvc-sonarr-config
+    #storageClassName: longhorn
+    #annotations:
+    #  my-annotation/test: my-value
+    #labels:
+    #  my-label/test: my-other-value
+    #accessModes: ReadWriteOnce
+    #storage: 5Gi
+    #selector: {}
+
+lidarr:
+  enabled: true
+  container:
+    image: docker.io/linuxserver/lidarr
+    nodeSelector: {}
+    port: 8686
+  service:
+    type: ClusterIP
+    port: 8686
+    nodePort:
+    extraLBService: false
+    # Defines an additional LB service, requires cloud provider service or MetalLB
+  ingress:
+    enabled: true
+    annotations: {}
+    path: /lidarr
     tls:
       enabled: false
       secretName: ""

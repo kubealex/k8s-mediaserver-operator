@@ -14,7 +14,9 @@ you to render in a webUI your movies, TV Series, podcasts, video streams.
 [Sonarr](https://sonarr.tv/ "Sonarr") - A TV series and show tracker, that allows the integration with download managers
 for searching and retrieving TV Series, organizing them, schedule notifications when an episode comes up and much more.
 
-[Radarr](https://radarr.video/ "Radarr") - The same a **Sonarr**, but for movies!
+[Lidarr](https://lidarr.audio/ "Lidarr") - The same as **Sonarr**, but for music!
+
+[Radarr](https://radarr.video/ "Radarr") - The same as **Sonarr**, but for movies!
 
 [Jackett](https://github.com/Jackett/Jackett "Jackett") - An API interface that keeps easy your life interacting with
 trackers for torrents.
@@ -117,6 +119,7 @@ letting some customization to fit the resource inside your cluster.
 | general.storage.size                  | Size of the persistenVolume                                                                                 | 50Gi                                            |
 | general.storage.subPaths.tv           | Default subpath for tv series folder on used storage                                                        | media/tv                                        |
 | general.storage.subPaths.movies       | Default subpath for movies folder on used storage                                                           | media/movies                                    |
+| general.storage.subPaths.music        | Default subpath for music folder on used storage                                                            | media/music                                    |
 | general.storage.subPaths.downloads    | Default root path for downloads for both sabnzbd and transmission on used storage                           | downloads                                       |
 | general.storage.subPaths.transmission | Default subpath for transmission downloads on used storage                                                  | general.storage.subPaths.downloads/transmission |
 | general.storage.subPaths.sabnzbd      | Default subpath for sabnzbd downloads on used storage                                                       | general.storage.subPaths.downloads/sabnzbd      |
@@ -167,6 +170,27 @@ letting some customization to fit the resource inside your cluster.
 | sonarr.ingress.tls.secretName               | Name of the secret holding certificates for the secure ingress                                                 | ""        | 
 | sonarr.resources                            | Limits and Requests for the container                                                                          | {}        |
 | sonarr.volume                               | If set, Plex will create a PVC for it's config volume, else it will be put on general.storage.subPaths.config  | {}        |
+
+### Lidarr
+
+| Config path                                 | Meaning                                                                                                        | Default   | 
+|---------------------------------------------|----------------------------------------------------------------------------------------------------------------|-----------|
+| lidarr.enabled                              | Flag if you want to enable lidarr                                                                              | true      | 
+| lidarr.container.port                       | The port in use by the container                                                                               | 8686      | 
+| lidarr.container.image                      | The image used by the container                                                                                | docker.io/linuxserver/lidarr |
+| lidarr.container.tag                        | The tag used by the container                                                                                  | null      | 
+| lidarr.service.type                         | The kind of Service (ClusterIP/NodePort/LoadBalancer)                                                          | ClusterIP |
+| lidarr.service.port                         | The port assigned to the service                                                                               | 8686      |
+| lidarr.service.nodePort                     | In case of service.type NodePort, the nodePort to use                                                          | ""        |
+| lidarr.service.extraLBService               | If true, creates an additional LoadBalancer service with '-lb' suffix (requires a cloud provider or metalLB)   | false     |
+| lidarr.service.extraLBService.annotations   | Instead of using extraLBService as a bool, you can use it as a map to define annotations on the loadbalancer   | null      |
+| lidarr.ingress.enabled                      | If true, creates the ingress resource for the application                                                      | true      |
+| lidarr.ingress.annotations                  | Additional field for annotations, if needed                                                                    | {}        |
+| lidarr.ingress.path                         | The path where the application is exposed                                                                      | /lidarr   |
+| lidarr.ingress.tls.enabled                  | If true, tls is enabled                                                                                        | false     |
+| lidarr.ingress.tls.secretName               | Name of the secret holding certificates for the secure ingress                                                 | ""        | 
+| lidarr.resources                            | Limits and Requests for the container                                                                          | {}        |
+| lidarr.volume                               | If set, Plex will create a PVC for it's config volume, else it will be put on general.storage.subPaths.config  | {}        |
 
 ### Radarr
 

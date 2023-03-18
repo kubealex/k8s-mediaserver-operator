@@ -73,6 +73,9 @@ spec:
             - name: mediaserver-volume
               mountPath: /tv
               subPath: "{{ .Values.general.storage.subPaths.tv }}"
+            - name: mediaserver-volume
+              mountPath: /music
+              subPath: "{{ .Values.general.storage.subPaths.music }}"
           {{- with .Values.plex.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
