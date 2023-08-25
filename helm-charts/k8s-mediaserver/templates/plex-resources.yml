@@ -29,20 +29,25 @@ spec:
         app: plex
     spec:
       volumes:
-        {{ if not .Values.general.storage.customVolume }}
+        {{- if not .Values.general.storage.customVolume }}
         - name: mediaserver-volume
           persistentVolumeClaim:
             claimName: {{ .Values.general.storage.pvcName }}
-        {{ else }}
+        {{- else }}
         - name: mediaserver-volume
           {{- toYaml .Values.general.storage.volumes | nindent 10 }}
-        {{ end }}
+        {{- end }}
+        {{- if .Values.plex.volume }}
+        - name: {{ .Values.plex.volume.name }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.plex.volume.name }}
+        {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           envFrom:
             - configMapRef:
                 name: plex-config
-          image: "docker.io/linuxserver/plex:{{ .Values.general.image_tag }}"
+          image: "{{ .Values.plex.container.image }}:{{ .Values.plex.container.tag | default .Values.general.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
             tcpSocket:
@@ -54,14 +59,19 @@ spec:
               containerPort: {{ .Values.plex.container.port }}
               protocol: TCP
           volumeMounts:
+          {{- if .Values.plex.volume }}
+            - name: {{ .Values.plex.volume.name }}
+              mountPath: /config
+          {{- else }}
             - name: mediaserver-volume
-              mountPath: "/config"
+              mountPath: /config
               subPath: "{{ .Values.general.storage.subPaths.config }}/plex"
+          {{- end }}
             - name: mediaserver-volume
-              mountPath: "/movies"
+              mountPath: /movies
               subPath: "{{ .Values.general.storage.subPaths.movies }}"
             - name: mediaserver-volume
-              mountPath: "/tv"
+              mountPath: /tv
               subPath: "{{ .Values.general.storage.subPaths.tv }}"
           {{- with .Values.plex.resources }}
           resources:
@@ -98,6 +108,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: plex-lb
+  annotations:
+    {{- include .Values.plex.service.extraLBService.annotations . | nindent 4 }}
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
 spec:
@@ -129,7 +141,7 @@ spec:
     - hosts:
         - {{ .Values.general.plex_ingress_host | quote }}
       secretName: {{ .Values.plex.ingress.tls.secretName }}
-{{ end }}     
+{{ end }}
   ingressClassName: {{ .Values.general.ingress.ingressClassName }}
   rules:
     - host: {{ .Values.general.plex_ingress_host | quote }}
@@ -142,5 +154,5 @@ spec:
                 name: plex
                 port:
                   number: {{ .Values.plex.service.port }}
-{{ end }}     
-{{ end }}     
+{{ end }}
+{{ end }}

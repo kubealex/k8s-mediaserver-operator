@@ -1,0 +1,90 @@
+name: Build and Push Image
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'helm-charts/k8s-mediaserver/**'
+      - 'Dockerfile'
+      - 'Dockerfile-ARM64'
+jobs:
+  versioning:
+    name: Check and manage versioning
+    runs-on: ubuntu-latest
+    outputs:
+      release_tag: ${{ steps.bump-version.outputs.new_tag || steps.bump-version.outputs.previous_tag }}
+      previous_tag: ${{ steps.bump-version.outputs.previous_tag }}
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Bump version and push tag
+      uses: mathieudutour/github-tag-action@v6.1
+      id: bump-version
+      with:
+        github_token: ${{ secrets.GH_TOKEN }}
+        default_bump: false
+
+  build_image:
+    needs: versioning
+    name: Build and push container images
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Image - x86_64
+        id: build-image-x86_64
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: k8s-mediaserver-operator
+          tags: latest ${{ needs.versioning.outputs.release_tag }}
+          containerfiles: |
+            ./Dockerfile
+
+      - name: Build Image - ARM64
+        id: build-image-arm64
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: k8s-mediaserver-operator
+          tags: latest-arm64 ${{ needs.versioning.outputs.release_tag }}-arm64
+          containerfiles: |
+            ./Dockerfile-ARM64
+
+      - name: Push To quay.io
+        id: push-x86
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-image-x86_64.outputs.image }}
+          tags: latest ${{ needs.versioning.outputs.release_tag }}
+          registry: quay.io/kubealex
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_TOKEN }}
+
+      - name: Push To quay.io
+        id: push-arm64
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-image-arm64.outputs.image }}
+          tags: latest-arm64 ${{ needs.versioning.outputs.release_tag }}-arm64
+          registry: quay.io/kubealex
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_TOKEN }}
+
+      - name: Print image url
+        run: echo "Images pushed to ${{ steps.push-x86.outputs.registry-paths }} and ${{ steps.push-arm64.outputs.registry-paths }}"
+
+      - name: Bump operator version in CRD
+        run: |
+          sed -i "s/k8s-mediaserver-operator:${{ previous_tag }}/k8s-mediaserver-operator:${{ release_tag }}/g" k8s-mediaserver-operator.yml k8s-mediaserver-operator-arm64.yml
+
+      - name: Commit files
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -a -m "Bumping operator definition to comply with ${{ release_version }}"
+          
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          branch: ${{ github.ref }}
