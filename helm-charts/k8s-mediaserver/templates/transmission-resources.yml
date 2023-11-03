@@ -187,7 +187,7 @@ spec:
           configMap:
             defaultMode: 493
             name: init-transmission-cm
-      {{- with .Values.general.nodeSelector }}
+      {{- with .Values.transmission.container.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}

@@ -119,7 +119,7 @@ spec:
           configMap:
             defaultMode: 493
             name: init-sonarr-cm
-      {{- with .Values.general.nodeSelector }}
+      {{- with .Values.sonarr.container.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
