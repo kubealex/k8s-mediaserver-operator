@@ -30,6 +30,7 @@ general:
     #    path: /mnt/share
   ingress:
     ingressClassName: ""
+  nodeSelector: {}
 
 sonarr:
   enabled: true
