@@ -75,7 +75,7 @@ jobs:
 
       - name: Bump operator version in CRD
         run: |
-          sed -i "s/k8s-mediaserver-operator:${{ previous_tag }}/k8s-mediaserver-operator:${{ release_tag }}/g" k8s-mediaserver-operator.yml k8s-mediaserver-operator-arm64.yml
+          sed -i "s/k8s-mediaserver-operator:${{ needs.versioning.outputs.previous_tag }}/k8s-mediaserver-operator:${{ needs.versioning.outputs.release_tag }}/g" k8s-mediaserver-operator.yml k8s-mediaserver-operator-arm64.yml
 
       - name: Commit files
         run: |
