@@ -111,7 +111,7 @@ spec:
           configMap:
             defaultMode: 493
             name: init-jackett-cm
-      {{- with .Values.general.nodeSelector }}
+      {{- with merge .Values.jackett.container.nodeSelector .Values.general.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
