@@ -109,7 +109,7 @@ letting some customization to fit the resource inside your cluster.
 | general.image_tag                     | The name of the image tag (arm32v7-latest, arm64v8-latest, development)                                     | latest                                          |
 | general.pgid                          | The GID for the process                                                                                     | 1000                                            |
 | general.puid                          | The UID for the process                                                                                     | 1000                                            |
-| general.nodeSelector                  | Default Node Selector for all the pods. Per-service nodeSelectors are merged against this.                  | {}                                              |
+| general.nodeSelector                  | Node Selector for all the pods                                                                              | {}                                              |
 | general.storage.customVolume          | Flag if you want to supply your own volume and not use a PVC                                                | false                                           |
 | general.storage.pvcName               | Name of the persistenVolumeClaim configured in deployments                                                  | mediaserver-pvc                                 |
 | general.storage.accessMode            | Access mode for mediaserver PVC in case of single nodes                                                     | ReadWriteMany                                   |
@@ -131,7 +131,6 @@ letting some customization to fit the resource inside your cluster.
 | plex.enabled                              | Flag if you want to enable plex                                                                               | true      | 
 | plex.claim                                | **IMPORTANT** Token from your account, needed to claim the server                                             | CHANGEME  |
 | plex.replicaCount                         | Number of replicas serving plex                                                                               | 1         | 
-| plex.container.nodeSelector               | Node Selector for the Plex pods                                                                               | {}        |
 | plex.container.port                       | The port in use by the container                                                                              | 32400     | 
 | plex.container.image                      | The image used by the container                                                                               | docker.io/linuxserver/plex |
 | plex.container.tag                        | The tag used by the container                                                                                 | null      | 
@@ -153,7 +152,6 @@ letting some customization to fit the resource inside your cluster.
 | Config path                                 | Meaning                                                                                                        | Default   | 
 |---------------------------------------------|----------------------------------------------------------------------------------------------------------------|-----------|
 | sonarr.enabled                              | Flag if you want to enable sonarr                                                                              | true      | 
-| sonarr.container.nodeSelector               | Node Selector for the Sonarr pods                                                                              | {}        |
 | sonarr.container.port                       | The port in use by the container                                                                               | 8989      | 
 | sonarr.container.image                      | The image used by the container                                                                                | docker.io/linuxserver/sonarr |
 | sonarr.container.tag                        | The tag used by the container                                                                                  | null      | 
@@ -175,7 +173,6 @@ letting some customization to fit the resource inside your cluster.
 | Config path                                 | Meaning                                                                                                        | Default   | 
 |---------------------------------------------|----------------------------------------------------------------------------------------------------------------|-----------|
 | radarr.enabled                              | Flag if you want to enable radarr                                                                              | true      | 
-| radarr.container.nodeSelector               | Node Selector for the Radarr pods                                                                              | {}        |
 | radarr.container.port                       | The port in use by the container                                                                               | 7878      | 
 | radarr.container.image                      | The image used by the container                                                                                | docker.io/linuxserver/radarr |
 | radarr.container.tag                        | The tag used by the container                                                                                  | null      |
@@ -197,7 +194,6 @@ letting some customization to fit the resource inside your cluster.
 | Config path                                 | Meaning                                                                                                         | Default   | 
 |---------------------------------------------|-----------------------------------------------------------------------------------------------------------------|-----------|
 | jackett.enabled                             | Flag if you want to enable jackett                                                                              | true      | 
-| jackett.container.nodeSelector              | Node Selector for the Jackett pods                                                                              | {}        |
 | jackett.container.port                      | The port in use by the container                                                                                | 9117      | 
 | jackett.container.image                     | The image used by the container                                                                                 | docker.io/linuxserver/jackett |
 | jackett.container.tag                       | The tag used by the container                                                                                   | null      |
@@ -219,7 +215,6 @@ letting some customization to fit the resource inside your cluster.
 | Config path                                   | Meaning                                                                                                         | Default   | 
 |-----------------------------------------------|-----------------------------------------------------------------------------------------------------------------|-----------|
 | prowlarr.enabled                              | Flag if you want to enable prowlarr                                                                             | true      | 
-| prowlarr.container.nodeSelector               | Node Selector for the Prowlarr pods                                                                             | {}        |
 | prowlarr.container.port                       | The port in use by the container                                                                                | 9117      | 
 | prowlarr.container.image                      | The image used by the container                                                                                 | docker.io/linuxserver/prowlarr |
 | prowlarr.container.tag                        | The tag used by the container                                                                                   | develop   |
@@ -241,7 +236,6 @@ letting some customization to fit the resource inside your cluster.
 | Config path                                       | Meaning                                                                                                        | Default       | 
 |---------------------------------------------------|----------------------------------------------------------------------------------------------------------------|---------------|
 | transmission.enabled                              | Flag if you want to enable transmission                                                                        | true          | 
-| transmission.container.nodeSelector               | Node Selector for the Transmission pods                                                                        | {}        |
 | transmission.container.port.utp                   | The port in use by the container                                                                               | 9091          | 
 | transmission.container.port.peer                  | The port in use by the container for peer connection                                                           | 51413         | 
 | transmission.container.image                      | The image used by the container                                                                                | docker.io/linuxserver/transmission |
@@ -272,7 +266,6 @@ letting some customization to fit the resource inside your cluster.
 | Config path                                 | Meaning                                                                                                        | Default   | 
 |---------------------------------------------|----------------------------------------------------------------------------------------------------------------|-----------|
 | sabnzbd.enabled                             | Flag if you want to enable sabnzbd                                                                             | true      | 
-| sabnzbd.container.nodeSelector              | Node Selector for the Sabnzbd pods                                                                             | {}        |
 | sabnzbd.container.port.http                 | The port in use by the container                                                                               | 8080      | 
 | sabnzbd.container.port.https                | The port in use by the container for peer connection                                                           | 9090      | 
 | sabnzbd.container.image                     | The image used by the container                                                                                | docker.io/linuxserver/sabnzbd |

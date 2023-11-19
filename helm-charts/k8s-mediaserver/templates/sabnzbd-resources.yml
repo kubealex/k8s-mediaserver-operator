@@ -420,7 +420,7 @@ spec:
           configMap:
             defaultMode: 493
             name: init-sabnzbd-cm
-      {{- with merge .Values.sabnzbd.container.nodeSelector .Values.general.nodeSelector }}
+      {{- with .Values.general.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
