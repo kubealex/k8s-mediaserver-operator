@@ -81,7 +81,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git commit -a -m "Bumping operator definition to comply with ${{ release_version }}"
+          git commit -a -m "Bumping operator definition to comply with ${{ needs.versioning.outputs.release_version }}"
           
       - name: Push changes
         uses: ad-m/github-push-action@master
