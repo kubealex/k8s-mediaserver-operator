@@ -120,7 +120,7 @@ spec:
           configMap:
             defaultMode: 493
             name: init-radarr-cm
-      {{- with .Values.general.nodeSelector }}
+      {{- with merge .Values.radarr.container.nodeSelector .Values.general.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
