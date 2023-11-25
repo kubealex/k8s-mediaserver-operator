@@ -149,8 +149,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: sonarr-lb
+  {{- with .Values.sonarr.service.extraLBAnnotations }}
   annotations:
-    {{- include .Values.sonarr.service.extraLBService.annotations . | nindent 4 }}
+    {{- . | toYaml | nindent 4 }}
+  {{- end }}
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
 spec:
