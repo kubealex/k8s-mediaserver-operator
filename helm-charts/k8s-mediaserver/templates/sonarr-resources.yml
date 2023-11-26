@@ -74,7 +74,8 @@ spec:
           image: "{{ .Values.sonarr.container.image }}:{{ .Values.sonarr.container.tag | default .Values.general.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: "/{{ .Values.sonarr.ingress.path }}/ping"
               port: {{ .Values.sonarr.container.port }}
             initialDelaySeconds: 10
             periodSeconds: 20

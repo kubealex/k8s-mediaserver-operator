@@ -52,8 +52,9 @@ spec:
           image: "{{ .Values.plex.container.image }}:{{ .Values.plex.container.tag | default .Values.general.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
-            tcpSocket:
+            httpGet:
               port: {{ .Values.plex.container.port }}
+              path: "/"
             initialDelaySeconds: 20
             periodSeconds: 15
           ports:

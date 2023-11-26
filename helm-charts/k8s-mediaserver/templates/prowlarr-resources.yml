@@ -74,7 +74,8 @@ spec:
           image: "{{ .Values.prowlarr.container.image }}:{{ .Values.prowlarr.container.tag | default .Values.general.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: "/{{ .Values.prowlarr.ingress.path }}/ping"
               port: {{ .Values.prowlarr.container.port }}
             initialDelaySeconds: 10
             periodSeconds: 20
