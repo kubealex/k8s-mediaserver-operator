@@ -377,8 +377,7 @@ spec:
           image: "{{ .Values.sabnzbd.container.image }}:{{ .Values.sabnzbd.container.tag | default .Values.general.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
-            httpGet:
-              path: /{{ .Values.sabnzbd.ingress.path }}/wizard/
+            tcpSocket:
               port: {{ .Values.sabnzbd.container.port.http }}
             initialDelaySeconds: 5
             periodSeconds: 10

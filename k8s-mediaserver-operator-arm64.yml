@@ -314,7 +314,7 @@ spec:
         - --upstream=http://127.0.0.1:8080/
         - --logtostderr=true
         - --v=0
-        image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.0
+        image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.0-arm64
         name: kube-rbac-proxy
         ports:
         - containerPort: 8443
@@ -334,10 +334,9 @@ spec:
             - ALL
       - args:
         - --health-probe-bind-address=:8081
-        - --metrics-bind-address=127.0.0.1:8080
-        - --leader-elect
+        - --metrics-addr=127.0.0.1:8080
         - --leader-election-id=k8s-mediaserver-operator
-        image: quay.io/kubealex/k8s-mediaserver-operator:v0.9.0
+        image: quay.io/kubealex/k8s-mediaserver-operator:v0.9.0-arm64
         livenessProbe:
           httpGet:
             path: /healthz
