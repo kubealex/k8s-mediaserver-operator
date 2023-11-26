@@ -141,7 +141,8 @@ spec:
           image: "{{ .Values.transmission.container.image }}:{{ .Values.transmission.container.tag | default .Values.general.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: /{{ .Values.transmission.ingress.path }}/
               port: {{ .Values.transmission.container.port.utp }}
             initialDelaySeconds: 5
             periodSeconds: 10

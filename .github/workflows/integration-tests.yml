@@ -75,7 +75,7 @@ jobs:
           kubectl apply -f tests/k8s-mediaserver.yml -n mediaserver
           sleep 15
           for pod in $(kubectl get pods -n mediaserver | awk 'NR>1{ print $1 }'); do while [[ $(kubectl get pods $pod -n mediaserver -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "Waiting for mediaserver pods to be ready" && sleep 10; done ; done
-
+          sleep 15
       - name: Edit hosts file and test apps
         run: |
           sudo echo "127.0.0.1   ${{ env.plex_ingress_host }} ${{ env.ingress_host }}" | sudo tee -a /etc/hosts
