@@ -75,7 +75,8 @@ spec:
           image: "{{ .Values.radarr.container.image }}:{{ .Values.radarr.container.tag | default .Values.general.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: "/{{ .Values.radarr.ingress.path }}/ping"
               port: {{ .Values.radarr.container.port }}
             initialDelaySeconds: 10
             periodSeconds: 20

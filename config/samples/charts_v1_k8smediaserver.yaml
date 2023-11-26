@@ -5,18 +5,23 @@ metadata:
 spec:
   # Default values copied from <project_dir>/helm-charts/k8s-mediaserver/values.yaml
   general:
-    image_tag: latest
     ingress:
       ingressClassName: ""
     ingress_host: k8s-mediaserver.k8s.test
-    pgid: 1000
+    nodeSelector: {}
     plex_ingress_host: k8s-plex.k8s.test
+    image_tag: latest
+    podDistribution: cluster
+    # UID to run the process with
     puid: 1000
+    # GID to run the process with
+    pgid: 1000
+    # Persistent storage selections and pathing
     storage:
-      customVolume: false
+      customVolume: false  # set to true if not using a PVC (must provide volume below)
       pvcName: mediaserver-pvc
-      pvcStorageClass: []
       size: 5Gi
+      pvcStorageClass: ""
       subPaths:
         config: config
         downloads: downloads
@@ -27,6 +32,7 @@ spec:
       volumes: {}
   jackett:
     container:
+      image: docker.io/linuxserver/jackett
       nodeSelector: {}
       port: 9117
     enabled: true
@@ -39,13 +45,16 @@ spec:
         secretName: ""
     resources: {}
     service:
+      extraLBAnnotations: {}
       extraLBService: false
       nodePort: null
       port: 9117
       type: ClusterIP
+    volume: {}
   plex:
     claim: CHANGEME
     container:
+      image: docker.io/linuxserver/plex
       nodeSelector: {}
       port: 32400
     enabled: true
@@ -58,12 +67,37 @@ spec:
     replicaCount: 1
     resources: {}
     service:
+      extraLBAnnotations: {}
       extraLBService: false
       nodePort: null
       port: 32400
       type: ClusterIP
+    volume: {}
+  prowlarr:
+    container:
+      image: docker.io/linuxserver/prowlarr
+      nodeSelector: {}
+      port: 9696
+      tag: develop
+    enabled: true
+    ingress:
+      annotations: {}
+      enabled: true
+      path: /prowlarr
+      tls:
+        enabled: false
+        secretName: ""
+    resources: {}
+    service:
+      extraLBAnnotations: {}
+      extraLBService: false
+      nodePort: null
+      port: 9696
+      type: ClusterIP
+    volume: {}
   radarr:
     container:
+      image: docker.io/linuxserver/radarr
       nodeSelector: {}
       port: 7878
     enabled: true
@@ -76,12 +110,15 @@ spec:
         secretName: ""
     resources: {}
     service:
+      extraLBAnnotations: {}
       extraLBService: false
       nodePort: null
       port: 7878
       type: ClusterIP
+    volume: {}
   sabnzbd:
     container:
+      image: docker.io/linuxserver/sabnzbd
       nodeSelector: {}
       port:
         http: 8080
@@ -97,17 +134,21 @@ spec:
     resources: {}
     service:
       http:
+        extraLBAnnotations: {}
         extraLBService: false
         nodePort: null
         port: 8080
         type: ClusterIP
       https:
+        extraLBAnnotations: {}
         extraLBService: false
         nodePort: null
         port: 9090
         type: ClusterIP
+    volume: {}
   sonarr:
     container:
+      image: docker.io/linuxserver/sonarr
       nodeSelector: {}
       port: 8989
     enabled: true
@@ -120,10 +161,12 @@ spec:
         secretName: ""
     resources: {}
     service:
+      extraLBAnnotations: {}
       extraLBService: false
       nodePort: null
       port: 8989
       type: ClusterIP
+    volume: {}
   transmission:
     config:
       auth:
@@ -131,6 +174,7 @@ spec:
         password: ""
         username: ""
     container:
+      image: docker.io/linuxserver/transmission
       nodeSelector: {}
       port:
         peer: 51413
@@ -146,15 +190,18 @@ spec:
     resources: {}
     service:
       peer:
+        extraLBAnnotations: {}
         extraLBService: false
         nodePort: null
         nodePortUDP: null
         port: 51413
         type: ClusterIP
       utp:
+        extraLBAnnotations: {}
         extraLBService: false
         nodePort: null
         port: 9091
         type: ClusterIP
-  
-  
+    volume: {}
+
+
