@@ -42,7 +42,6 @@ jobs:
         with:
           image: k8s-mediaserver-operator
           archs: amd64, arm64
-          platforms: linux/amd64, linux/arm64
           tags: latest ${{ needs.versioning.outputs.release_tag }}
           containerfiles: |
             ./Dockerfile
