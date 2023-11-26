@@ -1,4 +1,4 @@
-## Append samples of your project ##
+## Append samples you want in your CSV to this file as resources ##
 resources:
 - charts_v1_k8smediaserver.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples

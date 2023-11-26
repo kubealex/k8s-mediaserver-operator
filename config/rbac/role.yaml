@@ -45,15 +45,7 @@ rules:
   - patch
   - update
   - watch
-- verbs:
-  - "*"
-  apiGroups:
-  - "networking.k8s.io"
-  resources:
-  - "ingresses"
-- verbs:
-  - "*"
-  apiGroups:
+- apiGroups:
   - ""
   resources:
   - pods
@@ -64,13 +56,33 @@ rules:
   - events
   - configmaps
   - secrets
-- verbs:
-  - "*"
-  apiGroups:
-  - "apps"
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apps
   resources:
   - deployments
   - daemonsets
   - replicasets
   - statefulsets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - "networking.k8s.io"
+  verbs:
+  - "*"
+  resources:
+  - "ingresses"
 #+kubebuilder:scaffold:rules
