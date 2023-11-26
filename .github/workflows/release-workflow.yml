@@ -6,7 +6,6 @@ on:
     paths:
       - 'helm-charts/k8s-mediaserver/**'
       - 'Dockerfile'
-      - 'Dockerfile-ARM64'
 jobs:
   versioning:
     name: Check and manage versioning
@@ -32,57 +31,45 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Build Image - x86_64
-        id: build-image-x86_64
+      - name: Install qemu-user-static for multiarch builds
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static
+
+      - name: Build Image - multiarch
+        id: build-image
         uses: redhat-actions/buildah-build@v2
         with:
           image: k8s-mediaserver-operator
+          archs: amd64, arm64
+          platforms: linux/amd64, linux/arm64
           tags: latest ${{ needs.versioning.outputs.release_tag }}
           containerfiles: |
             ./Dockerfile
 
-      - name: Build Image - ARM64
-        id: build-image-arm64
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: k8s-mediaserver-operator
-          tags: latest-arm64 ${{ needs.versioning.outputs.release_tag }}-arm64
-          containerfiles: |
-            ./Dockerfile-ARM64
-
       - name: Push To quay.io
-        id: push-x86
+        id: push-image
         uses: redhat-actions/push-to-registry@v2
         with:
-          image: ${{ steps.build-image-x86_64.outputs.image }}
+          image: ${{ steps.build-image.outputs.image }}
           tags: latest ${{ needs.versioning.outputs.release_tag }}
-          registry: quay.io/kubealex
-          username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_TOKEN }}
-
-      - name: Push To quay.io
-        id: push-arm64
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.build-image-arm64.outputs.image }}
-          tags: latest-arm64 ${{ needs.versioning.outputs.release_tag }}-arm64
           registry: quay.io/kubealex
           username: ${{ secrets.QUAY_USERNAME }}
           password: ${{ secrets.QUAY_TOKEN }}
 
       - name: Print image url
-        run: echo "Images pushed to ${{ steps.push-x86.outputs.registry-paths }} and ${{ steps.push-arm64.outputs.registry-paths }}"
+        run: echo "Images pushed to ${{ steps.push-image.outputs.registry-paths }}"
 
       - name: Bump operator version in CRD
         run: |
-          sed -i "s/k8s-mediaserver-operator:${{ needs.versioning.outputs.previous_tag }}/k8s-mediaserver-operator:${{ needs.versioning.outputs.release_tag }}/g" k8s-mediaserver-operator.yml k8s-mediaserver-operator-arm64.yml
+          sed -i "s/k8s-mediaserver-operator:${{ needs.versioning.outputs.previous_tag }}/k8s-mediaserver-operator:${{ needs.versioning.outputs.release_tag }}/g" k8s-mediaserver-operator.yml
 
       - name: Commit files
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git commit -a -m "Bumping operator definition to comply with ${{ needs.versioning.outputs.release_version }}"
-          
+
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
