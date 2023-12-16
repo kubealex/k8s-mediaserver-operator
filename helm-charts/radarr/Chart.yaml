@@ -1,0 +1,6 @@
+apiVersion: v2
+appVersion: 0.9.1
+description: A Helm chart for Kubernetes radarr.
+name: k8s-radarr
+type: application
+version: 0.9.1

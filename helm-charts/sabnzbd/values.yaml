@@ -1,0 +1,38 @@
+enabled: true
+container:
+  image: docker.io/linuxserver/sabnzbd
+  nodeSelector: {}
+  port:
+    http: 8080
+    https: 9090
+service:
+  http:
+    type: ClusterIP
+    port: 8080
+    nodePort:
+    # Defines an additional LB service, requires cloud provider service or MetalLB
+    extraLBService: false
+    extraLBAnnotations: {}
+  https:
+    type: ClusterIP
+    port: 9090
+    nodePort:
+    # Defines an additional LB service, requires cloud provider service or MetalLB
+    extraLBService: false
+    extraLBAnnotations: {}
+ingress:
+  enabled: true
+  annotations: {}
+  path: /sabnzbd
+  tls:
+    enabled: false
+    secretName: ""
+resources: {}
+volume: {}
+#  name: pvc-plex-config
+#  storageClassName: longhorn
+#  annotations: {}
+#  labels: {}
+#  accessModes: ReadWriteOnce
+#  storage: 5Gi
+#  selector: {}

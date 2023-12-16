@@ -1,0 +1,28 @@
+enabled: true
+container:
+  image: docker.io/linuxserver/prowlarr
+  tag: develop
+  nodeSelector: {}
+  port: 9696
+service:
+  type: ClusterIP
+  port: 9696
+  nodePort:
+  extraLBService: false
+  extraLBAnnotations: {}
+ingress:
+  enabled: true
+  annotations: {}
+  path: /prowlarr
+  tls:
+    enabled: false
+    secretName: ""
+resources: {}
+volume: {}
+#  name: pvc-prowlarr-config
+#  storageClassName: longhorn
+#  annotations: {}
+#  labels: {}
+#  accessModes: ReadWriteOnce
+#  storage: 5Gi
+#  selector: {}

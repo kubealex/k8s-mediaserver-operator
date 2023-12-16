@@ -1,0 +1,6 @@
+apiVersion: v2
+appVersion: 0.9.1
+description: A Helm chart for kubernetes based Plex.
+name: k8s-plex
+type: application
+version: 0.9.1

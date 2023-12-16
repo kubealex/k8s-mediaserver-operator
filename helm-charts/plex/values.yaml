@@ -1,0 +1,35 @@
+enabled: true
+claim: "CHANGEME"
+replicaCount: 1
+container:
+  image: docker.io/linuxserver/plex
+  nodeSelector: {}
+  port: 32400
+service:
+  type: ClusterIP
+  port: 32400
+  nodePort:
+  # Defines an additional LB service, requires cloud provider service or MetalLB
+  extraLBService: false
+  extraLBAnnotations: {}
+ingress:
+  enabled: true
+  annotations: {}
+  tls:
+    enabled: false
+    secretName: ""
+resources: {}
+#  limits:
+#    cpu: 100m
+#    memory: 100Mi
+#  requests:
+#    cpu: 100m
+#    memory: 100Mi
+volume: {}
+#  name: pvc-plex-config
+#  storageClassName: longhorn
+#  annotations: {}
+#  labels: {}
+#  accessModes: ReadWriteOnce
+#  storage: 5Gi
+#  selector: {}

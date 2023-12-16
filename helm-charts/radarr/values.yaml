@@ -1,0 +1,28 @@
+enabled: true
+container:
+  image: docker.io/linuxserver/radarr
+  nodeSelector: {}
+  port: 7878
+service:
+  type: ClusterIP
+  port: 7878
+  nodePort:
+  # Defines an additional LB service, requires cloud provider service or MetalLB
+  extraLBService: false
+  extraLBAnnotations: {}
+ingress:
+  enabled: true
+  annotations: {}
+  path: /radarr
+  tls:
+    enabled: false
+    secretName: ""
+resources: {}
+volume: {}
+  #name: pvc-radarr-config
+  #storageClassName: longhorn
+  #annotations: {}
+  #labels: {}
+  #accessModes: ReadWriteOnce
+  #storage: 5Gi
+  #selector: {}
