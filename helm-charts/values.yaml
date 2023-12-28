@@ -1,0 +1,4 @@
+jackett:
+  enabled: false
+sonarr:
+  enabled: true

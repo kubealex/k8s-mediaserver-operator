@@ -1,0 +1,9 @@
+dependencies:
+- name: k8s-jackett
+  repository: file://./jackett
+  version: 0.9.1
+- name: k8s-sonarr
+  repository: file://./sonarr
+  version: 0.9.1
+digest: sha256:e4ddad5236987a75442c432666fb69d46de0d580ce6d8162f81197083747366c
+generated: "2023-12-28T13:53:54.083703-06:00"

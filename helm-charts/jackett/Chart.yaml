@@ -4,3 +4,4 @@ description: A Helm chart for kubernetes based jackett service.
 name: k8s-jackett
 type: application
 version: 0.9.1
+

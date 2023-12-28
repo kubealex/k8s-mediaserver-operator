@@ -1,0 +1,15 @@
+apiVersion: v2
+appVersion: 0.9.1
+description: A Helm chart for kubernetes based Media services.
+name: k8s-jackett
+type: application
+version: 0.9.1
+dependencies:
+- name: k8s-jackett
+  version: ^0.9.0
+  repository: "file://./jackett"
+  condition: jackett.enabled
+- name: k8s-sonarr
+  version: ^0.9.0
+  repository: "file://./sonarr"
+  condition: sonarr.enabled
