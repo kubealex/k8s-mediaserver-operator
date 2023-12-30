@@ -1,5 +1,3 @@
-{{- if .Values.sabnzbd.enabled -}}
----
 ### CONFIGMAP
 ## INIT-CONTAINER
 apiVersion: v1
@@ -47,9 +45,9 @@ data:
     api_key = 7a50bedb4f764603bab47212c7a16ec4
     nzb_key = c7378d3a9b024117baacb21de005b1a6
     permissions = ""
-    download_dir = /{{ .Values.general.storage.subPaths.downloads }}/{{ .Values.general.storage.subPaths.sabnzbd }}/incomplete
+    download_dir = /{{ .Values.storage.subPaths.downloads }}/{{ .Values.storage.subPaths.sabnzbd }}/incomplete
     download_free = ""
-    complete_dir = /{{ .Values.general.storage.subPaths.downloads }}/{{ .Values.general.storage.subPaths.sabnzbd }}/complete
+    complete_dir = /{{ .Values.storage.subPaths.downloads }}/{{ .Values.storage.subPaths.sabnzbd }}/complete
     complete_free = ""
     fulldisk_autoresume = 0
     script_dir = ""
@@ -183,7 +181,7 @@ data:
     nomedia_marker = ""
     ipv6_servers = 1
     url_base = /sabnzbd
-    host_whitelist = {{ .Values.general.ingress_host }}
+    host_whitelist = {{ .Values.ingress_host }}
     local_ranges = ,
     max_url_retries = 10
     downloader_sleep_time = 10
@@ -328,8 +326,8 @@ kind: ConfigMap
 metadata:
   name: sabnzbd-config
 data:
-  PGID: "{{ .Values.general.pgid }}"
-  PUID: "{{ .Values.general.puid }}"
+  PGID: "{{ .Values.pgid }}"
+  PUID: "{{ .Values.puid }}"
 ---
 ### DEPLOYMENT
 apiVersion: apps/v1
@@ -358,76 +356,76 @@ spec:
           volumeMounts:
             - mountPath: /init-sabnzbd
               name: init-files-sabnzbd
-          {{- if .Values.sabnzbd.volume }}
-            - name: {{ .Values.sabnzbd.volume.name }}
+          {{- if .Values.volume }}
+            - name: {{ .Values.volume.name }}
               mountPath: /sabnzbd-config
           {{- else }}
             - name: mediaserver-volume
               mountPath: "/sabnzbd-config"
-              subPath: "{{ .Values.general.storage.subPaths.config }}/sabnzbd"
+              subPath: "{{ .Values.storage.subPaths.config }}/sabnzbd"
           {{- end }}
           securityContext:
-            runAsUser: {{ .Values.general.puid }}
-            runAsGroup: {{ .Values.general.pgid }}
+            runAsUser: {{ .Values.puid }}
+            runAsGroup: {{ .Values.pgid }}
       containers:
         - name: {{ .Chart.Name }}
           envFrom:
             - configMapRef:
                 name: sabnzbd-config
-          image: "{{ .Values.sabnzbd.container.image }}:{{ .Values.sabnzbd.container.tag | default .Values.general.image_tag }}"
+          image: "{{ .Values.container.image }}:{{ .Values.container.tag | default .Values.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
             httpGet:
-              path: /{{ .Values.sabnzbd.ingress.path }}/wizard/
-              port: {{ .Values.sabnzbd.container.port.http }}
+              path: /{{ .Values.ingress.path }}/wizard/
+              port: {{ .Values.container.port.http }}
             initialDelaySeconds: 5
             periodSeconds: 10
           ports:
             - name: sabnzbd-http
-              containerPort: {{ .Values.sabnzbd.container.port.http }}
+              containerPort: {{ .Values.container.port.http }}
               protocol: TCP
             - name: sabnzbd-https
-              containerPort: {{ .Values.sabnzbd.container.port.https }}
+              containerPort: {{ .Values.container.port.https }}
               protocol: TCP
           volumeMounts:
-          {{- if .Values.sabnzbd.volume }}
-            - name: {{ .Values.sabnzbd.volume.name }}
+          {{- if .Values.volume }}
+            - name: {{ .Values.volume.name }}
               mountPath: /config
           {{- else }}
             - name: mediaserver-volume
               mountPath: "/config"
-              subPath: "{{ .Values.general.storage.subPaths.config }}/sabnzbd"
+              subPath: "{{ .Values.storage.subPaths.config }}/sabnzbd"
           {{- end }}
             - name: mediaserver-volume
               mountPath: "/downloads"
-              subPath: "{{ .Values.general.storage.subPaths.downloads }}"
-          {{- with .Values.sabnzbd.resources }}
+              subPath: "{{ .Values.storage.subPaths.downloads }}"
+          {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
-        {{- if not .Values.general.storage.customVolume }}
+        {{- if not .Values.storage.customVolume }}
         - name: mediaserver-volume
           persistentVolumeClaim:
-            claimName: {{ .Values.general.storage.pvcName }}
+            claimName: {{ .Values.storage.pvcName }}
         {{- else }}
         - name: mediaserver-volume
-          {{- toYaml .Values.general.storage.volumes | nindent 10 }}
+          {{- toYaml .Values.storage.volumes | nindent 10 }}
         {{- end }}
-        {{- if .Values.sabnzbd.volume }}
-        - name: {{ .Values.sabnzbd.volume.name }}
+        {{- if .Values.volume }}
+        - name: {{ .Values.volume.name }}
           persistentVolumeClaim:
-            claimName: {{ .Values.sabnzbd.volume.name }}
+            claimName: {{ .Values.volume.name }}
         {{- end }}
         - name: init-files-sabnzbd
           configMap:
             defaultMode: 493
             name: init-sabnzbd-cm
-      {{- with merge .Values.sabnzbd.container.nodeSelector .Values.general.nodeSelector }}
+      {{- with merge .Values.container.nodeSelector .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if eq .Values.general.podDistribution "cluster" }}
+      {{- if eq .Values.podDistribution "cluster" }}
       affinity:
         podAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -440,7 +438,7 @@ spec:
                   - {{ .Release.Name }}
               topologyKey: "kubernetes.io/hostname"
             weight: 100
-      {{- else if eq .Values.general.podDistribution "spread" }}
+      {{- else if eq .Values.podDistribution "spread" }}
       topologySpreadConstraints:
       - maxSkew: 1
         topologyKey: "kubernetes.io/hostname"
@@ -458,14 +456,14 @@ metadata:
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.sabnzbd.service.http.type }}
+  type: {{ .Values.service.http.type }}
   ports:
-    - port: {{ .Values.sabnzbd.service.http.port }}
-      targetPort: {{ .Values.sabnzbd.container.port.http }}
+    - port: {{ .Values.service.http.port }}
+      targetPort: {{ .Values.container.port.http }}
       protocol: TCP
       name: sabnzbd-http
-{{ if eq .Values.sabnzbd.service.http.type "NodePort" }}
-      nodePort: {{ .Values.sabnzbd.service.http.nodePort }}
+{{ if eq .Values.service.http.type "NodePort" }}
+      nodePort: {{ .Values.service.http.nodePort }}
 {{ end }}
   selector:
     app: sabnzbd
@@ -477,24 +475,24 @@ metadata:
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.sabnzbd.service.https.type }}
+  type: {{ .Values.service.https.type }}
   ports:
-    - port: {{ .Values.sabnzbd.service.https.port }}
-      targetPort: {{ .Values.sabnzbd.container.port.https }}
+    - port: {{ .Values.service.https.port }}
+      targetPort: {{ .Values.container.port.https }}
       protocol: TCP
       name: sabnzbd-https
-{{ if eq .Values.sabnzbd.service.http.type "NodePort" }}
-      nodePort: {{ .Values.sabnzbd.service.http.nodePort }}
+{{ if eq .Values.service.http.type "NodePort" }}
+      nodePort: {{ .Values.service.http.nodePort }}
 {{ end }}
   selector:
     app: sabnzbd
 ---
-{{ if .Values.sabnzbd.service.http.extraLBService }}
+{{ if .Values.service.http.extraLBService }}
 apiVersion: v1
 kind: Service
 metadata:
   name: sabnzbd-lb
-  {{- with .Values.sabnzbd.service.http.extraLBAnnotations }}
+  {{- with .Values.service.http.extraLBAnnotations }}
   annotations:
     {{- . | toYaml | nindent 4 }}
   {{- end }}
@@ -503,20 +501,20 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: {{ .Values.sabnzbd.service.http.port }}
-      targetPort: {{ .Values.sabnzbd.container.port.http }}
+    - port: {{ .Values.service.http.port }}
+      targetPort: {{ .Values.container.port.http }}
       protocol: TCP
       name: sabnzbd-http
   selector:
     app: sabnzbd
 {{ end }}
 ---
-{{ if .Values.sabnzbd.service.https.extraLBService }}
+{{ if .Values.service.https.extraLBService }}
 apiVersion: v1
 kind: Service
 metadata:
   name: sabnzbd-lb-https
-  {{- with .Values.sabnzbd.service.https.extraLBAnnotations }}
+  {{- with .Values.service.https.extraLBAnnotations }}
   annotations:
     {{- . | toYaml | nindent 4 }}
   {{- end }}
@@ -525,8 +523,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: {{ .Values.sabnzbd.service.https.port }}
-      targetPort: {{ .Values.sabnzbd.container.port.https }}
+    - port: {{ .Values.service.https.port }}
+      targetPort: {{ .Values.container.port.https }}
       protocol: TCP
       name: sabnzbd-https
   selector:
@@ -534,35 +532,34 @@ spec:
     {{ end }}
 ---
 ### INGRESS
-{{ if .Values.sabnzbd.ingress.enabled }}
+{{ if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: sabnzbd
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
-  {{- with .Values.sabnzbd.ingress.annotations }}
+  {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-{{- if .Values.sabnzbd.ingress.tls.enabled }}
+{{- if .Values.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values.general.ingress_host | quote }}
-      secretName: {{ .Values.sabnzbd.ingress.tls.secretName }}
+        - {{ .Values.ingress_host | quote }}
+      secretName: {{ .Values.ingress.tls.secretName }}
 {{ end }}
-  ingressClassName: {{ .Values.general.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
   rules:
-    - host: {{ .Values.general.ingress_host | quote }}
+    - host: {{ .Values.ingress_host | quote }}
       http:
         paths:
-          - path: {{ .Values.sabnzbd.ingress.path }}
+          - path: {{ .Values.ingress.path }}
             pathType: Prefix
             backend:
               service:
                 name: sabnzbd
                 port:
-                  number: {{ .Values.sabnzbd.service.http.port }}
-{{ end }}
+                  number: {{ .Values.service.http.port }}
 {{ end }}

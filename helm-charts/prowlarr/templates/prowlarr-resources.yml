@@ -1,12 +1,10 @@
-{{ if .Values.prowlarr.enabled }}
----
 ### CONFIGMAPS
 ## INIT-CONTAINER
 apiVersion: v1
 data:
   config.xml: |
     <Config>
-      <UrlBase>{{ .Values.prowlarr.ingress.path }}</UrlBase>
+      <UrlBase>{{ .Values.ingress.path }}</UrlBase>
     </Config>
   init-prowlarr.sh: |
     #!/bin/bash
@@ -25,8 +23,8 @@ kind: ConfigMap
 metadata:
   name: prowlarr-config
 data:
-  PGID: "{{ .Values.general.pgid }}"
-  PUID: "{{ .Values.general.puid }}"
+  PGID: "{{ .Values.pgid }}"
+  PUID: "{{ .Values.puid }}"
 ---
 ### DEPLOYMENT
 apiVersion: apps/v1
@@ -55,70 +53,70 @@ spec:
           volumeMounts:
             - mountPath: /init-prowlarr
               name: init-files-prowlarr
-          {{- if .Values.prowlarr.volume }}
-            - name: {{ .Values.prowlarr.volume.name }}
+          {{- if .Values.volume }}
+            - name: {{ .Values.volume.name }}
               mountPath: /prowlarr-config
           {{- else }}
             - name: mediaserver-volume
               mountPath: /prowlarr-config
-              subPath: "{{ .Values.general.storage.subPaths.config }}/prowlarr"
+              subPath: "{{ .Values.storage.subPaths.config }}/prowlarr"
           {{- end }}
           securityContext:
-            runAsUser: {{ .Values.general.puid }}
-            runAsGroup: {{ .Values.general.pgid }}
+            runAsUser: {{ .Values.puid }}
+            runAsGroup: {{ .Values.pgid }}
       containers:
         - name: {{ .Chart.Name }}
           envFrom:
             - configMapRef:
                 name: prowlarr-config
-          image: "{{ .Values.prowlarr.container.image }}:{{ .Values.prowlarr.container.tag | default .Values.general.image_tag }}"
+          image: "{{ .Values.container.image }}:{{ .Values.container.tag | default .Values.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
             httpGet:
-              path: "/{{ .Values.prowlarr.ingress.path }}/ping"
-              port: {{ .Values.prowlarr.container.port }}
+              path: "/{{ .Values.ingress.path }}/ping"
+              port: {{ .Values.container.port }}
             initialDelaySeconds: 10
             periodSeconds: 20
           ports:
             - name: prowlarr-port
-              containerPort: {{ .Values.prowlarr.container.port }}
+              containerPort: {{ .Values.container.port }}
               protocol: TCP
           volumeMounts:
-          {{- if .Values.prowlarr.volume }}
-            - name: {{ .Values.prowlarr.volume.name }}
+          {{- if .Values.volume }}
+            - name: {{ .Values.volume.name }}
               mountPath: /config
           {{- else }}
             - name: mediaserver-volume
               mountPath: "/config"
-              subPath: "{{ .Values.general.storage.subPaths.config }}/prowlarr"
+              subPath: "{{ .Values.storage.subPaths.config }}/prowlarr"
           {{- end }}
-          {{- with .Values.prowlarr.resources }}
+          {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
-        {{ if not .Values.general.storage.customVolume }}
+        {{ if not .Values.storage.customVolume }}
         - name: mediaserver-volume
           persistentVolumeClaim:
-            claimName: {{ .Values.general.storage.pvcName }}
+            claimName: {{ .Values.storage.pvcName }}
         {{ else }}
         - name: mediaserver-volume
-          {{- toYaml .Values.general.storage.volumes | nindent 10 }}
+          {{- toYaml .Values.storage.volumes | nindent 10 }}
         {{ end }}
-        {{- if .Values.prowlarr.volume }}
-        - name: {{ .Values.prowlarr.volume.name }}
+        {{- if .Values.volume }}
+        - name: {{ .Values.volume.name }}
           persistentVolumeClaim:
-            claimName: {{ .Values.prowlarr.volume.name }}
+            claimName: {{ .Values.volume.name }}
         {{- end }}
         - name: init-files-prowlarr
           configMap:
             defaultMode: 493
             name: init-prowlarr-cm
-      {{- with merge .Values.prowlarr.container.nodeSelector .Values.general.nodeSelector }}
+      {{- with merge .Values.container.nodeSelector .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if eq .Values.general.podDistribution "cluster" }}
+      {{- if eq .Values.podDistribution "cluster" }}
       affinity:
         podAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -131,7 +129,7 @@ spec:
                   - {{ .Release.Name }}
               topologyKey: "kubernetes.io/hostname"
             weight: 100
-      {{- else if eq .Values.general.podDistribution "spread" }}
+      {{- else if eq .Values.podDistribution "spread" }}
       topologySpreadConstraints:
       - maxSkew: 1
         topologyKey: "kubernetes.io/hostname"
@@ -149,25 +147,25 @@ metadata:
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.prowlarr.service.type }}
+  type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.prowlarr.service.port }}
-      targetPort: {{ .Values.prowlarr.container.port }}
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.container.port }}
       protocol: TCP
-{{ if eq .Values.prowlarr.service.type "NodePort" }}
-      nodePort: {{ .Values.prowlarr.service.nodePort }}
+{{ if eq .Values.service.type "NodePort" }}
+      nodePort: {{ .Values.service.nodePort }}
 {{ end }}
       name: prowlarr-port
   selector:
     app: prowlarr
 
 ---
-{{ if .Values.prowlarr.service.extraLBService }}
+{{ if .Values.service.extraLBService }}
 apiVersion: v1
 kind: Service
 metadata:
   name: prowlarr-lb
-  {{- with .Values.prowlarr.service.extraLBAnnotations }}
+  {{- with .Values.service.extraLBAnnotations }}
   annotations:
     {{- . | toYaml | nindent 4 }}
   {{- end }}
@@ -176,8 +174,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: {{ .Values.prowlarr.service.port }}
-      targetPort: {{ .Values.prowlarr.container.port }}
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.container.port }}
       protocol: TCP
       name: prowlarr-port
   selector:
@@ -185,35 +183,34 @@ spec:
 {{ end }}
 ---
 ### INGRESS ###
-{{ if .Values.prowlarr.ingress.enabled }}
+{{ if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: prowlarr
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
-  {{- with .Values.prowlarr.ingress.annotations }}
+  {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-{{ if .Values.prowlarr.ingress.tls.enabled }}
+{{ if .Values.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values.general.ingress_host | quote }}
-      secretName: {{ .Values.prowlarr.ingress.tls.secretName }}
+        - {{ .Values.ingress_host | quote }}
+      secretName: {{ .Values.ingress.tls.secretName }}
 {{ end }}
-  ingressClassName: {{ .Values.general.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
   rules:
-    - host: {{ .Values.general.ingress_host | quote }}
+    - host: {{ .Values.ingress_host | quote }}
       http:
         paths:
-          - path: {{ .Values.prowlarr.ingress.path }}
+          - path: {{ .Values.ingress.path }}
             pathType: Prefix
             backend:
               service:
                 name: prowlarr
                 port:
-                  number: {{ .Values.prowlarr.service.port }}
-{{ end }}
+                  number: {{ .Values.service.port }}
 {{ end }}

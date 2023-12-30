@@ -8,7 +8,6 @@ service:
   nodePort:
   extraLBService: false
   extraLBAnnotations: {}
-  # Defines an additional LB service, requires cloud provider service or MetalLB
 ingress:
   enabled: true
   annotations: {}

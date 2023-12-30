@@ -2,3 +2,11 @@ jackett:
   enabled: false
 sonarr:
   enabled: true
+prowlarr:
+  enabled: true
+sabnzbd:
+  enabled: true
+plex:
+  enabled: true
+transmission:
+  enabled: true

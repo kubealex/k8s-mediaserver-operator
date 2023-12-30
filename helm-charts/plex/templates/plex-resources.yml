@@ -1,14 +1,12 @@
-{{ if .Values.plex.enabled }}
----
 ### CONFIGMAP
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: plex-config
 data:
-  PGID: "{{ .Values.general.pgid }}"
-  PUID: "{{ .Values.general.puid }}"
-  PLEX_CLAIM: {{ .Values.plex.claim }}
+  PGID: "{{ .Values.pgid }}"
+  PUID: "{{ .Values.puid }}"
+  PLEX_CLAIM: {{ .Values.claim }}
 ---
 ### DEPLOYMENT
 apiVersion: apps/v1
@@ -20,7 +18,7 @@ metadata:
 spec:
   strategy:
     type: Recreate
-  replicas: {{ .Values.plex.replicaCount }}
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       {{- include "k8s-mediaserver.selectorLabels" . | nindent 6 }}
@@ -31,60 +29,60 @@ spec:
         app: plex
     spec:
       volumes:
-        {{- if not .Values.general.storage.customVolume }}
+        {{- if not .Values.storage.customVolume }}
         - name: mediaserver-volume
           persistentVolumeClaim:
-            claimName: {{ .Values.general.storage.pvcName }}
+            claimName: {{ .Values.storage.pvcName }}
         {{- else }}
         - name: mediaserver-volume
-          {{- toYaml .Values.general.storage.volumes | nindent 10 }}
+          {{- toYaml .Values.storage.volumes | nindent 10 }}
         {{- end }}
-        {{- if .Values.plex.volume }}
-        - name: {{ .Values.plex.volume.name }}
+        {{- if .Values.volume }}
+        - name: {{ .Values.volume.name }}
           persistentVolumeClaim:
-            claimName: {{ .Values.plex.volume.name }}
+            claimName: {{ .Values.volume.name }}
         {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           envFrom:
             - configMapRef:
                 name: plex-config
-          image: "{{ .Values.plex.container.image }}:{{ .Values.plex.container.tag | default .Values.general.image_tag }}"
+          image: "{{ .Values.container.image }}:{{ .Values.container.tag | default .Values.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
             httpGet:
-              port: {{ .Values.plex.container.port }}
+              port: {{ .Values.container.port }}
               path: "/"
             initialDelaySeconds: 20
             periodSeconds: 15
           ports:
             - name: plex-port
-              containerPort: {{ .Values.plex.container.port }}
+              containerPort: {{ .Values.container.port }}
               protocol: TCP
           volumeMounts:
-          {{- if .Values.plex.volume }}
-            - name: {{ .Values.plex.volume.name }}
+          {{- if .Values.volume }}
+            - name: {{ .Values.volume.name }}
               mountPath: /config
           {{- else }}
             - name: mediaserver-volume
               mountPath: /config
-              subPath: "{{ .Values.general.storage.subPaths.config }}/plex"
+              subPath: "{{ .Values.storage.subPaths.config }}/plex"
           {{- end }}
             - name: mediaserver-volume
               mountPath: /movies
-              subPath: "{{ .Values.general.storage.subPaths.movies }}"
+              subPath: "{{ .Values.storage.subPaths.movies }}"
             - name: mediaserver-volume
               mountPath: /tv
-              subPath: "{{ .Values.general.storage.subPaths.tv }}"
-          {{- with .Values.plex.resources }}
+              subPath: "{{ .Values.storage.subPaths.tv }}"
+          {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-      {{- with merge .Values.plex.container.nodeSelector .Values.general.nodeSelector }}
+      {{- with merge .Values.container.nodeSelector .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if eq .Values.general.podDistribution "cluster" }}
+      {{- if eq .Values.podDistribution "cluster" }}
       affinity:
         podAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -97,7 +95,7 @@ spec:
                   - {{ .Release.Name }}
               topologyKey: "kubernetes.io/hostname"
             weight: 100
-      {{- else if eq .Values.general.podDistribution "spread" }}
+      {{- else if eq .Values.podDistribution "spread" }}
       topologySpreadConstraints:
       - maxSkew: 1
         topologyKey: "kubernetes.io/hostname"
@@ -115,25 +113,25 @@ metadata:
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.plex.service.type }}
+  type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.plex.service.port }}
-      targetPort: {{ .Values.plex.container.port }}
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.container.port }}
       protocol: TCP
       name: plex-port
-{{ if eq .Values.plex.service.type "NodePort" }}
-      nodePort: {{ .Values.plex.service.nodePort }}
+{{ if eq .Values.service.type "NodePort" }}
+      nodePort: {{ .Values.service.nodePort }}
 {{ end }}
   selector:
     app: plex
 
 ---
-{{ if .Values.plex.service.extraLBService }}
+{{ if .Values.service.extraLBService }}
 apiVersion: v1
 kind: Service
 metadata:
   name: plex-lb
-  {{- with .Values.plex.service.extraLBAnnotations }}
+  {{- with .Values.service.extraLBAnnotations }}
   annotations:
     {{- . | toYaml | nindent 4 }}
   {{- end }}
@@ -142,8 +140,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: {{ .Values.plex.service.port }}
-      targetPort: {{ .Values.plex.container.port }}
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.container.port }}
       protocol: TCP
       name: plex-port
   selector:
@@ -151,27 +149,27 @@ spec:
 {{ end }}
 ---
 ### INGRESS
-{{ if .Values.plex.ingress.enabled }}
+{{ if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: plex
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
-  {{- with .Values.plex.ingress.annotations }}
+  {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-{{- if .Values.plex.ingress.tls.enabled }}
+{{- if .Values.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values.general.plex_ingress_host | quote }}
-      secretName: {{ .Values.plex.ingress.tls.secretName }}
+        - {{ .Values_ingress_host | quote }}
+      secretName: {{ .Values.ingress.tls.secretName }}
 {{ end }}
-  ingressClassName: {{ .Values.general.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
   rules:
-    - host: {{ .Values.general.plex_ingress_host | quote }}
+    - host: {{ .Values_ingress_host | quote }}
       http:
         paths:
           - path: /
@@ -180,6 +178,5 @@ spec:
               service:
                 name: plex
                 port:
-                  number: {{ .Values.plex.service.port }}
-{{ end }}
+                  number: {{ .Values.service.port }}
 {{ end }}

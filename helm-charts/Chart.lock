@@ -5,5 +5,17 @@ dependencies:
 - name: k8s-sonarr
   repository: file://./sonarr
   version: 0.9.1
-digest: sha256:e4ddad5236987a75442c432666fb69d46de0d580ce6d8162f81197083747366c
-generated: "2023-12-28T13:53:54.083703-06:00"
+- name: k8s-radarr
+  repository: file://./radarr
+  version: 0.9.1
+- name: k8s-prowlarr
+  repository: file://./prowlarr
+  version: 0.9.1
+- name: k8s-sabnzbd
+  repository: file://./sabnzbd
+  version: 0.9.1
+- name: k8s-plex
+  repository: file://./plex
+  version: 0.9.1
+digest: sha256:708d1e8d0379973dca097adc71bacf06497fef3edaaf97701f73969677fcedac
+generated: "2023-12-30T11:12:56.955251-06:00"

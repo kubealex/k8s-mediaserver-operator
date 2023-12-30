@@ -19,17 +19,19 @@ ingress:
     enabled: false
     secretName: ""
 resources: {}
-#  limits:
-#    cpu: 100m
-#    memory: 100Mi
-#  requests:
-#    cpu: 100m
-#    memory: 100Mi
 volume: {}
-#  name: pvc-plex-config
-#  storageClassName: longhorn
-#  annotations: {}
-#  labels: {}
-#  accessModes: ReadWriteOnce
-#  storage: 5Gi
-#  selector: {}
+storage:
+  customVolume: false  #set to true if not using a PVC (must provide volume below)
+  pvcName: mediaserver-pvc
+  accessMode: ""
+  size: 5Gi
+  pvcStorageClass: ""
+  subPaths:
+    tv: media/tv
+    movies: media/movies
+    downloads: downloads
+    transmission: transmission
+    sabnzbd: sabnzbd
+    config: config
+  volumes: {}
+nodeSelector: {}

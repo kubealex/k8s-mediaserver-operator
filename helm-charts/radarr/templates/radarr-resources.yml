@@ -1,4 +1,3 @@
-{{ if .Values.radarr.enabled }}
 ---
 ### CONFIGMAP
 ## INIT-CONTAINER
@@ -7,7 +6,7 @@ apiVersion: v1
 data:
   config.xml: |
     <Config>
-      <UrlBase>{{ .Values.radarr.ingress.path }}</UrlBase>
+      <UrlBase>{{ .Values.ingress.path }}</UrlBase>
     </Config>
   init-radarr.sh: |
     #!/bin/bash
@@ -26,8 +25,8 @@ kind: ConfigMap
 metadata:
   name: radarr-config
 data:
-  PGID: "{{ .Values.general.pgid }}"
-  PUID: "{{ .Values.general.puid }}"
+  PGID: "{{ .Values.pgid }}"
+  PUID: "{{ .Values.puid }}"
 ---
 ### DEPLOYMENT
 apiVersion: apps/v1
@@ -56,76 +55,76 @@ spec:
           volumeMounts:
             - mountPath: /init-radarr
               name: init-files-radarr
-          {{- if .Values.radarr.volume }}
-            - name: {{ .Values.radarr.volume.name }}
+          {{- if .Values.volume }}
+            - name: {{ .Values.volume.name }}
               mountPath: /radarr-config
           {{- else }}
             - name: mediaserver-volume
               mountPath: /radarr-config
-              subPath: "{{ .Values.general.storage.subPaths.config }}/radarr"
+              subPath: "{{ .Values.storage.subPaths.config }}/radarr"
           {{- end }}
           securityContext:
-            runAsUser: {{ .Values.general.puid }}
-            runAsGroup: {{ .Values.general.pgid }}
+            runAsUser: {{ .Values.puid }}
+            runAsGroup: {{ .Values.pgid }}
       containers:
         - name: {{ .Chart.Name }}
           envFrom:
             - configMapRef:
                 name: radarr-config
-          image: "{{ .Values.radarr.container.image }}:{{ .Values.radarr.container.tag | default .Values.general.image_tag }}"
+          image: "{{ .Values.container.image }}:{{ .Values.container.tag | default .Values.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
             httpGet:
-              path: "/{{ .Values.radarr.ingress.path }}/ping"
-              port: {{ .Values.radarr.container.port }}
+              path: "/{{ .Values.ingress.path }}/ping"
+              port: {{ .Values.container.port }}
             initialDelaySeconds: 10
             periodSeconds: 20
           ports:
             - name: radarr-port
-              containerPort: {{ .Values.radarr.container.port }}
+              containerPort: {{ .Values.container.port }}
               protocol: TCP
           volumeMounts:
-          {{- if .Values.radarr.volume }}
-            - name: {{ .Values.radarr.volume.name }}
+          {{- if .Values.volume }}
+            - name: {{ .Values.volume.name }}
               mountPath: /config
           {{- else }}
             - name: mediaserver-volume
               mountPath: "/config"
-              subPath: "{{ .Values.general.storage.subPaths.config }}/radarr"
+              subPath: "{{ .Values.storage.subPaths.config }}/radarr"
           {{- end }}
             - name: mediaserver-volume
               mountPath: "/downloads"
-              subPath: "{{ .Values.general.storage.subPaths.downloads }}"
+              subPath: "{{ .Values.storage.subPaths.downloads }}"
             - name: mediaserver-volume
               mountPath: "/movies"
-              subPath: "{{ .Values.general.storage.subPaths.movies }}"
-          {{- with .Values.radarr.resources }}
+              subPath: "{{ .Values.storage.subPaths.movies }}"
+          {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
-        {{- if not .Values.general.storage.customVolume }}
+        {{- if not .Values.storage.customVolume }}
         - name: mediaserver-volume
           persistentVolumeClaim:
-            claimName: {{ .Values.general.storage.pvcName }}
+            claimName: {{ .Values.storage.pvcName }}
         {{- else }}
         - name: mediaserver-volume
-          {{- toYaml .Values.general.storage.volumes | nindent 10 }}
+          {{- toYaml .Values.storage.volumes | nindent 10 }}
         {{- end }}
-        {{- if .Values.radarr.volume }}
-        - name: {{ .Values.radarr.volume.name }}
+        {{- if .Values.volume }}
+        - name: {{ .Values.volume.name }}
           persistentVolumeClaim:
-            claimName: {{ .Values.radarr.volume.name }}
+            claimName: {{ .Values.volume.name }}
         {{- end }}
         - name: init-files-radarr
           configMap:
             defaultMode: 493
             name: init-radarr-cm
-      {{- with merge .Values.radarr.container.nodeSelector .Values.general.nodeSelector }}
+      {{- with merge .Values.container.nodeSelector .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if eq .Values.general.podDistribution "cluster" }}
+      {{- if eq .Values.podDistribution "cluster" }}
       affinity:
         podAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -138,7 +137,7 @@ spec:
                   - {{ .Release.Name }}
               topologyKey: "kubernetes.io/hostname"
             weight: 100
-      {{- else if eq .Values.general.podDistribution "spread" }}
+      {{- else if eq .Values.podDistribution "spread" }}
       topologySpreadConstraints:
       - maxSkew: 1
         topologyKey: "kubernetes.io/hostname"
@@ -156,25 +155,25 @@ metadata:
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.radarr.service.type }}
+  type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.radarr.service.port }}
-      targetPort: {{ .Values.radarr.container.port }}
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.container.port }}
       protocol: TCP
-{{ if eq .Values.radarr.service.type "NodePort" }}
-      nodePort: {{ .Values.radarr.service.nodePort }}
+{{ if eq .Values.service.type "NodePort" }}
+      nodePort: {{ .Values.service.nodePort }}
 {{ end }}
       name: radarr-port
   selector:
     app: radarr
 
 ---
-{{ if .Values.radarr.service.extraLBService }}
+{{ if .Values.service.extraLBService }}
 apiVersion: v1
 kind: Service
 metadata:
   name: radarr-lb
-  {{- with .Values.radarr.service.extraLBAnnotations }}
+  {{- with .Values.service.extraLBAnnotations }}
   annotations:
     {{- . | toYaml | nindent 4 }}
   {{- end }}
@@ -183,8 +182,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: {{ .Values.radarr.service.port }}
-      targetPort: {{ .Values.radarr.container.port }}
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.container.port }}
       protocol: TCP
       name: radarr-port
   selector:
@@ -192,35 +191,34 @@ spec:
 {{ end }}
 ---
 ### INGRESS ###
-{{ if .Values.radarr.ingress.enabled }}
+{{ if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: radarr
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
-  {{- with .Values.radarr.ingress.annotations }}
+  {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-{{- if .Values.radarr.ingress.tls.enabled }}
+{{- if .Values.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values.general.ingress_host | quote }}
-      secretName: {{ .Values.radarr.ingress.tls.secretName }}
+        - {{ .Values.ingress_host | quote }}
+      secretName: {{ .Values.ingress.tls.secretName }}
 {{ end }}
-  ingressClassName: {{ .Values.general.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
   rules:
-    - host: {{ .Values.general.ingress_host | quote }}
+    - host: {{ .Values.ingress_host | quote }}
       http:
         paths:
-          - path: {{ .Values.radarr.ingress.path }}
+          - path: {{ .Values.ingress.path }}
             pathType: Prefix
             backend:
               service:
                 name: radarr
                 port:
-                  number: {{ .Values.radarr.service.port }}
-{{ end }}
+                  number: {{ .Values.service.port }}
 {{ end }}

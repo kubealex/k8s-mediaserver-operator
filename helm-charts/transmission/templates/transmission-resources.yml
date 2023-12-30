@@ -1,4 +1,4 @@
-{{- if .Values.transmission.enabled -}}
+{{- if .Values.enabled -}}
 ---
 ### CONFIGMAP
 ## INIT-CONTAINER
@@ -26,13 +26,13 @@ data:
         "blocklist-url": "http://www.example.com/blocklist",
         "cache-size-mb": 4,
         "dht-enabled": true,
-        "download-dir": "/{{ .Values.general.storage.subPaths.downloads }}/{{ .Values.general.storage.subPaths.transmission }}/complete",
+        "download-dir": "/{{ .Values.storage.subPaths.downloads }}/{{ .Values.storage.subPaths.transmission }}/complete",
         "download-queue-enabled": true,
         "download-queue-size": 5,
         "encryption": 1,
         "idle-seeding-limit": 30,
         "idle-seeding-limit-enabled": false,
-        "incomplete-dir": "/{{ .Values.general.storage.subPaths.downloads }}/{{ .Values.general.storage.subPaths.transmission }}/incomplete",
+        "incomplete-dir": "/{{ .Values.storage.subPaths.downloads }}/{{ .Values.storage.subPaths.transmission }}/incomplete",
         "incomplete-dir-enabled": true,
         "lpd-enabled": false,
         "message-level": 2,
@@ -40,7 +40,7 @@ data:
         "peer-id-ttl-hours": 6,
         "peer-limit-global": 200,
         "peer-limit-per-torrent": 50,
-        "peer-port": {{ .Values.transmission.service.peer.port }},
+        "peer-port": {{ .Values.service.peer.port }},
         "peer-port-random-high": 65535,
         "peer-port-random-low": 49152,
         "peer-port-random-on-start": false,
@@ -54,15 +54,15 @@ data:
         "ratio-limit": 2,
         "ratio-limit-enabled": false,
         "rename-partial-files": true,
-        "rpc-authentication-required": {{ .Values.transmission.config.auth.enabled }},
+        "rpc-authentication-required": {{ .Values.config.auth.enabled }},
         "rpc-bind-address": "0.0.0.0",
         "rpc-enabled": true,
         "rpc-host-whitelist": "",
         "rpc-host-whitelist-enabled": false,
-        "rpc-password": {{ .Values.transmission.config.auth.password | quote }} ,
+        "rpc-password": {{ .Values.config.auth.password | quote }} ,
         "rpc-port": 9091,
-        "rpc-url": "{{ .Values.transmission.ingress.path }}/",
-        "rpc-username": {{ .Values.transmission.config.auth.username | quote }},
+        "rpc-url": "{{ .Values.ingress.path }}/",
+        "rpc-username": {{ .Values.config.auth.username | quote }},
         "rpc-whitelist": "127.0.0.1",
         "rpc-whitelist-enabled": false,
         "scrape-paused-torrents-enabled": true,
@@ -92,8 +92,8 @@ kind: ConfigMap
 metadata:
   name: transmission-config
 data:
-  PGID: "{{ .Values.general.pgid }}"
-  PUID: "{{ .Values.general.puid }}"
+  PGID: "{{ .Values.pgid }}"
+  PUID: "{{ .Values.puid }}"
 ---
 ### DEPLOYMENT
 apiVersion: apps/v1
@@ -122,79 +122,79 @@ spec:
           volumeMounts:
             - mountPath: /init-transmission
               name: init-files-transmission
-          {{ if .Values.transmission.volume }}
-            - name: {{ .Values.transmission.volume.name }}
+          {{ if .Values.volume }}
+            - name: {{ .Values.volume.name }}
               mountPath: /transmission-config
           {{ else }}
             - name: mediaserver-volume
               mountPath: "/transmission-config"
-              subPath: "{{ .Values.general.storage.subPaths.config }}/transmission"
+              subPath: "{{ .Values.storage.subPaths.config }}/transmission"
           {{ end }}
           securityContext:
-            runAsUser: {{ .Values.general.puid }}
-            runAsGroup: {{ .Values.general.pgid }}
+            runAsUser: {{ .Values.puid }}
+            runAsGroup: {{ .Values.pgid }}
       containers:
         - name: {{ .Chart.Name }}
           envFrom:
             - configMapRef:
                 name: transmission-config
-          image: "{{ .Values.transmission.container.image }}:{{ .Values.transmission.container.tag | default .Values.general.image_tag }}"
+          image: "{{ .Values.container.image }}:{{ .Values.container.tag | default .Values.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
             httpGet:
-              path: /{{ .Values.transmission.ingress.path }}/
-              port: {{ .Values.transmission.container.port.utp }}
+              path: /{{ .Values.ingress.path }}/
+              port: {{ .Values.container.port.utp }}
             initialDelaySeconds: 5
             periodSeconds: 10
           ports:
             - name: trans-port
-              containerPort: {{ .Values.transmission.container.port.utp }}
+              containerPort: {{ .Values.container.port.utp }}
               protocol: TCP
             - name: trans-peer-tcp
-              containerPort: {{ .Values.transmission.container.port.peer }}
+              containerPort: {{ .Values.container.port.peer }}
               protocol: TCP
             - name: trans-peer-udp
-              containerPort: {{ .Values.transmission.container.port.peer }}
+              containerPort: {{ .Values.container.port.peer }}
               protocol: UDP
           volumeMounts:
-          {{ if .Values.transmission.volume }}
-            - name: {{ .Values.transmission.volume.name }}
+          {{ if .Values.volume }}
+            - name: {{ .Values.volume.name }}
               mountPath: /config
           {{ else }}
             - name: mediaserver-volume
               mountPath: "/config"
-              subPath: "{{ .Values.general.storage.subPaths.config }}/transmission"
+              subPath: "{{ .Values.storage.subPaths.config }}/transmission"
           {{ end }}
             - name: mediaserver-volume
               mountPath: "/downloads"
-              subPath: "{{ .Values.general.storage.subPaths.downloads }}"
-          {{- with .Values.transmission.resources }}
+              subPath: "{{ .Values.storage.subPaths.downloads }}"
+          {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
-        {{ if not .Values.general.storage.customVolume }}
+        {{ if not .Values.storage.customVolume }}
         - name: mediaserver-volume
           persistentVolumeClaim:
-            claimName: {{ .Values.general.storage.pvcName }}
+            claimName: {{ .Values.storage.pvcName }}
         {{ else }}
         - name: mediaserver-volume
-          {{- toYaml .Values.general.storage.volumes | nindent 10 }}
+          {{- toYaml .Values.storage.volumes | nindent 10 }}
         {{ end }}
-        {{ if .Values.transmission.volume }}
-        - name: {{ .Values.transmission.volume.name }}
+        {{ if .Values.volume }}
+        - name: {{ .Values.volume.name }}
           persistentVolumeClaim:
-            claimName: {{ .Values.transmission.volume.name }}
+            claimName: {{ .Values.volume.name }}
         {{ end }}
         - name: init-files-transmission
           configMap:
             defaultMode: 493
             name: init-transmission-cm
-      {{- with merge .Values.transmission.container.nodeSelector .Values.general.nodeSelector }}
+      {{- with merge .Values.container.nodeSelector .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if eq .Values.general.podDistribution "cluster" }}
+      {{- if eq .Values.podDistribution "cluster" }}
       affinity:
         podAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -207,7 +207,7 @@ spec:
                   - {{ .Release.Name }}
               topologyKey: "kubernetes.io/hostname"
             weight: 100
-      {{- else if eq .Values.general.podDistribution "spread" }}
+      {{- else if eq .Values.podDistribution "spread" }}
       topologySpreadConstraints:
       - maxSkew: 1
         topologyKey: "kubernetes.io/hostname"
@@ -225,14 +225,14 @@ metadata:
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.transmission.service.utp.type }}
+  type: {{ .Values.service.utp.type }}
   ports:
-    - port: {{ .Values.transmission.service.utp.port }}
-      targetPort: {{ .Values.transmission.container.port.utp }}
+    - port: {{ .Values.service.utp.port }}
+      targetPort: {{ .Values.container.port.utp }}
       protocol: TCP
       name: trans-port
-{{ if eq .Values.transmission.service.utp.type "NodePort" }}
-      nodePort: {{ .Values.transmission.service.utp.nodePort }}
+{{ if eq .Values.service.utp.type "NodePort" }}
+      nodePort: {{ .Values.service.utp.nodePort }}
 {{ end }}
   selector:
     app: transmission
@@ -244,14 +244,14 @@ metadata:
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.transmission.service.peer.type }}
+  type: {{ .Values.service.peer.type }}
   ports:
-    - port: {{ .Values.transmission.service.peer.port }}
-      targetPort: {{ .Values.transmission.container.port.peer }}
+    - port: {{ .Values.service.peer.port }}
+      targetPort: {{ .Values.container.port.peer }}
       protocol: TCP
       name: trans-peer-tcp
-{{ if eq .Values.transmission.service.peer.type "NodePort" }}
-      nodePort: {{ .Values.transmission.service.peer.nodePort }}
+{{ if eq .Values.service.peer.type "NodePort" }}
+      nodePort: {{ .Values.service.peer.nodePort }}
 {{ end }}
   selector:
     app: transmission
@@ -263,24 +263,24 @@ metadata:
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.transmission.service.peer.type }}
+  type: {{ .Values.service.peer.type }}
   ports:
-    - port: {{ .Values.transmission.service.peer.port }}
-      targetPort: {{ .Values.transmission.container.port.peer }}
+    - port: {{ .Values.service.peer.port }}
+      targetPort: {{ .Values.container.port.peer }}
       protocol: UDP
       name: trans-peer-udp
-{{ if eq .Values.transmission.service.peer.type "NodePort" }}
-      nodePort: {{ .Values.transmission.service.peer.nodePortUDP }}
+{{ if eq .Values.service.peer.type "NodePort" }}
+      nodePort: {{ .Values.service.peer.nodePortUDP }}
 {{ end }}
   selector:
     app: transmission
 ---
-{{ if .Values.transmission.service.utp.extraLBService }}
+{{ if .Values.service.utp.extraLBService }}
 apiVersion: v1
 kind: Service
 metadata:
   name: transmission-lb
-  {{- with .Values.transmission.service.utp.extraLBAnnotations }}
+  {{- with .Values.service.utp.extraLBAnnotations }}
   annotations:
     {{- . | toYaml | nindent 4 }}
   {{- end }}
@@ -289,20 +289,20 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: {{ .Values.transmission.service.utp.port }}
-      targetPort: {{ .Values.transmission.container.port.utp }}
+    - port: {{ .Values.service.utp.port }}
+      targetPort: {{ .Values.container.port.utp }}
       protocol: TCP
       name: trans-port
   selector:
     app: transmission
 ---
 {{ end }}
-{{ if .Values.transmission.service.peer.extraLBService }}
+{{ if .Values.service.peer.extraLBService }}
 apiVersion: v1
 kind: Service
 metadata:
   name: transmission-lb-peer-tcp
-  {{- with .Values.transmission.service.peer.extraLBAnnotations }}
+  {{- with .Values.service.peer.extraLBAnnotations }}
   annotations:
     {{- . | toYaml | nindent 4 }}
   {{- end }}
@@ -311,8 +311,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: {{ .Values.transmission.service.peer.port }}
-      targetPort: {{ .Values.transmission.container.port.peer }}
+    - port: {{ .Values.service.peer.port }}
+      targetPort: {{ .Values.container.port.peer }}
       protocol: TCP
       name: trans-peer-tcp
   selector:
@@ -322,7 +322,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: transmission-lb-peer-udp
-  {{- with .Values.transmission.service.peer.extraLBAnnotations }}
+  {{- with .Values.service.peer.extraLBAnnotations }}
   annotations:
     {{- . | toYaml | nindent 4 }}
   {{- end }}
@@ -331,8 +331,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: {{ .Values.transmission.service.peer.port }}
-      targetPort: {{ .Values.transmission.container.port.peer }}
+    - port: {{ .Values.service.peer.port }}
+      targetPort: {{ .Values.container.port.peer }}
       protocol: UDP
       name: trans-peer-udp
   selector:
@@ -340,35 +340,35 @@ spec:
 {{ end }}
 ---
 ### INGRESS
-{{ if .Values.transmission.ingress.enabled }}
+{{ if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: transmission
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
-  {{- with .Values.transmission.ingress.annotations }}
+  {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-{{- if .Values.transmission.ingress.tls.enabled }}
+{{- if .Values.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values.general.ingress_host | quote }}
-      secretName: {{ .Values.transmission.ingress.tls.secretName }}
+        - {{ .Values.ingress_host | quote }}
+      secretName: {{ .Values.ingress.tls.secretName }}
 {{ end }}
-  ingressClassName: {{ .Values.general.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
   rules:
-    - host: {{ .Values.general.ingress_host | quote }}
+    - host: {{ .Values.ingress_host | quote }}
       http:
         paths:
-          - path: {{ .Values.transmission.ingress.path }}
+          - path: {{ .Values.ingress.path }}
             pathType: Prefix
             backend:
               service:
                 name: transmission
                 port:
-                  number: {{ .Values.transmission.service.utp.port }}
+                  number: {{ .Values.service.utp.port }}
 {{ end }}
 {{ end }}
