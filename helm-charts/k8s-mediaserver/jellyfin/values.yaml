@@ -1,0 +1,24 @@
+global:
+  ingress_host: jellyfing.k8s.test
+  #UID to run the process with
+  puid: 1000
+  #GID to run the process with
+  pgid: 1000
+replicaCount: 1
+container:
+  image: docker.io/linuxserver/jellyfin
+  nodeSelector: {}
+  port: 8096
+service:
+  type: ClusterIP
+  port: 8096
+  nodePort:
+  extraLBService: false
+ingress:
+  enabled: true
+  annotations: {}
+  tls:
+    enabled: false
+    secretName: ""
+resources: {}
+volume: {}

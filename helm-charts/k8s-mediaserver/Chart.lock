@@ -17,8 +17,11 @@ dependencies:
 - name: k8s-plex
   repository: file://./plex
   version: 0.9.1
+- name: k8s-jellyfin
+  repository: file://./jellyfin/
+  version: 0.9.1
 - name: k8s-transmission
   repository: file://./transmission/
   version: 0.9.1
-digest: sha256:37c054023fdf8a0c53cd280bc8f3e63604ccee7c9c411be72074b6f73dfc9945
-generated: "2023-12-30T13:47:59.408439-06:00"
+digest: sha256:842c38872ca31d1fe4bc2b995317d96e9987a7c81f32c85f9448b9e6c54d97c2
+generated: "2023-12-30T15:57:55.62729-06:00"
