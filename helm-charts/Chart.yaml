@@ -29,3 +29,7 @@ dependencies:
   version: ^0.9.0
   repository: "file://./plex"
   condition: plex.enabled
+- name: k8s-transmission
+  version: ^0.9.0
+  repository: "file://./plex"
+  condition: plex.enabled

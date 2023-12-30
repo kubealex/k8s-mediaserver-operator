@@ -1,6 +1,8 @@
 jackett:
-  enabled: false
+  enabled: true
 sonarr:
+  enabled: true
+radarr:
   enabled: true
 prowlarr:
   enabled: true
