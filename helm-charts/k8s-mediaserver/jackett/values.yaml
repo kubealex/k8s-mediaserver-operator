@@ -1,0 +1,22 @@
+container:
+  image: docker.io/linuxserver/jackett
+  nodeSelector: {}
+  port: 9117
+service:
+  type: ClusterIP
+  port: 9117
+  nodePort:
+  extraLBService: false
+  extraLBAnnotations: {}
+ingress:
+  enabled: true
+  annotations: {}
+  path: /jackett
+  tls:
+    enabled: false
+    secretName: ""
+resources: {}
+image_tag: latest
+radarr:
+  ingress:
+    path: /radarr

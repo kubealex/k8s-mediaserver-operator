@@ -1,0 +1,34 @@
+container:
+  image: docker.io/linuxserver/radarr
+  nodeSelector: {}
+  port: 7878
+service:
+  type: ClusterIP
+  port: 7878
+  nodePort:
+  extraLBService: false
+  extraLBAnnotations: {}
+ingress:
+  enabled: true
+  annotations: {}
+  path: /radarr
+  tls:
+    enabled: false
+    secretName: ""
+resources: {}
+volume: {}
+storage:
+  customVolume: false  #set to true if not using a PVC (must provide volume below)
+  pvcName: mediaserver-pvc
+  accessMode: ""
+  size: 5Gi
+  pvcStorageClass: ""
+  subPaths:
+    tv: media/tv
+    movies: media/movies
+    downloads: downloads
+    transmission: transmission
+    sabnzbd: sabnzbd
+    config: config
+  volumes: {}
+nodeSelector: {}

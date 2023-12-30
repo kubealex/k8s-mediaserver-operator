@@ -1,0 +1,27 @@
+dependencies:
+- name: k8s-jackett
+  repository: file://./jackett
+  version: 0.9.1
+- name: k8s-sonarr
+  repository: file://./sonarr
+  version: 0.9.1
+- name: k8s-radarr
+  repository: file://./radarr
+  version: 0.9.1
+- name: k8s-prowlarr
+  repository: file://./prowlarr
+  version: 0.9.1
+- name: k8s-sabnzbd
+  repository: file://./sabnzbd
+  version: 0.9.1
+- name: k8s-plex
+  repository: file://./plex
+  version: 0.9.1
+- name: k8s-jellyfin
+  repository: file://./jellyfin/
+  version: 0.9.1
+- name: k8s-transmission
+  repository: file://./transmission/
+  version: 0.9.1
+digest: sha256:842c38872ca31d1fe4bc2b995317d96e9987a7c81f32c85f9448b9e6c54d97c2
+generated: "2023-12-30T15:57:55.62729-06:00"

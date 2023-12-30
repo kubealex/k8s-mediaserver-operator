@@ -1,0 +1,19 @@
+container:
+  image: docker.io/linuxserver/sonarr
+  nodeSelector: {}
+  port: 8989
+service:
+  type: ClusterIP
+  port: 8989
+  nodePort:
+  extraLBService: false
+  extraLBAnnotations: {}
+ingress:
+  enabled: true
+  annotations: {}
+  path: /sonarr
+  tls:
+    enabled: false
+    secretName: ""
+resources: {}
+volume: {}

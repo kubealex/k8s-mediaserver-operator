@@ -1,0 +1,154 @@
+### CONFIGMAP
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jellyfin-config
+data:
+  PGID: "{{ .Values.global.pgid }}"
+  PUID: "{{ .Values.global.puid }}"  
+---
+### DEPLOYMENT
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin
+  labels:
+    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "k8s-mediaserver.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "k8s-mediaserver.selectorLabels" . | nindent 8 }}
+        app: jellyfin
+    spec:
+      volumes:
+        {{- if not .Values.global.storage.customVolume }}
+        - name: mediaserver-volume
+          persistentVolumeClaim:
+            claimName: {{ .Values.global.storage.pvcName }}
+        {{- else }}
+        - name: mediaserver-volume
+          {{- toYaml .Values.global.storage.volumes | nindent 10 }}
+        {{- end }}
+        {{- if .Values.volume }}
+        - name: {{ .Values.volume.name }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.volume.name }}
+        {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          envFrom:
+            - configMapRef:
+                name: jellyfin-config
+          image: "{{ .Values.container.image }}:{{ .Values.container.tag | default .Values.global.image_tag }}"
+          imagePullPolicy: Always
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.container.port }}
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          ports:
+            - name: jellyfin-port
+              containerPort: {{ .Values.container.port }}
+              protocol: TCP
+          volumeMounts:
+          {{- if .Values.volume }}
+            - name: {{ .Values.volume.name }}
+              mountPath: /config
+          {{- else }}
+            - name: mediaserver-volume
+              mountPath: /config
+              subPath: "{{ .Values.global.storage.subPaths.config }}/jellyfin"
+          {{- end }}
+            - name: mediaserver-volume
+              mountPath: /movies
+              subPath: "{{ .Values.global.storage.subPaths.movies }}"
+            - name: mediaserver-volume
+              mountPath: /tv
+              subPath: "{{ .Values.global.storage.subPaths.tv }}"
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.global.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+### SERVICE
+apiVersion: v1
+kind: Service
+metadata:
+  name: jellyfin
+  labels:
+    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.container.port }}
+      protocol: TCP
+      name: jellyfin-port
+{{ if eq .Values.service.type "NodePort" }}
+      nodePort: {{ .Values.service.nodePort }}
+{{ end }}
+  selector:
+    app: jellyfin
+
+---
+{{ if .Values.service.extraLBService }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: jellyfin-lb
+  annotations:
+    {{- include .Values.service.extraLBService.annotations . | nindent 4 }}
+  labels:
+    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
+spec:
+  type: LoadBalancer
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.container.port }}
+      protocol: TCP
+      name: jellyfin-port
+  selector:
+    app: jellyfin
+{{ end }}
+---
+### INGRESS
+{{ if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jellyfin
+  labels:
+    {{- include "k8s-mediaserver.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+{{- if .Values.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.global.jellyfin_ingress_host | quote }}
+      secretName: {{ .Values.ingress.tls.secretName }}
+{{ end }}
+  ingressClassName: {{ .Values.global.ingress.ingressClassName }}
+  rules:
+    - host: {{ .Values.global.jellyfin_ingress_host | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: jellyfin
+                port:
+                  number: {{ .Values.service.port }}
+{{ end }}

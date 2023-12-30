@@ -1,16 +1,16 @@
 ---
-{{- if not .Values.general.storage.customVolume }}
+{{- if not .Values.global.storage.customVolume }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Values.general.storage.pvcName }}
+  name: {{ .Values.global.storage.pvcName }}
 spec:
   accessModes:
-    - {{ .Values.general.storage.accessMode | default "ReadWriteMany" }}
+    - {{ .Values.global.storage.accessMode | default "ReadWriteMany" }}
   resources:
     requests:
-      storage: {{ .Values.general.storage.size }}
-  storageClassName: {{ if (kindIs "invalid" .Values.general.storage.pvcStorageClass) }}""{{- else }}{{ .Values.general.storage.pvcStorageClass | quote }}{{- end }}
+      storage: {{ .Values.global.storage.size }}
+  storageClassName: {{ if (kindIs "invalid" .Values.global.storage.pvcStorageClass) }}""{{- else }}{{ .Values.global.storage.pvcStorageClass | quote }}{{- end }}
 {{- end }}
 {{- with .Values.sonarr.volume }}
 ---
@@ -195,3 +195,4 @@ spec:
   {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end }}
+

@@ -1,6 +1,39 @@
 apiVersion: v2
 appVersion: 0.9.1
-description: A Helm chart for Kubernetes mediaserver
+description: A Helm chart for kubernetes based Media services.
 name: k8s-mediaserver
 type: application
 version: 0.9.1
+dependencies:
+- name: k8s-jackett
+  version: ^0.9.0
+  repository: "file://./jackett"
+  condition: jackett.enabled
+- name: k8s-sonarr
+  version: ^0.9.0
+  repository: "file://./sonarr"
+  condition: sonarr.enabled
+- name: k8s-radarr
+  version: ^0.9.0
+  repository: "file://./radarr"
+  condition: radarr.enabled
+- name: k8s-prowlarr
+  version: ^0.9.0
+  repository: "file://./prowlarr"
+  condition: prowlarr.enabled
+- name: k8s-sabnzbd
+  version: ^0.9.0
+  repository: "file://./sabnzbd"
+  condition: sabnzbd.enabled
+- name: k8s-plex
+  version: ^0.9.0
+  repository: "file://./plex"
+  condition: plex.enabled
+- name: k8s-jellyfin
+  version: ^0.9.0
+  repository: "file://./jellyfin/"
+  condition: jellyfin.enabled
+- name: k8s-transmission
+  version: ^0.9.0
+  repository: "file://./transmission/"
+  condition: transmission.enabled

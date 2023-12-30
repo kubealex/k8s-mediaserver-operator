@@ -1,0 +1,21 @@
+claim: "CHANGEME"
+replicaCount: 1
+container:
+  image: docker.io/linuxserver/plex
+  nodeSelector: {}
+  port: 32400
+service:
+  type: ClusterIP
+  port: 32400
+  nodePort:
+  extraLBService: false
+  extraLBAnnotations: {}
+ingress:
+  enabled: true
+  annotations: {}
+  tls:
+    enabled: false
+    secretName: ""
+resources: {}
+volume: {}
+nodeSelector: {}

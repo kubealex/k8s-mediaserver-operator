@@ -1,0 +1,44 @@
+enabled: true
+container:
+  image: docker.io/linuxserver/sabnzbd
+  nodeSelector: {}
+  port:
+    http: 8080
+    https: 9090
+service:
+  http:
+    type: ClusterIP
+    port: 8080
+    nodePort:
+    extraLBService: false
+    extraLBAnnotations: {}
+  https:
+    type: ClusterIP
+    port: 9090
+    nodePort:
+    extraLBService: false
+    extraLBAnnotations: {}
+ingress:
+  enabled: true
+  annotations: {}
+  path: /sabnzbd
+  tls:
+    enabled: false
+    secretName: ""
+resources: {}
+volume: {}
+storage:
+  customVolume: false  #set to true if not using a PVC (must provide volume below)
+  pvcName: mediaserver-pvc
+  accessMode: ""
+  size: 5Gi
+  pvcStorageClass: ""
+  subPaths:
+    tv: media/tv
+    movies: media/movies
+    downloads: downloads
+    transmission: transmission
+    sabnzbd: sabnzbd
+    config: config
+  volumes: {}
+nodeSelector: {}
