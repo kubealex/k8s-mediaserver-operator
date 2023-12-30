@@ -1,4 +1,3 @@
-enabled: true
 container:
   image: docker.io/linuxserver/prowlarr
   tag: develop
@@ -19,18 +18,3 @@ ingress:
     secretName: ""
 resources: {}
 volume: {}
-storage:
-  customVolume: false  #set to true if not using a PVC (must provide volume below)
-  pvcName: mediaserver-pvc
-  accessMode: ""
-  size: 5Gi
-  pvcStorageClass: ""
-  subPaths:
-    tv: media/tv
-    movies: media/movies
-    downloads: downloads
-    transmission: transmission
-    sabnzbd: sabnzbd
-    config: config
-  volumes: {}
-nodeSelector: {}

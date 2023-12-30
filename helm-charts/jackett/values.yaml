@@ -1,3 +1,28 @@
+global:
+  ingress_host: k8s-mediaserver.k8s.test
+  image_tag: latest
+  podDistribution: cluster # can be "spread" or "cluster"
+  #UID to run the process with
+  puid: 1000
+  #GID to run the process with
+  pgid: 1000
+  #Persistent storage selections and pathing
+  storage:
+    customVolume: false  #set to true if not using a PVC (must provide volume below)
+    accessMode: ""
+    pvcName: mediaserver-pvc
+    size: 5Gi
+    pvcStorageClass: ""
+    # the path starting from the top level of the pv you're passing. If your share is server.local/share/, then tv is server.local/share/media/tv
+    subPaths:
+      tv: media/tv
+      movies: media/movies
+      downloads: downloads
+      transmission: transmission
+      sabnzbd: sabnzbd
+      config: config
+    volumes: {}
+# Jackett
 container:
   image: docker.io/linuxserver/jackett
   nodeSelector: {}
@@ -8,7 +33,6 @@ service:
   nodePort:
   extraLBService: false
   extraLBAnnotations: {}
-  # Defines an additional LB service, requires cloud provider service or MetalLB
 ingress:
   enabled: true
   annotations: {}
@@ -17,27 +41,7 @@ ingress:
     enabled: false
     secretName: ""
 resources: {}
-volume: {}
-ingress_host: k8s-mediaserver.k8s.test
 image_tag: latest
-podDistribution: cluster # can be "spread" or "cluster"
-puid: 1000
-pgid: 1000
 radarr:
   ingress:
     path: /radarr
-storage:
-  customVolume: false  #set to true if not using a PVC (must provide volume below)
-  pvcName: mediaserver-pvc
-  accessMode: ""
-  size: 5Gi
-  pvcStorageClass: ""
-  subPaths:
-    tv: media/tv
-    movies: media/movies
-    downloads: downloads
-    transmission: transmission
-    sabnzbd: sabnzbd
-    config: config
-  volumes: {}
-nodeSelector: {}

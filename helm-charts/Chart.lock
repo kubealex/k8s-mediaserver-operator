@@ -18,7 +18,7 @@ dependencies:
   repository: file://./plex
   version: 0.9.1
 - name: k8s-transmission
-  repository: file://./plex
+  repository: file://./transmission/
   version: 0.9.1
-digest: sha256:d4bdfb818bb9906d8f89bd03da25e04a453e5f0c090ba4af6e12d17fc5389107
-generated: "2023-12-30T11:41:45.482245-06:00"
+digest: sha256:37c054023fdf8a0c53cd280bc8f3e63604ccee7c9c411be72074b6f73dfc9945
+generated: "2023-12-30T13:47:59.408439-06:00"

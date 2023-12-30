@@ -4,8 +4,8 @@ kind: ConfigMap
 metadata:
   name: plex-config
 data:
-  PGID: "{{ .Values.pgid }}"
-  PUID: "{{ .Values.puid }}"
+  PGID: "{{ .Values.global.pgid }}"
+  PUID: "{{ .Values.global.puid }}"
   PLEX_CLAIM: {{ .Values.claim }}
 ---
 ### DEPLOYMENT
@@ -29,13 +29,13 @@ spec:
         app: plex
     spec:
       volumes:
-        {{- if not .Values.storage.customVolume }}
+        {{- if not .Values.global.storage.customVolume }}
         - name: mediaserver-volume
           persistentVolumeClaim:
-            claimName: {{ .Values.storage.pvcName }}
+            claimName: {{ .Values.global.storage.pvcName }}
         {{- else }}
         - name: mediaserver-volume
-          {{- toYaml .Values.storage.volumes | nindent 10 }}
+          {{- toYaml .Values.global.storage.volumes | nindent 10 }}
         {{- end }}
         {{- if .Values.volume }}
         - name: {{ .Values.volume.name }}
@@ -47,7 +47,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: plex-config
-          image: "{{ .Values.container.image }}:{{ .Values.container.tag | default .Values.image_tag }}"
+          image: "{{ .Values.container.image }}:{{ .Values.container.tag | default .Values.global.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
             httpGet:
@@ -66,23 +66,23 @@ spec:
           {{- else }}
             - name: mediaserver-volume
               mountPath: /config
-              subPath: "{{ .Values.storage.subPaths.config }}/plex"
+              subPath: "{{ .Values.global.storage.subPaths.config }}/plex"
           {{- end }}
             - name: mediaserver-volume
               mountPath: /movies
-              subPath: "{{ .Values.storage.subPaths.movies }}"
+              subPath: "{{ .Values.global.storage.subPaths.movies }}"
             - name: mediaserver-volume
               mountPath: /tv
-              subPath: "{{ .Values.storage.subPaths.tv }}"
+              subPath: "{{ .Values.global.storage.subPaths.tv }}"
           {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-      {{- with merge .Values.container.nodeSelector .Values.nodeSelector }}
+      {{- with merge .Values.container.nodeSelector .Values.global.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if eq .Values.podDistribution "cluster" }}
+      {{- if eq .Values.global.podDistribution "cluster" }}
       affinity:
         podAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -95,7 +95,7 @@ spec:
                   - {{ .Release.Name }}
               topologyKey: "kubernetes.io/hostname"
             weight: 100
-      {{- else if eq .Values.podDistribution "spread" }}
+      {{- else if eq .Values.global.podDistribution "spread" }}
       topologySpreadConstraints:
       - maxSkew: 1
         topologyKey: "kubernetes.io/hostname"
@@ -164,12 +164,12 @@ spec:
 {{- if .Values.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values_ingress_host | quote }}
+        - {{ .Values.global.plex_ingress_host | quote }}
       secretName: {{ .Values.ingress.tls.secretName }}
 {{ end }}
-  ingressClassName: {{ .Values.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.global.ingress.ingressClassName }}
   rules:
-    - host: {{ .Values_ingress_host | quote }}
+    - host: {{ .Values.global.plex_ingress_host | quote }}
       http:
         paths:
           - path: /
