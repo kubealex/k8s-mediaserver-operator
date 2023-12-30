@@ -1,0 +1,198 @@
+---
+{{- if not .Values.global.storage.customVolume }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.global.storage.pvcName }}
+spec:
+  accessModes:
+    - {{ .Values.global.storage.accessMode | default "ReadWriteMany" }}
+  resources:
+    requests:
+      storage: {{ .Values.global.storage.size }}
+  storageClassName: {{ if (kindIs "invalid" .Values.global.storage.pvcStorageClass) }}""{{- else }}{{ .Values.global.storage.pvcStorageClass | quote }}{{- end }}
+{{- end }}
+{{- with .Values.sonarr.volume }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .name }}
+  {{ with .annotations }}
+  annotations:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{ with .labels }}
+  labels:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .accessModes }}
+  resources:
+    requests:
+      storage: {{ .storage }}
+  storageClassName: {{ .storageClassName }}
+  {{ with .selector }}
+  selector:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- with .Values.radarr.volume }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .name }}
+  {{ with .annotations }}
+  annotations:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{ with .labels }}
+  labels:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .accessModes }}
+  resources:
+    requests:
+      storage: {{ .storage }}
+  storageClassName: {{ .storageClassName }}
+  {{ with .selector }}
+  selector:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- with .Values.plex.volume }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .name }}
+  {{ with .annotations }}
+  annotations:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{ with .labels }}
+  labels:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .accessModes }}
+  resources:
+    requests:
+      storage: {{ .storage }}
+  storageClassName: {{ .storageClassName }}
+  {{ with .selector }}
+  selector:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- with .Values.jackett.volume }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .name }}
+  {{ with .annotations }}
+  annotations:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{ with .labels }}
+  labels:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .accessModes }}
+  resources:
+    requests:
+      storage: {{ .storage }}
+  storageClassName: {{ .storageClassName }}
+  {{ with .selector }}
+  selector:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- with .Values.sabnzbd.volume }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .name }}
+  {{ with .annotations }}
+  annotations:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{ with .labels }}
+  labels:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .accessModes }}
+  resources:
+    requests:
+      storage: {{ .storage }}
+  storageClassName: {{ .storageClassName }}
+  {{ with .selector }}
+  selector:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- with .Values.transmission.volume }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .name }}
+  {{ with .annotations }}
+  annotations:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{ with .labels }}
+  labels:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .accessModes }}
+  resources:
+    requests:
+      storage: {{ .storage }}
+  storageClassName: {{ .storageClassName }}
+  {{ with .selector }}
+  selector:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+
+{{- with .Values.prowlarr.volume }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .name }}
+  {{ with .annotations }}
+  annotations:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{ with .labels }}
+  labels:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .accessModes }}
+  resources:
+    requests:
+      storage: {{ .storage }}
+  storageClassName: {{ .storageClassName }}
+  {{ with .selector }}
+  selector:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+
