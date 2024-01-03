@@ -75,10 +75,11 @@ spec:
           imagePullPolicy: Always
           readinessProbe:
             httpGet:
-              path: "/{{ .Values.prowlarr.ingress.path }}/ping"
+              path: "{{ .Values.prowlarr.ingress.path }}/ping"
               port: {{ .Values.prowlarr.container.port }}
             initialDelaySeconds: 10
             periodSeconds: 20
+            timeoutSeconds: 20
           ports:
             - name: prowlarr-port
               containerPort: {{ .Values.prowlarr.container.port }}

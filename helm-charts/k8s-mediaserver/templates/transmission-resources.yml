@@ -142,10 +142,11 @@ spec:
           imagePullPolicy: Always
           readinessProbe:
             httpGet:
-              path: /{{ .Values.transmission.ingress.path }}/
+              path: "{{ .Values.transmission.ingress.path }}/"
               port: {{ .Values.transmission.container.port.utp }}
             initialDelaySeconds: 5
             periodSeconds: 10
+            timeoutSeconds: 20
           ports:
             - name: trans-port
               containerPort: {{ .Values.transmission.container.port.utp }}

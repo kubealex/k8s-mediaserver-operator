@@ -76,10 +76,11 @@ spec:
           imagePullPolicy: Always
           readinessProbe:
             httpGet:
-              path: "/{{ .Values.radarr.ingress.path }}/ping"
+              path: "{{ .Values.radarr.ingress.path }}/ping"
               port: {{ .Values.radarr.container.port }}
             initialDelaySeconds: 10
             periodSeconds: 20
+            timeoutSeconds: 20
           ports:
             - name: radarr-port
               containerPort: {{ .Values.radarr.container.port }}

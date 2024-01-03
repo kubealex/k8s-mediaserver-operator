@@ -57,6 +57,7 @@ spec:
               path: "/"
             initialDelaySeconds: 20
             periodSeconds: 15
+            timeoutSeconds: 20
           ports:
             - name: plex-port
               containerPort: {{ .Values.plex.container.port }}
