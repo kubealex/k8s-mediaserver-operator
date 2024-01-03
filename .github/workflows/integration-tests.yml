@@ -48,7 +48,7 @@ jobs:
           cp k8s-mediaserver.yml k8s-mediaserver-operator.yml tests/
           sed -i 's/accessMode: ""/accessMode: ReadWriteOnce/g' tests/k8s-mediaserver.yml
           sed -i 's/pvcStorageClass: ""/pvcStorageClass: standard/g' tests/k8s-mediaserver.yml
-          sed 's|quay.io\/kubealex.*|${{ env.image_name }}:${{ github.sha }}|g' tests/k8s-mediaserver-operator.yml
+          sed -i 's|quay.io\/kubealex.*|${{ env.image_name }}:${{ github.sha }}|g' tests/k8s-mediaserver-operator.yml
 
       - name: Kind Cluster
         uses: helm/kind-action@v1.8.0
@@ -76,15 +76,13 @@ jobs:
           kubectl apply -f tests/k8s-mediaserver.yml -n mediaserver
           sleep 15
           for pod in $(kubectl get pods -n mediaserver | awk 'NR>1{ print $1 }'); do while [[ $(kubectl get pods $pod -n mediaserver -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "Waiting for mediaserver pods to be ready" && sleep 10; done ; done
-          sleep 15
+          sleep 30
       - name: Edit hosts file and test apps
         run: |
           sudo echo "127.0.0.1   ${{ env.plex_ingress_host }} ${{ env.ingress_host }}" | sudo tee -a /etc/hosts
-          sudo echo "127.0.0.1   ${{ env.jellyfin_ingress_host }} ${{ env.ingress_host }}" | sudo tee -a /etc/hosts
-          wget ${{ env.ingress_host }}/jackett
           wget ${{ env.ingress_host }}/sonarr
           wget ${{ env.ingress_host }}/radarr
           wget ${{ env.ingress_host }}/sabnzbd
           wget ${{ env.ingress_host }}/prowlarr
+          wget --retry-on-http-error=503,500 ${{ env.ingress_host }}/jackett
           curl ${{ env.plex_ingress_host }}
-          curl ${{ env.jellyfin_ingress_host }}

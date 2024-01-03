@@ -75,10 +75,11 @@ spec:
           imagePullPolicy: Always
           readinessProbe:
             httpGet:
-              path: "/{{ .Values.sonarr.ingress.path }}/ping"
+              path: "{{ .Values.sonarr.ingress.path }}/ping"
               port: {{ .Values.sonarr.container.port }}
             initialDelaySeconds: 10
             periodSeconds: 20
+            timeoutSeconds: 20
           ports:
             - name: sonarr-port
               containerPort: {{ .Values.sonarr.container.port }}

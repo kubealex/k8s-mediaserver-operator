@@ -378,10 +378,11 @@ spec:
           imagePullPolicy: Always
           readinessProbe:
             httpGet:
-              path: /{{ .Values.sabnzbd.ingress.path }}/wizard/
+              path: "{{ .Values.sabnzbd.ingress.path }}/wizard/"
               port: {{ .Values.sabnzbd.container.port.http }}
             initialDelaySeconds: 5
             periodSeconds: 10
+            timeoutSeconds: 20
           ports:
             - name: sabnzbd-http
               containerPort: {{ .Values.sabnzbd.container.port.http }}
