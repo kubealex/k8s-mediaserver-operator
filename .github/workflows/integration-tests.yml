@@ -3,9 +3,9 @@ on:
   pull_request:
     types: [opened, reopened, edited, synchronize]
     paths:
-      - 'helm-charts/k8s-mediaserver/**'
-      - 'Dockerfile'
-      - 'k8s-mediaserver*'
+      - "helm-charts/k8s-mediaserver/**"
+      - "Dockerfile"
+      - "k8s-mediaserver*"
   workflow_dispatch:
 
 jobs:
@@ -18,7 +18,7 @@ jobs:
       - name: Setup helm
         uses: azure/setup-helm@v3
         with:
-           version: 'v3.13.0'
+          version: "v3.13.0"
         id: install-helm
 
       - name: Lint Helm template
@@ -30,6 +30,7 @@ jobs:
     env:
       ingress_host: k8s-mediaserver.k8s.test
       plex_ingress_host: k8s-plex.k8s.test
+      jellyfin_ingress_host: k8s-jelly.k8s.test
       image_name: k8s-mediaserver-operator
     runs-on: ubuntu-latest
     steps:
@@ -86,4 +87,4 @@ jobs:
           wget ${{ env.ingress_host }}/sabnzbd
           wget ${{ env.ingress_host }}/prowlarr
           curl ${{ env.plex_ingress_host }}
-          curl ${{ env.jellyfin_ingress_host }}          
+          curl ${{ env.jellyfin_ingress_host }}
