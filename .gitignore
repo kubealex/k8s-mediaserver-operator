@@ -6,10 +6,11 @@
 *.so
 *.dylib
 bin
-kube-alex.yml
+*_digest.txt
 # editor and IDE paraphernalia
 .idea
 *.swp
 *.swo
 *~
 kubeserver.yml
+my-values.yaml

@@ -1,0 +1,90 @@
+name: Deploy KinD cluster and test resources
+on:
+  pull_request:
+    types: [opened, reopened, edited, synchronize]
+    paths:
+      - "helm-charts/k8s-mediaserver/**"
+      - "Dockerfile"
+      - "k8s-mediaserver*"
+  workflow_dispatch:
+
+jobs:
+  helm-linter:
+    runs-on: ubuntu-latest
+    name: Run Helm linting
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup helm
+        uses: azure/setup-helm@v3
+        with:
+          version: "v3.13.0"
+        id: install-helm
+
+      - name: Lint Helm template
+        run: helm template helm-charts/k8s-mediaserver
+
+  build-deploy-cluster:
+    needs: helm-linter
+    name: Build images and deploy KinD cluster with test resources
+    env:
+      ingress_host: k8s-mediaserver.k8s.test
+      plex_ingress_host: k8s-plex.k8s.test
+      jellyfin_ingress_host: k8s-jelly.k8s.test
+      image_name: k8s-mediaserver-operator
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Image
+        id: build-image
+        uses: docker/build-push-action@v3
+        with:
+          tags: ${{ env.image_name }}:${{ github.sha }}
+          file: ./Dockerfile
+
+      - name: Fetch newer version of CRD
+        run: |
+          cp k8s-mediaserver.yml k8s-mediaserver-operator.yml tests/
+          sed -i 's/accessMode: ""/accessMode: ReadWriteOnce/g' tests/k8s-mediaserver.yml
+          sed -i 's/pvcStorageClass: ""/pvcStorageClass: standard/g' tests/k8s-mediaserver.yml
+          sed -i 's|quay.io\/kubealex.*|${{ env.image_name }}:${{ github.sha }}|g' tests/k8s-mediaserver-operator.yml
+
+      - name: Kind Cluster
+        uses: helm/kind-action@v1.8.0
+        with:
+          cluster_name: kind
+          config: tests/kind-cluster.yml
+
+      - name: Load images into KinD nodes
+        run: |
+          kind load docker-image ${{ env.image_name }}:${{ github.sha }}
+
+      - name: Deploy ingress to newly created cluster
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+          while [[ $(kubectl get pods -n ingress-nginx -l app.kubernetes.io/component=controller -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "Waiting for ingress pod to be ready" && sleep 5; done
+
+      - name: Deploy k8s-mediaserver-operator
+        run: |
+          kubectl apply -f tests/k8s-mediaserver-operator.yml
+          while [[ $(kubectl get pods -n k8s-mediaserver-operator-system -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "Waiting for operator pod to be ready" && sleep 5; done
+
+      - name: Deploy k8s-mediaserver CRD
+        run: |
+          kubectl create ns mediaserver
+          kubectl apply -f tests/k8s-mediaserver.yml -n mediaserver
+          sleep 15
+          for pod in $(kubectl get pods -n mediaserver | awk 'NR>1{ print $1 }'); do while [[ $(kubectl get pods $pod -n mediaserver -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "Waiting for mediaserver pods to be ready" && sleep 10; done ; done
+          sleep 30
+      - name: Edit hosts file and test apps
+        run: |
+          sudo echo "127.0.0.1   ${{ env.plex_ingress_host }} ${{ env.ingress_host }}" | sudo tee -a /etc/hosts
+          sudo echo "127.0.0.1   ${{ env.jellyfin_ingress_host }} ${{ env.ingress_host }}" | sudo tee -a /etc/hosts
+          wget --retry-on-http-error=503,500 ${{ env.ingress_host }}/sonarr
+          wget --retry-on-http-error=503,500 ${{ env.ingress_host }}/radarr
+          wget --retry-on-http-error=503,500 ${{ env.ingress_host }}/sabnzbd
+          wget --retry-on-http-error=503,500 ${{ env.ingress_host }}/prowlarr
+          wget --retry-on-http-error=503,500 ${{ env.ingress_host }}/jackett          
+          curl ${{ env.plex_ingress_host }}
+          curl ${{ env.jellyfin_ingress_host }}

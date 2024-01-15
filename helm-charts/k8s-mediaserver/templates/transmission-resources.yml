@@ -103,6 +103,8 @@ metadata:
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
 spec:
+  strategy:
+    type: Recreate
   replicas: 1
   selector:
     matchLabels:
@@ -139,10 +141,12 @@ spec:
           image: "{{ .Values.transmission.container.image }}:{{ .Values.transmission.container.tag | default .Values.general.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: "{{ .Values.transmission.ingress.path }}/"
               port: {{ .Values.transmission.container.port.utp }}
             initialDelaySeconds: 5
             periodSeconds: 10
+            timeoutSeconds: 20
           ports:
             - name: trans-port
               containerPort: {{ .Values.transmission.container.port.utp }}
@@ -187,9 +191,31 @@ spec:
           configMap:
             defaultMode: 493
             name: init-transmission-cm
-      {{- with .Values.general.nodeSelector }}
+      {{- with merge .Values.transmission.container.nodeSelector .Values.general.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if eq .Values.general.podDistribution "cluster" }}
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - {{ .Release.Name }}
+              topologyKey: "kubernetes.io/hostname"
+            weight: 100
+      {{- else if eq .Values.general.podDistribution "spread" }}
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: "kubernetes.io/hostname"
+        whenUnsatisfiable: "ScheduleAnyway"
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/instance: {{ .Release.Name }}
       {{- end }}
 ---
 ### SERVICES
@@ -255,13 +281,17 @@ apiVersion: v1
 kind: Service
 metadata:
   name: transmission-lb
+  {{- with .Values.transmission.service.utp.extraLBAnnotations }}
+  annotations:
+    {{- . | toYaml | nindent 4 }}
+  {{- end }}
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
 spec:
   type: LoadBalancer
   ports:
-    - port: {{ .Values.transmission.service.port }}
-      targetPort: {{ .Values.transmission.container.port }}
+    - port: {{ .Values.transmission.service.utp.port }}
+      targetPort: {{ .Values.transmission.container.port.utp }}
       protocol: TCP
       name: trans-port
   selector:
@@ -273,6 +303,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: transmission-lb-peer-tcp
+  {{- with .Values.transmission.service.peer.extraLBAnnotations }}
+  annotations:
+    {{- . | toYaml | nindent 4 }}
+  {{- end }}
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
 spec:
@@ -289,6 +323,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: transmission-lb-peer-udp
+  {{- with .Values.transmission.service.peer.extraLBAnnotations }}
+  annotations:
+    {{- . | toYaml | nindent 4 }}
+  {{- end }}
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
 spec:
