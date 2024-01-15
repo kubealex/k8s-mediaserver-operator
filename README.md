@@ -324,7 +324,6 @@ To add an NFS volume to each resource, edit the K8SMediaServer CR to match below
 and `path:` values to match your NFS.
 
 ```yaml
-
 general:
   storage:
     customVolume: true
