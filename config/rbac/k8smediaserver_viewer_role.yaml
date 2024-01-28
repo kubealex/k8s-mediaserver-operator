@@ -1,0 +1,27 @@
+# permissions for end users to view k8smediaservers.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: k8smediaserver-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: k8s-mediaserver-operator
+    app.kubernetes.io/part-of: k8s-mediaserver-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: k8smediaserver-viewer-role
+rules:
+- apiGroups:
+  - charts.kubealex.com
+  resources:
+  - k8smediaservers
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - charts.kubealex.com
+  resources:
+  - k8smediaservers/status
+  verbs:
+  - get

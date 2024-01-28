@@ -1,0 +1,76 @@
+name: Build and Push Image
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'helm-charts/k8s-mediaserver/**'
+      - 'Dockerfile'
+jobs:
+  versioning:
+    name: Check and manage versioning
+    runs-on: ubuntu-latest
+    outputs:
+      release_tag: ${{ steps.bump-version.outputs.new_tag || steps.bump-version.outputs.previous_tag }}
+      previous_tag: ${{ steps.bump-version.outputs.previous_tag }}
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Bump version and push tag
+      uses: mathieudutour/github-tag-action@v6.1
+      id: bump-version
+      with:
+        github_token: ${{ secrets.GH_TOKEN }}
+        default_bump: false
+
+  build_image:
+    needs: versioning
+    name: Build and push container images
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install qemu-user-static for multiarch builds
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static
+
+      - name: Build Image - multiarch
+        id: build-image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: k8s-mediaserver-operator
+          archs: amd64, arm64
+          tags: latest ${{ needs.versioning.outputs.release_tag }}
+          containerfiles: |
+            ./Dockerfile
+
+      - name: Push To quay.io
+        id: push-image
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-image.outputs.image }}
+          tags: latest ${{ needs.versioning.outputs.release_tag }}
+          registry: quay.io/kubealex
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_TOKEN }}
+
+      - name: Print image url
+        run: echo "Images pushed to ${{ steps.push-image.outputs.registry-paths }}"
+
+      - name: Bump operator version in CRD
+        run: |
+          sed -i "s/k8s-mediaserver-operator:${{ needs.versioning.outputs.previous_tag }}/k8s-mediaserver-operator:${{ needs.versioning.outputs.release_tag }}/g" k8s-mediaserver-operator.yml
+
+      - name: Commit files
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -a -m "Bumping operator definition to comply with ${{ needs.versioning.outputs.release_version }}"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          branch: ${{ github.ref }}

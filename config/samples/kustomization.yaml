@@ -1,0 +1,4 @@
+## Append samples of your project ##
+resources:
+- charts_v1_k8smediaserver.yaml
+#+kubebuilder:scaffold:manifestskustomizesamples
