@@ -1,3 +1,22 @@
+replicaCount: 1
+container:
+  image: docker.io/linuxserver/jellyfin
+  nodeSelector: {}
+  port: 8096
+service:
+  type: ClusterIP
+  port: 8096
+  nodePort:
+  extraLBService: false
+ingress:
+  enabled: true
+  annotations: {}
+  tls:
+    enabled: false
+    secretName: ""
+resources: {}
+volume: {}
+
 global:
   ingress_host: k8s-mediaserver.k8s.test
   ingress:
