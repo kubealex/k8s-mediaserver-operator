@@ -1,24 +1,27 @@
 global:
-  ingress_host: jellyfing.k8s.test
+  ingress_host: k8s-mediaserver.k8s.test
+  ingress:
+    ingressClassName: ""
+  image_tag: latest
+  podDistribution: cluster # can be "spread" or "cluster"
   #UID to run the process with
   puid: 1000
   #GID to run the process with
   pgid: 1000
-replicaCount: 1
-container:
-  image: docker.io/linuxserver/jellyfin
+  #Persistent storage selections and pathing
+  storage:
+    customVolume: false  #set to true if not using a PVC (must provide volume below)
+    accessMode: ""
+    pvcName: mediaserver-pvc
+    size: 5Gi
+    pvcStorageClass: ""
+    # the path starting from the top level of the pv you're passing. If your share is server.local/share/, then tv is server.local/share/media/tv
+    subPaths:
+      tv: media/tv
+      movies: media/movies
+      downloads: downloads
+      transmission: transmission
+      sabnzbd: sabnzbd
+      config: config
+    volumes: {}
   nodeSelector: {}
-  port: 8096
-service:
-  type: ClusterIP
-  port: 8096
-  nodePort:
-  extraLBService: false
-ingress:
-  enabled: true
-  annotations: {}
-  tls:
-    enabled: false
-    secretName: ""
-resources: {}
-volume: {}
