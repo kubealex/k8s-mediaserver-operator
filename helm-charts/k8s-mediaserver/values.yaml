@@ -97,7 +97,7 @@ radarr:
   # selector: {}
 
 jackett:
-  enabled: true
+  enabled: false
   container:
     image: docker.io/linuxserver/jackett
     nodeSelector: {}
