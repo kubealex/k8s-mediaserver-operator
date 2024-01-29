@@ -18,7 +18,7 @@ spec:
     pgid: 1000
     # Persistent storage selections and pathing
     storage:
-      customVolume: false  # set to true if not using a PVC (must provide volume below)
+      customVolume: false # set to true if not using a PVC (must provide volume below)
       pvcName: mediaserver-pvc
       size: 5Gi
       pvcStorageClass: ""
@@ -71,6 +71,27 @@ spec:
       extraLBService: false
       nodePort: null
       port: 32400
+      type: ClusterIP
+    volume: {}
+  jellyfin:
+    container:
+      image: docker.io/linuxserver/jellyfin
+      nodeSelector: {}
+      port: 8096
+    enabled: false
+    ingress:
+      annotations: {}
+      enabled: true
+      tls:
+        enabled: false
+        secretName: ""
+    replicaCount: 1
+    resources: {}
+    service:
+      extraLBAnnotations: {}
+      extraLBService: false
+      nodePort: null
+      port: 8096
       type: ClusterIP
     volume: {}
   prowlarr:
@@ -203,5 +224,3 @@ spec:
         port: 9091
         type: ClusterIP
     volume: {}
-
-

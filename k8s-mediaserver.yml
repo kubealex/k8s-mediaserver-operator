@@ -16,7 +16,7 @@ spec:
     pgid: 1000
     #Persistent storage selections and pathing
     storage:
-      customVolume: false  #set to true if not using a PVC (must provide volume below)
+      customVolume: false #set to true if not using a PVC (must provide volume below)
       accessMode: ""
       pvcName: mediaserver-pvc
       size: 5Gi
@@ -57,7 +57,8 @@ spec:
         enabled: false
         secretName: ""
     resources: {}
-    volume: {}
+    volume:
+      {}
       #name: pvc-sonarr-config
       #storageClassName: longhorn
       #annotations:
@@ -89,7 +90,8 @@ spec:
         enabled: false
         secretName: ""
     resources: {}
-    volume: {}
+    volume:
+      {}
       #name: pvc-radarr-config
       #storageClassName: longhorn
       #annotations: {}
@@ -257,6 +259,42 @@ spec:
     service:
       type: ClusterIP
       port: 32400
+      nodePort:
+      # Defines an additional LB service, requires cloud provider service or MetalLB
+      extraLBService: false
+      extraLBAnnotations: {}
+    ingress:
+      enabled: true
+      annotations: {}
+      tls:
+        enabled: false
+        secretName: ""
+    resources: {}
+    #  limits:
+    #    cpu: 100m
+    #    memory: 100Mi
+    #  requests:
+    #    cpu: 100m
+    #    memory: 100Mi
+    volume: {}
+    #  name: pvc-plex-config
+    #  storageClassName: longhorn
+    #  annotations: {}
+    #  labels: {}
+    #  accessModes: ReadWriteOnce
+    #  storage: 5Gi
+    #  selector: {}
+
+  jellyfin:
+    enabled: false
+    replicaCount: 1
+    container:
+      image: docker.io/linuxserver/jellyfin
+      nodeSelector: {}
+      port: 8096
+    service:
+      type: ClusterIP
+      port: 8096
       nodePort:
       # Defines an additional LB service, requires cloud provider service or MetalLB
       extraLBService: false

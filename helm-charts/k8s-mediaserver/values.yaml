@@ -5,15 +5,16 @@
 general:
   ingress_host: k8s-mediaserver.k8s.test
   plex_ingress_host: k8s-plex.k8s.test
+  jellyfin_ingress_host: k8s-jelly.k8s.test
   image_tag: latest
   podDistribution: cluster # can be "spread" or "cluster"
   #UID to run the process with
   puid: 1000
-  #GID to run the process with
+  # GID to run the process with
   pgid: 1000
-  #Persistent storage selections and pathing
+  # Persistent storage selections and pathing
   storage:
-    customVolume: false  #set to true if not using a PVC (must provide volume below)
+    customVolume: false # set to true if not using a PVC (must provide volume below)
     pvcName: mediaserver-pvc
     accessMode: ""
     size: 5Gi
@@ -55,15 +56,15 @@ sonarr:
       secretName: ""
   resources: {}
   volume: {}
-    #name: pvc-sonarr-config
-    #storageClassName: longhorn
-    #annotations:
-    #  my-annotation/test: my-value
-    #labels:
-    #  my-label/test: my-other-value
-    #accessModes: ReadWriteOnce
-    #storage: 5Gi
-    #selector: {}
+  # name: pvc-sonarr-config
+  # storageClassName: longhorn
+  # annotations:
+  #   my-annotation/test: my-value
+  # labels:
+  #   my-label/test: my-other-value
+  # accessModes: ReadWriteOnce
+  # storage: 5Gi
+  # selector: {}
 
 radarr:
   enabled: true
@@ -87,13 +88,13 @@ radarr:
       secretName: ""
   resources: {}
   volume: {}
-    #name: pvc-radarr-config
-    #storageClassName: longhorn
-    #annotations: {}
-    #labels: {}
-    #accessModes: ReadWriteOnce
-    #storage: 5Gi
-    #selector: {}
+  # name: pvc-radarr-config
+  # storageClassName: longhorn
+  # annotations: {}
+  # labels: {}
+  # accessModes: ReadWriteOnce
+  # storage: 5Gi
+  # selector: {}
 
 jackett:
   enabled: true
@@ -273,6 +274,41 @@ plex:
   #    memory: 100Mi
   volume: {}
   #  name: pvc-plex-config
+  #  storageClassName: longhorn
+  #  annotations: {}
+  #  labels: {}
+  #  accessModes: ReadWriteOnce
+  #  storage: 5Gi
+  #  selector: {}
+
+jellyfin:
+  enabled: false
+  replicaCount: 1
+  container:
+    image: docker.io/linuxserver/jellyfin
+    nodeSelector: {}
+    port: 8096
+  service:
+    type: ClusterIP
+    port: 8096
+    nodePort:
+    # Defines an additional LB service, requires cloud provider service or MetalLB
+    extraLBService: false
+  ingress:
+    enabled: true
+    annotations: {}
+    tls:
+      enabled: false
+      secretName: ""
+  resources: {}
+  #  limits:
+  #    cpu: 100m
+  #    memory: 100Mi
+  #  requests:
+  #    cpu: 100m
+  #    memory: 100Mi
+  volume: {}
+  #  name: pvc-jellyfin-config
   #  storageClassName: longhorn
   #  annotations: {}
   #  labels: {}

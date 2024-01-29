@@ -80,9 +80,11 @@ jobs:
       - name: Edit hosts file and test apps
         run: |
           sudo echo "127.0.0.1   ${{ env.plex_ingress_host }} ${{ env.ingress_host }}" | sudo tee -a /etc/hosts
-          wget ${{ env.ingress_host }}/sonarr
-          wget ${{ env.ingress_host }}/radarr
-          wget ${{ env.ingress_host }}/sabnzbd
-          wget ${{ env.ingress_host }}/prowlarr
-          wget --retry-on-http-error=503,500 ${{ env.ingress_host }}/jackett
+          sudo echo "127.0.0.1   ${{ env.jellyfin_ingress_host }} ${{ env.ingress_host }}" | sudo tee -a /etc/hosts
+          wget --retry-on-http-error=503,500 ${{ env.ingress_host }}/sonarr
+          wget --retry-on-http-error=503,500 ${{ env.ingress_host }}/radarr
+          wget --retry-on-http-error=503,500 ${{ env.ingress_host }}/sabnzbd
+          wget --retry-on-http-error=503,500 ${{ env.ingress_host }}/prowlarr
+          wget --retry-on-http-error=503,500 ${{ env.ingress_host }}/jackett          
           curl ${{ env.plex_ingress_host }}
+          curl ${{ env.jellyfin_ingress_host }}
