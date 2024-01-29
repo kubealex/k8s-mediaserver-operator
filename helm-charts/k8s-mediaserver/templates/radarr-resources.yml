@@ -75,10 +75,12 @@ spec:
           image: "{{ .Values.radarr.container.image }}:{{ .Values.radarr.container.tag | default .Values.general.image_tag }}"
           imagePullPolicy: Always
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: "{{ .Values.radarr.ingress.path }}/ping"
               port: {{ .Values.radarr.container.port }}
             initialDelaySeconds: 10
             periodSeconds: 20
+            timeoutSeconds: 20
           ports:
             - name: radarr-port
               containerPort: {{ .Values.radarr.container.port }}
@@ -120,9 +122,31 @@ spec:
           configMap:
             defaultMode: 493
             name: init-radarr-cm
-      {{- with .Values.general.nodeSelector }}
+      {{- with merge .Values.radarr.container.nodeSelector .Values.general.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if eq .Values.general.podDistribution "cluster" }}
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - {{ .Release.Name }}
+              topologyKey: "kubernetes.io/hostname"
+            weight: 100
+      {{- else if eq .Values.general.podDistribution "spread" }}
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: "kubernetes.io/hostname"
+        whenUnsatisfiable: "ScheduleAnyway"
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/instance: {{ .Release.Name }}
       {{- end }}
 ---
 ### SERVICES
@@ -151,6 +175,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: radarr-lb
+  {{- with .Values.radarr.service.extraLBAnnotations }}
+  annotations:
+    {{- . | toYaml | nindent 4 }}
+  {{- end }}
   labels:
     {{- include "k8s-mediaserver.labels" . | nindent 4 }}
 spec:

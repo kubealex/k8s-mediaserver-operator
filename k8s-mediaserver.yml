@@ -9,13 +9,15 @@ spec:
     ingress_host: k8s-mediaserver.k8s.test
     plex_ingress_host: k8s-plex.k8s.test
     image_tag: latest
+    podDistribution: cluster # can be "spread" or "cluster"
     #UID to run the process with
     puid: 1000
     #GID to run the process with
     pgid: 1000
     #Persistent storage selections and pathing
     storage:
-      customVolume: false  #set to true if not using a PVC (must provide volume below)
+      customVolume: false #set to true if not using a PVC (must provide volume below)
+      accessMode: ""
       pvcName: mediaserver-pvc
       size: 5Gi
       pvcStorageClass: ""
@@ -32,6 +34,7 @@ spec:
       #    path: /mnt/share
     ingress:
       ingressClassName: ""
+    nodeSelector: {}
 
   sonarr:
     enabled: true
@@ -44,8 +47,8 @@ spec:
       port: 8989
       nodePort:
       extraLBService: false
+      extraLBAnnotations: {}
       # Defines an additional LB service, requires cloud provider service or MetalLB
-
     ingress:
       enabled: true
       annotations: {}
@@ -54,7 +57,8 @@ spec:
         enabled: false
         secretName: ""
     resources: {}
-    volume: {}
+    volume:
+      {}
       #name: pvc-sonarr-config
       #storageClassName: longhorn
       #annotations:
@@ -75,9 +79,9 @@ spec:
       type: ClusterIP
       port: 7878
       nodePort:
-      extraLBService: false
       # Defines an additional LB service, requires cloud provider service or MetalLB
-
+      extraLBService: false
+      extraLBAnnotations: {}
     ingress:
       enabled: true
       annotations: {}
@@ -86,7 +90,8 @@ spec:
         enabled: false
         secretName: ""
     resources: {}
-    volume: {}
+    volume:
+      {}
       #name: pvc-radarr-config
       #storageClassName: longhorn
       #annotations: {}
@@ -106,6 +111,7 @@ spec:
       port: 9117
       nodePort:
       extraLBService: false
+      extraLBAnnotations: {}
       # Defines an additional LB service, requires cloud provider service or MetalLB
     ingress:
       enabled: true
@@ -136,16 +142,20 @@ spec:
       utp:
         type: ClusterIP
         port: 9091
+        # if type is NodePort, nodePort must be set
         nodePort:
         # Defines an additional LB service, requires cloud provider service or MetalLB
         extraLBService: false
+        extraLBAnnotations: {}
       peer:
         type: ClusterIP
         port: 51413
+        # if type is NodePort, nodePort and nodePortUDP must be set
         nodePort:
         nodePortUDP:
         # Defines an additional LB service, requires cloud provider service or MetalLB
         extraLBService: false
+        extraLBAnnotations: {}
     ingress:
       enabled: true
       annotations: {}
@@ -183,12 +193,14 @@ spec:
         nodePort:
         # Defines an additional LB service, requires cloud provider service or MetalLB
         extraLBService: false
+        extraLBAnnotations: {}
       https:
         type: ClusterIP
         port: 9090
         nodePort:
         # Defines an additional LB service, requires cloud provider service or MetalLB
         extraLBService: false
+        extraLBAnnotations: {}
     ingress:
       enabled: true
       annotations: {}
@@ -199,6 +211,36 @@ spec:
     resources: {}
     volume: {}
     #  name: pvc-plex-config
+    #  storageClassName: longhorn
+    #  annotations: {}
+    #  labels: {}
+    #  accessModes: ReadWriteOnce
+    #  storage: 5Gi
+    #  selector: {}
+
+  prowlarr:
+    enabled: true
+    container:
+      image: docker.io/linuxserver/prowlarr
+      tag: develop
+      nodeSelector: {}
+      port: 9696
+    service:
+      type: ClusterIP
+      port: 9696
+      nodePort:
+      extraLBService: false
+      extraLBAnnotations: {}
+    ingress:
+      enabled: true
+      annotations: {}
+      path: /prowlarr
+      tls:
+        enabled: false
+        secretName: ""
+    resources: {}
+    volume: {}
+    #  name: pvc-prowlarr-config
     #  storageClassName: longhorn
     #  annotations: {}
     #  labels: {}
@@ -220,6 +262,7 @@ spec:
       nodePort:
       # Defines an additional LB service, requires cloud provider service or MetalLB
       extraLBService: false
+      extraLBAnnotations: {}
     ingress:
       enabled: true
       annotations: {}
