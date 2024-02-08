@@ -13,3 +13,4 @@ bin
 *.swo
 *~
 kubeserver.yml
+my-values.yaml
