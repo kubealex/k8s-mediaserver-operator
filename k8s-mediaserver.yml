@@ -8,6 +8,7 @@ spec:
   general:
     ingress_host: k8s-mediaserver.k8s.test
     plex_ingress_host: k8s-plex.k8s.test
+    jellyfin_ingress_host: k8s-jellyfin.k8s.test
     image_tag: latest
     podDistribution: cluster # can be "spread" or "cluster"
     #UID to run the process with
@@ -170,6 +171,8 @@ spec:
         password: ""
     resources: {}
     volume: {}
+    vpn:
+      enabled: false
     #  name: pvc-transmission-config
     #  storageClassName: longhorn
     #  annotations: {}
