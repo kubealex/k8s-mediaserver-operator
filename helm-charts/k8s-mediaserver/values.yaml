@@ -294,6 +294,7 @@ jellyfin:
     nodePort:
     # Defines an additional LB service, requires cloud provider service or MetalLB
     extraLBService: false
+    extraLBAnnotations: {}
   ingress:
     enabled: true
     annotations: {}
