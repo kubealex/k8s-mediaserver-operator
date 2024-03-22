@@ -171,9 +171,9 @@ letting some customization to fit the resource inside your cluster.
 
 | Config path                                 | Meaning                                                                                                           | Default                        |
 | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------ |
-| jellyfin.enabled                            | Flag if you want to enable Plex                                                                                   | true                           |
-| jellyfin.replicaCount                       | Number of replicas serving Plex                                                                                   | 1                              |
-| jellyfin.container.nodeSelector             | Node Selector for the Plex pods                                                                                   | {}                             |
+| jellyfin.enabled                            | Flag if you want to enable Jellyfin                                                                               | true                           |
+| jellyfin.replicaCount                       | Number of replicas serving Jellyfin                                                                               | 1                              |
+| jellyfin.container.nodeSelector             | Node Selector for the Jellyfin pods                                                                               | {}                             |
 | jellyfin.container.port                     | The port in use by the container                                                                                  | 8096                           |
 | jellyfin.container.image                    | The image used by the container                                                                                   | docker.io/linuxserver/jellyfin |
 | jellyfin.container.tag                      | The tag used by the container                                                                                     | null                           |
