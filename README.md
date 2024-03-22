@@ -280,34 +280,35 @@ letting some customization to fit the resource inside your cluster.
 
 ### Transmission
 
-| Config path                                     | Meaning                                                                                                       | Default                            |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| transmission.enabled                            | Flag if you want to enable Transmission                                                                       | true                               |
-| transmission.container.port.utp                 | The port in use by the container                                                                              | 9091                               |
-| transmission.container.nodeSelector             | Node Selector for the Transmission pods                                                                       | {}                                 |
-| transmission.container.port.peer                | The port in use by the container for peer connection                                                          | 51413                              |
-| transmission.container.image                    | The image used by the container                                                                               | docker.io/linuxserver/transmission |
-| transmission.container.tag                      | The tag used by the container                                                                                 | null                               |
-| transmission.service.utp.type                   | The kind of Service (ClusterIP/NodePort/LoadBalancer) for Transmission itself                                 | ClusterIP                          |
-| transmission.service.utp.port                   | The port assigned to the service for Transmission itself                                                      | 9091                               |
-| transmission.service.utp.nodePort               | In case of service.type NodePort, the nodePort to use for Transmission itself                                 | ""                                 |
-| transmission.service.utp.extraLBService         | If true, creates an additional LoadBalancer service with '-lb' suffix (requires a cloud provider or metalLB)  | false                              |
-| transmission.service.peer.type                  | The kind of Service (ClusterIP/NodePort/LoadBalancer) for peer port                                           | ClusterIP                          |
-| transmission.service.peer.port                  | The port assigned to the service for peer port                                                                | 51413                              |
-| transmission.service.peer.nodePort              | In case of service.type NodePort, the nodePort to use for peer port                                           | ""                                 |
-| transmission.service.peer.nodePortUDP           | In case of service.type NodePort, the nodePort to use for peer port UDP service                               | ""                                 |
-| transmission.service.peer.extraLBService        | If true, creates an additional LoadBalancer service with '-lb' suffix (requires a cloud provider or metalLB)  | false                              |
-| transmission.service.extraLBService.annotations | Instead of using extraLBService as a bool, you can use it as a map to define annotations on the loadbalancer  | null                               |
-| transmission.ingress.enabled                    | If true, creates the ingress resource for the application                                                     | true                               |
-| transmission.ingress.annotations                | Additional field for annotations, if needed                                                                   | {}                                 |
-| transmission.ingress.path                       | The path where the application is exposed                                                                     | /transmission                      |
-| transmission.ingress.tls.enabled                | If true, tls is enabled                                                                                       | false                              |
-| transmission.ingress.tls.secretName             | Name of the secret holding certificates for the secure ingress                                                | ""                                 |
-| transmission.config.auth.enabled                | Enables authentication for Transmission                                                                       | false                              |
-| transmission.config.auth.username               | Username for Transmission                                                                                     | ""                                 |
-| transmission.config.auth.password               | Password for Transmission                                                                                     | ""                                 |
-| transmission.resources                          | Limits and Requests for the container                                                                         | {}                                 |
-| transmission.volume                             | If set, Plex will create a PVC for it's config volume, else it will be put on general.storage.subPaths.config | {}                                 |
+| Config path                                     | Meaning                                                                                                                                                          | Default                            |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| transmission.enabled                            | Flag if you want to enable Transmission                                                                                                                          | true                               |
+| transmission.container.port.utp                 | The port in use by the container                                                                                                                                 | 9091                               |
+| transmission.container.nodeSelector             | Node Selector for the Transmission pods                                                                                                                          | {}                                 |
+| transmission.container.port.peer                | The port in use by the container for peer connection                                                                                                             | 51413                              |
+| transmission.container.image                    | The image used by the container                                                                                                                                  | docker.io/linuxserver/transmission |
+| transmission.container.tag                      | The tag used by the container                                                                                                                                    | null                               |
+| transmission.service.utp.type                   | The kind of Service (ClusterIP/NodePort/LoadBalancer) for Transmission itself                                                                                    | ClusterIP                          |
+| transmission.service.utp.port                   | The port assigned to the service for Transmission itself                                                                                                         | 9091                               |
+| transmission.service.utp.nodePort               | In case of service.type NodePort, the nodePort to use for Transmission itself                                                                                    | ""                                 |
+| transmission.service.utp.extraLBService         | If true, creates an additional LoadBalancer service with '-lb' suffix (requires a cloud provider or metalLB)                                                     | false                              |
+| transmission.service.peer.type                  | The kind of Service (ClusterIP/NodePort/LoadBalancer) for peer port                                                                                              | ClusterIP                          |
+| transmission.service.peer.port                  | The port assigned to the service for peer port                                                                                                                   | 51413                              |
+| transmission.service.peer.nodePort              | In case of service.type NodePort, the nodePort to use for peer port                                                                                              | ""                                 |
+| transmission.service.peer.nodePortUDP           | In case of service.type NodePort, the nodePort to use for peer port UDP service                                                                                  | ""                                 |
+| transmission.service.peer.extraLBService        | If true, creates an additional LoadBalancer service with '-lb' suffix (requires a cloud provider or metalLB)                                                     | false                              |
+| transmission.service.extraLBService.annotations | Instead of using extraLBService as a bool, you can use it as a map to define annotations on the loadbalancer                                                     | null                               |
+| transmission.ingress.enabled                    | If true, creates the ingress resource for the application                                                                                                        | true                               |
+| transmission.ingress.annotations                | Additional field for annotations, if needed                                                                                                                      | {}                                 |
+| transmission.ingress.path                       | The path where the application is exposed                                                                                                                        | /transmission                      |
+| transmission.ingress.tls.enabled                | If true, tls is enabled                                                                                                                                          | false                              |
+| transmission.ingress.tls.secretName             | Name of the secret holding certificates for the secure ingress                                                                                                   | ""                                 |
+| transmission.config.auth.enabled                | Enables authentication for Transmission                                                                                                                          | false                              |
+| transmission.config.auth.username               | Username for Transmission                                                                                                                                        | ""                                 |
+| transmission.config.auth.password               | Password for Transmission                                                                                                                                        | ""                                 |
+| transmission.resources                          | Limits and Requests for the container                                                                                                                            | {}                                 |
+| transmission.volume                             | If set, Plex will create a PVC for it's config volume, else it will be put on general.storage.subPaths.config                                                    | {}                                 |
+| transmission.vpn.enabled                        | If set, a [gluetun](https://github.com/qdm12/gluetun-wiki) sidecar will be provisioned to route the traffic through a VPN. This requires a 3rd party VPN account | {}                                 |
 
 ### Sabnzbd
 
@@ -376,9 +377,34 @@ plex:
         service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags:
 ```
 
+### Setting up the VPN
+
+If you have enabled the VPN for transmission you will need to fullfill the rest of parameters related to it, currently only [Mullvad](https://mullvad.net) VPN is supported.
+
+The following shows an example of the current settings for mullvard.
+
+```yaml
+vpn:
+  enabled: true
+  provider: mullvad
+  type: openvpn
+  user: "XXXXXX"
+  city: zurich
+```
+
 ## About the project
 
 This project is intended as an exercise, and absolutely for fun.
 This is not intended to promote piracy.
 
 Also feel free to contribute and extend it!
+
+### Uninstalling the helm chart
+
+To fully remove all the resources created you should uninstall the helm deployment.
+
+```bash
+  helm uninstall k8s-mediaserver
+```
+
+This will not delete the Custom Resources like the operator.
