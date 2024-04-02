@@ -166,6 +166,8 @@ transmission:
       password: ""
   resources: {}
   volume: {}
+  vpn:
+    enabled: false
   #  name: pvc-transmission-config
   #  storageClassName: longhorn
   #  annotations: {}
