@@ -142,6 +142,7 @@ letting some customization to fit the resource inside your cluster.
 | general.storage.subPaths.config       | Default subpath for all config files on used storage                                                        | config                                          |
 | general.storage.volumes               | Supply custom volume to be mounted for all services                                                         | {}                                              |
 | general.ingress.ingressClassName      | Reference an IngressClass resource that contains additional Ingress configuration                           | ""                                              |
+| general.ingress.enableSubdomains      | If set to true each application will be accesible also as a subdomain. e.x. plex.domain.com                 | false                                           |
 
 ### Plex
 

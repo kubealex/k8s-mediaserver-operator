@@ -32,6 +32,7 @@ general:
     #    path: /mnt/share
   ingress:
     ingressClassName: ""
+    enableSubdomains: true
   nodeSelector: {}
 
 sonarr:

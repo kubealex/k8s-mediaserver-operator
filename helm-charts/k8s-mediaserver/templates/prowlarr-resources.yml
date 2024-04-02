@@ -216,5 +216,17 @@ spec:
                 name: prowlarr
                 port:
                   number: {{ .Values.prowlarr.service.port }}
+{{ if .Values.general.ingress.enableSubdomains }}
+    - host: {{ printf "%s.%s" "prowlarr" .Values.general.ingress_host | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: prowlarr
+                port:
+                  number: {{ .Values.prowlarr.service.port }}
+{{ end }}
 {{ end }}
 {{ end }}
