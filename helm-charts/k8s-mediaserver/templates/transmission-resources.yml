@@ -173,6 +173,28 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+        {{- if .Values.transmission.vpn.enabled }}
+        - name: gluetun
+          image: ghcr.io/qdm12/gluetun # Optionally you can use the "qmcgaw/gluetun" image as well as specify what version of Gluetun you desire
+          imagePullPolicy: Always
+          securityContext:
+            capabilities:
+              add: ["NET_ADMIN"]
+          env:
+          {{- if eq .Values.transmission.vpn.provider  `mullvad` }}
+            # https://github.com/qdm12/gluetun-wiki/blob/main/setup/providers/mullvad.md
+            - name: TZ
+              value: "Europe/London"
+            - name: VPN_SERVICE_PROVIDER
+              value: "{{ .Values.transmission.vpn.provider }}"
+            - name: VPN_TYPE
+              value: "{{ .Values.transmission.vpn.type }}"
+            - name: OPENVPN_USER
+              value: {{ .Values.transmission.vpn.user | quote }}
+            - name: SERVER_CITIES
+              value: {{ .Values.transmission.vpn.city }}
+          {{ end }}
+        {{- end }}
       volumes:
         {{ if not .Values.general.storage.customVolume }}
         - name: mediaserver-volume
@@ -371,5 +393,17 @@ spec:
                 name: transmission
                 port:
                   number: {{ .Values.transmission.service.utp.port }}
+{{ if .Values.general.ingress.enableSubdomains }}
+    - host: {{ printf "%s.%s" "transmission" .Values.general.ingress_host | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: transmission
+                port:
+                  number: {{ .Values.transmission.service.utp.port }}
+{{ end }}
 {{ end }}
 {{ end }}

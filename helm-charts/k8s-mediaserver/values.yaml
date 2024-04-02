@@ -32,6 +32,7 @@ general:
     #    path: /mnt/share
   ingress:
     ingressClassName: ""
+    enableSubdomains: true
   nodeSelector: {}
 
 sonarr:
@@ -166,6 +167,8 @@ transmission:
       password: ""
   resources: {}
   volume: {}
+  vpn:
+    enabled: false
   #  name: pvc-transmission-config
   #  storageClassName: longhorn
   #  annotations: {}
@@ -294,6 +297,7 @@ jellyfin:
     nodePort:
     # Defines an additional LB service, requires cloud provider service or MetalLB
     extraLBService: false
+    extraLBAnnotations: {}
   ingress:
     enabled: true
     annotations: {}
