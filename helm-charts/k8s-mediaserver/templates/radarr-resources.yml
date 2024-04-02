@@ -223,5 +223,17 @@ spec:
                 name: radarr
                 port:
                   number: {{ .Values.radarr.service.port }}
+{{ if .Values.general.ingress.enableSubdomains }}
+    - host: {{ printf "%s.%s" "radarr" .Values.general.ingress_host | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: radarr
+                port:
+                  number: {{ .Values.radarr.service.port }}
+{{ end }}
 {{ end }}
 {{ end }}

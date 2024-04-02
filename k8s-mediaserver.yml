@@ -34,6 +34,7 @@ spec:
       #    path: /mnt/share
     ingress:
       ingressClassName: ""
+      enableSubdomains: false
     nodeSelector: {}
 
   sonarr:

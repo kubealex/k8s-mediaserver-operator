@@ -153,5 +153,17 @@ spec:
                 name: jellyfin
                 port:
                   number: {{ .Values.jellyfin.service.port }}
+{{ if .Values.general.ingress.enableSubdomains }}
+    - host: {{ printf "%s.%s" "jellyfin" .Values.general.ingress_host | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: jellyfin
+                port:
+                  number: {{ .Values.jellyfin.service.port }}
+{{ end }}
 {{ end }}
 {{ end }}

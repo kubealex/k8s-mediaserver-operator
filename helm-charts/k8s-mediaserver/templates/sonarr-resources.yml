@@ -221,5 +221,17 @@ spec:
                 name: sonarr
                 port:
                   number: {{ .Values.sonarr.service.port }}
+{{ if .Values.general.ingress.enableSubdomains }}
+    - host: {{ printf "%s.%s" "sonarr" .Values.general.ingress_host | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sonarr
+                port:
+                  number: {{ .Values.sonarr.service.port }}
+{{ end }}
 {{ end }}
 {{ end }}
