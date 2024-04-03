@@ -78,15 +78,15 @@ In seconds, you will be ready to use your applications!
 
 With default settings, your applications will run in these paths:
 
-| Service      | Link                                         |
-| ------------ | -------------------------------------------- |
-| Sonarr       | http://k8s-mediaserver.k8s.test/sonarr       |
-| Radarr       | http://k8s-mediaserver.k8s.test/radarr       |
-| Transmission | http://k8s-mediaserver.k8s.test/transmission |
-| Jackett      | http://k8s-mediaserver.k8s.test/jackett      |
-| Prowlarr     | http://k8s-mediaserver.k8s.test/prowlarr     |
-| Jellyfin     | http://k8s-jelly.k8s.test/                   |
-| PLEX         | http://k8s-plex.k8s.test/                    |
+| Service      | Link                                         | Subdomain option enabled                     |
+| ------------ | -------------------------------------------- | -------------------------------------------- |
+| Sonarr       | http://k8s-mediaserver.k8s.test/sonarr       | http://sonarr.k8s-mediaserver.k8s.test       |
+| Radarr       | http://k8s-mediaserver.k8s.test/radarr       | http://radarr.k8s-mediaserver.k8s.test       |
+| Transmission | http://k8s-mediaserver.k8s.test/transmission | http://transmission.k8s-mediaserver.k8s.test |
+| Jackett      | http://k8s-mediaserver.k8s.test/jackett      | http://jackett.k8s-mediaserver.k8s.test      |
+| Prowlarr     | http://k8s-mediaserver.k8s.test/prowlarr     | http://prowlarrk8s-mediaserver.k8s.test      |
+| Jellyfin     | http://k8s-jelly.k8s.test/                   | http://jellyfin.k8s-mediaserver.k8s.test     |
+| PLEX         | http://k8s-plex.k8s.test/                    | http://plex.k8s-mediaserver.k8s.test         |
 
 3. (Optional) Use custom values:
 
@@ -392,6 +392,10 @@ vpn:
   user: "XXXXXX"
   city: zurich
 ```
+
+### Hardware acceleration
+
+If you want to enable hardware acceleration for Ples or Jellyfin, you will need hardware passthrough and some extra steps, take a look at https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/ to see how to enable this functionality.
 
 ## About the project
 
